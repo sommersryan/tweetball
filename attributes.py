@@ -30,7 +30,7 @@ class Hitting(object):
 		
 		self.power = round(((xbh/singles)/(leagueXbh/const.singles.mean))*5)
 		self.discipline = round(((walks/(strikeouts+inPlayOuts))/(const.walks.mean/(const.strikeouts.mean+const.inPlayOuts.mean)))*5)
-		self.speedRating = round((steals/const.steals.mean)*5)
+		self.speed = round((steals/const.steals.mean)*5)
 		
 	@classmethod
 	def random(cls):
