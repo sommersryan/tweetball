@@ -1,7 +1,7 @@
 import random
 
 class Constant(object):
-	def __init__(mean,stdDev):
+	def __init__(self, mean, stdDev):
 		self.mean = mean
 		self.stdDev = stdDev
 	
