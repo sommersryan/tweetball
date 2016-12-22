@@ -1,5 +1,8 @@
 class Hitting(object):
-	pass
+	
+	def __init__(self):
+		pass
+		
 	
 class Fielding(object):
 	pass

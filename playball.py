@@ -15,12 +15,6 @@ class PlateAppearance(object):
 	
 		pass
 		
-class Pitch(object):
-
-	def __init__(self, plateAppearance):
-	
-		pass
-
 class Event(object):
 	
 	def __init__(self, plateAppearance):
@@ -36,6 +30,7 @@ class Player(object):
 
 	def __init__(self, twitterUser):
 		#twitterUser is a tweepy user object. initialize some basic stuff here
+		self.id = twitterUser['id']
 		self.handedness = random.choice(['L','R'])
 		self.uniNumber = random.randint(0,71)
 		
