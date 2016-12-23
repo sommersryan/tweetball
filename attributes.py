@@ -39,6 +39,17 @@ class Hitting(object):
 		inst = cls(**attrs)
 				
 		return inst
+	
+	def outcomes(self):
+	
+		atts = self.__dict__
+		
+		keys = ['singles','doubles','triples','homers',
+			'strikeouts','walks','hbp','inPlayOuts']
+		
+		oc = { key : atts[key] for key in keys }
+		
+		return oc
 		
 class Fielding(object):
 	pass

@@ -7,3 +7,12 @@ def weightedChoice(choices):
 		if upto + w >= r:
 			return c
 		upto += w
+		
+def log5(pitcherValue, hitterValue, leagueValue):
+	#Bill James' log 5 method of predicting hitter/pitcher matchup outcome
+	
+	num = (hitterValue * pitcherValue) / leagueValue
+	
+	denom = num + (( (1 - hitterValue) * (1 - pitcherValue) ) / (1 - leagueValue) )
+	
+	return num / denom
