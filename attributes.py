@@ -1,23 +1,11 @@
 import const
 
-class Hitting(object):
+class Attributes(object):
 	
 	def __init__(self, **kwargs):
 		
 		for key, value in kwargs.items():
 			setattr(self, key, value)
-		
-		allHits = kwargs['singles'] + kwargs['doubles'] + kwargs['triples'] + kwargs['homers']
-		leagueHits = const.singles.mean + const.doubles.mean + const.triples.mean + const.homers.mean
-		
-		self.contact = round(((allHits/kwargs['strikeouts'])/(leagueHits/const.strikeouts.mean))*5)
-		
-		xbh = kwargs['doubles'] + kwargs['triples'] + kwargs['homers']
-		leagueXbh = const.doubles.mean + const.triples.mean + const.homers.mean
-		
-		self.power = round(((xbh/kwargs['singles'])/(leagueXbh/const.singles.mean))*5)
-		self.discipline = round(((kwargs['walks']/(kwargs['strikeouts']+kwargs['inPlayOuts']))/(const.walks.mean/(const.strikeouts.mean+const.inPlayOuts.mean)))*5)
-		self.speed = round((kwargs['steals']/const.steals.mean)*5)
 		
 	@classmethod
 	def random(cls):
@@ -32,8 +20,6 @@ class Hitting(object):
 			'walks' : const.walks.generateAttribute(),
 			'hbp' : const.hbp.generateAttribute(),
 			'inPlayOuts' : const.inPlayOuts.generateAttribute(),
-			'steals' : const.steals.generateAttribute(),
-			'csRate' : const.csRate.generateAttribute()
 			}
 			
 		inst = cls(**attrs)
@@ -50,12 +36,27 @@ class Hitting(object):
 		oc = { key : atts[key] for key in keys }
 		
 		return oc
+
+class Hitting(Attributes):
+	
+	def __init__(self, **kwargs):
+	
+		super().__init__(**kwargs)
+
+	@classmethod
+	def random(cls):
 		
-class Fielding(object):
-	pass
+		inst = super().random()
+		
+		inst.steals = const.steals.generateAttribute()
+		inst.csRate = const.csRate.generateAttribute()
+		
+		return inst
+		
+class Pitching(Attributes):
+
+	def __init__(self, **kwargs):
 	
-class Pitching(object):
-	pass
+		super().__init__(**kwargs)
+
 	
-#all player attributes as floats stored in object attributes 
-#attributes modify LEAGUE_AVG constants?
