@@ -1,13 +1,19 @@
-import random
+from random import random
+from bisect import bisect
 
 def weightedChoice(choices):
-	total = sum(list(choices.values()))
-	r = random.uniform(0, total)
-	upto = 0
-	for c, w in choices.items():
-		if upto + w >= r:
-			return c
-		upto += w
+	values, weights = list(choices.keys()), list(choices.values())
+	total = 0
+	cumulative_weights = []
+	
+	for w in weights:
+		total += w
+		cumulative_weights.append(total)
+		
+	x = random() * total
+	i = bisect(cumulative_weights, x)
+	
+	return values[i]
 		
 def log5(pitcherValue, hitterValue, leagueValue):
 	#Bill James' log 5 method of predicting hitter/pitcher matchup outcome
