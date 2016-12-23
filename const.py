@@ -28,14 +28,14 @@ steals = Constant(0.013739,0.018139)
 csRate = Constant(0.282805,0.304335)
 
 LG_OUTCOMES = {
-				'singles' : singles,
-				'doubles' : doubles,
-				'triples' : triples,
-				'homers' : homers,
-				'strikeouts' : strikeouts,
-				'walks' : walks,
-				'hbp' : hbp,
-				'inPlayOuts', inPlayOuts }
+				'singles' : singles.mean,
+				'doubles' : doubles.mean,
+				'triples' : triples.mean,
+				'homers' : homers.mean,
+				'strikeouts' : strikeouts.mean,
+				'walks' : walks.mean,
+				'hbp' : hbp.mean,
+				'inPlayOuts' : inPlayOuts.mean }
 
 dpRate = 0.066844
 outsFB = 0.394876
