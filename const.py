@@ -9,10 +9,10 @@ class Constant(object):
 		att = random.normalvariate(self.mean, self.stdDev)
 		
 		if att > 1:
-			att = 1
+			att = 0.999999
 			
 		if att < 0:
-			att = 0
+			att = 0.000001
 			
 		return att
 		
@@ -28,15 +28,14 @@ steals = Constant(0.013739,0.018139)
 csRate = Constant(0.282805,0.304335)
 
 LG_OUTCOMES = {
-			'singles' : singles.mean,
-			'doubles' : doubles.mean,
-			'triples' : triples.mean,
-			'homers' : homers.mean,
-			'strikeouts' : strikeouts.mean,
-			'walks' : walks.mean,
-			'hbp' : hbp.mean,
-			'inPlayOuts' : inPlayOuts.mean
-		}
+				'singles' : singles,
+				'doubles' : doubles,
+				'triples' : triples,
+				'homers' : homers,
+				'strikeouts' : strikeouts,
+				'walks' : walks,
+				'hbp' : hbp,
+				'inPlayOuts', inPlayOuts }
 
 dpRate = 0.066844
 outsFB = 0.394876
@@ -45,3 +44,4 @@ outsLD = 0.097744
 hitsFB = 0.246425
 hitsGB = 0.323737
 hitsLD = 0.429837
+
