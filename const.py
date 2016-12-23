@@ -8,10 +8,10 @@ class Constant(object):
 	def generateAttribute(self):
 		att = random.normalvariate(self.mean, self.stdDev)
 		
-		if att > 1:
+		if att >= 1:
 			att = 0.999999
 			
-		if att < 0:
+		if att <= 0:
 			att = 0.000001
 			
 		return att

@@ -1,3 +1,1 @@
-
-OUTCOME_TYPES = ['singles','doubles','triples','homers','strikeouts',
-				'walks','hbp','inPlayOuts']
+RESULT_TYPES = ['singles','doubles','triples','homers','strikeouts','walks','hbp','inPlayOuts']

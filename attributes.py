@@ -1,4 +1,5 @@
-import const
+import const, config
+from utils import log5, weightedChoice
 
 class Attributes(object):
 	
@@ -29,11 +30,8 @@ class Attributes(object):
 	def outcomes(self):
 	
 		atts = self.__dict__
-		
-		keys = ['singles','doubles','triples','homers',
-			'strikeouts','walks','hbp','inPlayOuts']
-		
-		oc = { key : atts[key] for key in keys }
+
+		oc = { key : atts[key] for key in config.RESULT_TYPES }
 		
 		return oc
 
@@ -59,4 +57,17 @@ class Pitching(Attributes):
 	
 		super().__init__(**kwargs)
 
+class Matchup(object):
+
+	def __init__(self, hitter, pitcher):
 	
+		for key in config.RESULT_TYPES:
+		
+			resultProb = log5(pitcher[key], hitter[key], const.LG_OUTCOMES[key])
+			
+			setattr(self, key, resultProb)
+			
+	def genResult(self):
+	
+		return weightedChoice(self.__dict__)
+		
