@@ -21,7 +21,6 @@ class Pitcher(Player):
 	
 	def __init__(self, twitterUser):
 		Player.__init__(self, twitterUser)
-		self.repertoire = []
 		
 class Lineup(object):
 
@@ -31,12 +30,11 @@ class Lineup(object):
 		self.pitchers = []
 		self.team = team 
 		
-	def makeLineup(self):
-	
+	def random(self):
+		#load 9 random players and 3 or so pitchers from S3
 		pass
 		
 	def assignPositions(self):
-
 		pass
 		
 class Team(object):
