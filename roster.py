@@ -1,19 +1,21 @@
 import random
+from attributes import Hitting, Pitching
 
 class Player(object):
 
 	def __init__(self, twitterUser):
 		#twitterUser is a tweepy user object. initialize some basic stuff here
 		self.id = twitterUser['id']
-		self.handedness = random.choice(['L','R'])
+		self.handedness = random.choice(['L','R','S'])
 		self.uniNumber = random.randint(0,71)
 		
 class Batter(Player):
 
 	def __init__(self, twitterUser):
 		Player.__init__(self, twitterUser)
-		self.position = None
-		self.switchHitter = False
+		self.position = random.choice('C','1B','2B','3B', 'LF', 'CF', 'RF')
+		self.attributes = Hitting.random()
+		
 		
 class Pitcher(Player):
 	
