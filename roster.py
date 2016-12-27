@@ -12,15 +12,14 @@ class Player(object):
 class Batter(Player):
 
 	def __init__(self, twitterUser):
-		Player.__init__(self, twitterUser)
+		super().__init__(self, twitterUser)
 		self.position = random.choice('C','1B','2B','3B', 'LF', 'CF', 'RF')
 		self.attributes = Hitting.random()
-		
 		
 class Pitcher(Player):
 	
 	def __init__(self, twitterUser):
-		Player.__init__(self, twitterUser)
+		super().__init__(self, twitterUser)
 		
 class Lineup(object):
 
