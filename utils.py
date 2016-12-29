@@ -23,3 +23,14 @@ def log5(pitcherValue, hitterValue, leagueValue):
 	denom = num + (( (1 - hitterValue) * (1 - pitcherValue) ) / (1 - leagueValue) )
 	
 	return num / denom
+	
+baseNarratives = {
+					0 : 'bases empty',
+					1 : 'runner on first',
+					2 : 'runner on second',
+					3 : 'runner on third',
+					12 : 'runners on first and second',
+					13 : 'runners on first and third',
+					23 : 'runners on second and third',
+					123 : 'bases loaded'
+				}
