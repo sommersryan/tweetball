@@ -34,3 +34,29 @@ baseNarratives = {
 					23 : 'runners on second and third',
 					123 : 'bases loaded'
 				}
+				
+transitions = {
+					(0,0) : [
+								((0,0),['HR',],1),
+								((1,0),['BB','HBP','single','error'],0),
+								((2,0),['double',],0),
+								((3,0),['triple',],0),
+								((0,1),['inPlayOut','strikeout'],0)
+							],
+					(1,0) : [
+								((0,0),['HR',],2),
+								((3,0),['triple',],1),
+								((12,0),['BB','HBP','single','error'],0),
+								((23,0),['double',],0),
+								((1,1),['inPlayOut','strikeout'],0),
+								((0,2),['GDP',],0)
+							],
+					(2,0) : [
+								((0,0),['HR',],2),
+								((1,0),['single','error',],1)
+								]
+								
+								
+							]
+							
+				}
