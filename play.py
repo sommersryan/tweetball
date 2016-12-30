@@ -1,6 +1,19 @@
 import random, datetime
 from utils import baseNarratives, transitions
 
+class Event(object):
+
+	def __init__(self):
+	
+		self.type = ''
+		self.batterOut = False
+		self.outs = 0
+		
+	@classmethod
+	def fromString(cls):
+	
+		pass
+
 class BaseOutState(object):
 
 	def __init__(self, first=None, second=None, third=None, outs=0):
@@ -49,8 +62,41 @@ class PlateAppearance(object):
 		self.batter = batter
 		self.pitcher = pitcher
 		self.transitions = transitions[baseState.getState()]
+		self.event = None
 		
-	
+	def advanceRunners(self, newBases, runs):
+		
+		oldState = self.baseState
+		newState = BaseOutState()
+		runners = oldState.queue()
+		
+		for i in range(0, runs):
+			
+			runners.pop()
+		
+		if len(runners) > 0:
+		
+			if '3' in str(newBases):
+			
+				newState.third = runners.pop()
+				
+		if len(runners) > 0:
+		
+			if '2' in str(newBases):
+			
+				newState.second = runners.pop()
+				
+		if len(runners) > 0:
+		
+			if '1' in str(newBases):
+			
+				newState.first = runners.pop()	
+				
+		if not self.event.batterOut:
+		
+			newState.first = self.batter
+			
+		return newState
 
 class Game(object):
 
