@@ -1,29 +1,6 @@
 import random, datetime
-from utils import baseNarratives
+from utils import baseNarratives, transitions
 
-class PlateAppearance(object):
-	
-	def __init__(self, inning, baseState, batter, pitcher):
-		
-		self.inning = inning
-		self.baseState = baseState
-		self.batter = batter
-		self.pitcher = pitcher
-	
-class Game(object):
-
-	def __init__(self):
-	
-		self.homeTeam = None
-		self.awayTeam = None
-		self.homeScore = 0
-		self.awayScore = 0
-		self.PAs = []
-		self.inning = 1
-		self.half = 'top'
-		self.startTime = datetime.datetime.now()
-		self.complete = False
-		
 class BaseOutState(object):
 
 	def __init__(self, first=None, second=None, third=None, outs=0):
@@ -58,3 +35,34 @@ class BaseOutState(object):
 		narr = baseNarratives[self.getState()[0]]
 		
 		return "{0} and {1} outs".format(narr, self.outs)
+	
+	def queue(self):
+	
+		return [self.third, self.second, self.first]
+		
+class PlateAppearance(object):
+	
+	def __init__(self, inning, baseState, batter, pitcher):
+		
+		self.inning = inning
+		self.baseState = baseState
+		self.batter = batter
+		self.pitcher = pitcher
+		self.transitions = transitions[baseState.getState()]
+		
+	
+
+class Game(object):
+
+	def __init__(self):
+	
+		self.homeTeam = None
+		self.awayTeam = None
+		self.homeScore = 0
+		self.awayScore = 0
+		self.PAs = []
+		self.inning = 1
+		self.half = 'top'
+		self.startTime = datetime.datetime.now()
+		self.complete = False
+		
