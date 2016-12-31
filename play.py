@@ -51,7 +51,15 @@ class BaseOutState(object):
 	
 	def queue(self):
 	
-		return [self.third, self.second, self.first]
+		runners = []
+		
+		for runner in [self.first, self.second, self.third]:
+		
+			if runner:
+			
+				runners.append(runner)
+				
+		return runners
 		
 class PlateAppearance(object):
 	
@@ -97,7 +105,11 @@ class PlateAppearance(object):
 			newState.first = self.batter
 			
 		return newState
-
+	
+	def selectOutcome(self):
+	
+		pass
+		
 class Game(object):
 
 	def __init__(self):
