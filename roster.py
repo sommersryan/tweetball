@@ -1,6 +1,34 @@
 import random
-from attributes import Hitting, Pitching
+from league import AVG_OUTCOMES
 
+
+class Ratings(object):
+	
+	#Hitters: 
+	#	CON - more singles, less strikeouts
+	#   POW - more extra base hits, less inPlayOuts
+	#   DIS - more walks, less strikeouts
+	#
+	#Pitchers:
+	#	CTR - less walks, more inPlayOuts
+	#	STF - more strikeouts, less extra base hits
+	#	CMP - more GDP, less extra base hits 
+	
+	def __init__(self):
+		
+		self.contact = random.triangular(0,100,60)
+		self.power = random.triangular(0,100,60)
+		self.discipline = random.triangular(0,100,60)
+		self.control = random.triangular(0,100,60)
+		self.stuff = random.triangular(0,100,60)
+		self.composure = random.triangular(0,100,60)
+		
+		attributes = AVG_OUTCOMES
+		
+		
+		
+	
+		
 class Player(object):
 
 	def __init__(self, twitterUser):
@@ -13,7 +41,6 @@ class Batter(Player):
 
 	def __init__(self, twitterUser):
 		super().__init__(self, twitterUser)
-		self.position = random.choice('C','1B','2B','3B', 'LF', 'CF', 'RF')
 		self.attributes = Hitting.random()
 		
 class Pitcher(Player):
