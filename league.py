@@ -1,32 +1,52 @@
-import random
-
 AVG_OUTCOMES = {
-					'HR' : 0.026633,
-					'triple' : 0.004819,
-					'double' : 0.044616,
-					'single' : 0.152096,
-					'BB' : 0.078208,
-					'HBP' : 0.008884,
-					'inPlayOut' : 0.441708,
-					'strikeout' : 0.206237,
-					'sacrifice' : 0.006743,
-					'GDP' : 0.020057,
-					'error' : 0.01 
-					
+					'HR' : {
+								'hi' : 70,
+								'lo' : 1,
+								'mean' : 27
+							},
+					'triple' : {
+								'hi' : 32,
+								'lo' : 1,
+								'mean' : 5
+							},
+					'double' : {
+								'hi' : 81,
+								'lo' : 11,
+								'mean' : 45
+							},
+					'BB' : {
+								'hi' : 206,
+								'lo' : 20,
+								'mean' : 78
+							},
+					'HBP' : {
+								'hi' : 58,
+								'mean' : 9,
+								'lo' : 1
+							},
+					'inPlayOut' : {
+									'hi' : 585,
+									'mean' : 442,
+									'lo' : 299
+								},
+					'strikeout' : {
+									'hi' : 360,
+									'mean' : 206,
+									'lo' : 70
+								},
+					'sacrifice' : {
+									'hi' : 45,
+									'mean' : 6,
+									'lo' : 0
+								},
+					'GDP' : {
+								'hi' : 45,
+								'mean' : 20,
+								'lo' : 1
+							},
+					'error' : {
+								'hi' : 10,
+								'mean' : 10,
+								'lo' : 10
+							}
 				}
-
-# These constants are the number of times, out of 1,000, 
-# that a given event should occur on average
-
-HR = 27
-triple = 5
-double = 45
-single = 152
-BB = 78
-HBP = 9
-inPlayOut = 442
-strikeout = 206
-sacrifice = 6
-GDP = 20
-error = 10
-
