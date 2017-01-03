@@ -1,3 +1,5 @@
+import random
+
 AVG_OUTCOMES = {
 					'HR' : {
 								'hi' : 70,
@@ -55,3 +57,17 @@ AVG_OUTCOMES = {
 								'lo' : 10
 							}
 				}
+				
+dists = {}
+
+for key, value in AVG_OUTCOMES.items():
+
+	k = key
+	v= []
+	
+	for i in range(0,100000):
+		
+		v.append(round(random.triangular(value['lo'], value['hi'], value['mean'])))
+	
+	v.sort()
+	dists.update({k : v})
