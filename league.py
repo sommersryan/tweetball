@@ -14,6 +14,11 @@ AVG_OUTCOMES = {
 								'lo' : 11,
 								'mean' : 45
 							},
+					'single' : {
+								'hi' : 260,
+								'lo' : 80,
+								'mean' : 152
+							},
 					'BB' : {
 								'hi' : 206,
 								'lo' : 20,
