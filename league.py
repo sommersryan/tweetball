@@ -15,3 +15,18 @@ AVG_OUTCOMES = {
 					
 				}
 
+# These constants are the number of times, out of 1,000, 
+# that a given event should occur on average
+
+HR = 27
+triple = 5
+double = 45
+single = 152
+BB = 78
+HBP = 9
+inPlayOut = 442
+strikeout = 206
+sacrifice = 6
+GDP = 20
+error = 10
+

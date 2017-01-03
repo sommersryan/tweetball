@@ -16,18 +16,17 @@ class Ratings(object):
 	
 	def __init__(self):
 		
-		self.contact = random.triangular(0,100,60)
-		self.power = random.triangular(0,100,60)
-		self.discipline = random.triangular(0,100,60)
-		self.control = random.triangular(0,100,60)
-		self.stuff = random.triangular(0,100,60)
-		self.composure = random.triangular(0,100,60)
+		self.contact = random.triangular(0,100,50)
+		self.power = random.triangular(0,100,50)
+		self.discipline = random.triangular(0,100,50)
+		self.control = random.triangular(0,100,50)
+		self.stuff = random.triangular(0,100,50)
+		self.composure = random.triangular(0,100,50)
 		
-		attributes = AVG_OUTCOMES
+		hitAttributes = AVG_OUTCOMES
+		pitchAttributes = AVG_OUTCOMES
+
 		
-		
-		
-	
 		
 class Player(object):
 
