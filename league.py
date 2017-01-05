@@ -1,6 +1,6 @@
 import random
 
-HIT_AVG_OUTCOMES = {
+BAT_AVG_OUTCOMES = {
 					'HR' : {
 								'hi' : .070,
 								'lo' : .001,
@@ -138,16 +138,29 @@ PITCH_AVG_OUTCOMES = {
 							}
 				}				
 
-dists = {}
+def makeDist(outcomes):
 
-for key, value in AVG_OUTCOMES.items():
+	dists = {}
+	
+	for key, value in outcomes.items():
 
-	k = key
-	v= []
+		k = key
+		v = []
 	
-	for i in range(0,100000):
-		
-		v.append(round(random.gauss(value['mean'], value['sd'])))
+		for i in range(0,100000):
+			
+			pick = -1
+			
+			while not value['lo'] <= pick <= value['hi']:
+				
+				pick = random.gauss(value['mean'], value['sd'])
+				
+			v.append(pick)
+
+		v.sort()
+		dists.update({k : v})
 	
-	v.sort()
-	dists.update({k : v})
+	return dists
+	
+BAT_DIST = makeDist(BAT_AVG_OUTCOMES)
+PITCH_DIST = makeDist(PITCH_AVG_OUTCOMES)
