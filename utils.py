@@ -23,6 +23,13 @@ def log5(pitcherValue, hitterValue, leagueValue):
 	denom = num + (( (1 - hitterValue) * (1 - pitcherValue) ) / (1 - leagueValue) )
 	
 	return num / denom
+
+def percentile(p, data):
+	#finds the pth percentile in the set data
+	
+	ord = (p / 100) * len(data)
+	
+	return data[round(ord)]
 	
 baseNarratives = {
 					0 : 'bases empty',
