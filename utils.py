@@ -29,7 +29,7 @@ def percentile(p, data):
 	
 	ord = (p / 100) * len(data)
 	
-	return data[round(ord)]
+	return data[int(ord)]
 	
 baseNarratives = {
 					0 : 'bases empty',
