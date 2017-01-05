@@ -78,7 +78,7 @@ for key, value in AVG_OUTCOMES.items():
 	
 	for i in range(0,100000):
 		
-		v.append(round(random.triangular(value['lo'], value['hi'], value['mean'])))
+		v.append(round(random.gauss(value['mean'], value['sd'])))
 	
 	v.sort()
 	dists.update({k : v})
