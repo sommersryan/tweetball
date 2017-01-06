@@ -1,4 +1,5 @@
-import random
+import random, config
+from statistics import mean
 
 BAT_AVG_OUTCOMES = {
 					'HR' : {
@@ -137,6 +138,16 @@ PITCH_AVG_OUTCOMES = {
 								'sd' : .001
 							}
 				}				
+
+def leagueMeans():
+	
+	means = {}
+	
+	for key in config.RESULT_TYPES:
+	
+		means.update({ key : mean([BAT_AVG_OUTCOMES[key]['mean'], PITCH_AVG_OUTCOMES[key]['mean']])})
+	
+	return means
 
 def makeDist(outcomes):
 

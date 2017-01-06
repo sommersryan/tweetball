@@ -1,5 +1,23 @@
-import random, datetime
-from utils import baseNarratives, transitions
+import random, datetime, config
+from utils import baseNarratives, transitions, log5, weightedChoice
+from league import leagueMeans
+
+class Matchup(object):
+
+	def __init__(self, batting, pitching):
+		
+		lgAvg = leagueMeans()
+		
+		for key in config.RESULT_TYPES:
+		
+			resultProb = log5(pitching[key], batting[key], lgAvg[key])
+			
+			setattr(self, key, resultProb)
+			
+	def genResult(self):
+	
+		return weightedChoice(self.__dict__)
+		
 
 class Event(object):
 

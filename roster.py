@@ -23,6 +23,7 @@ class Ratings(object):
 		self.batting['HR'] = percentile(self.power, BAT_DIST['HR'])
 		self.batting['inPlayOut'] = percentile((100-self.power), BAT_DIST['inPlayOut'])
 		self.batting['BB'] = percentile(self.discipline, BAT_DIST['BB'])
+		self.batting['HBP'] = percentile(self.discipline, BAT_DIST['HBP'])
 		self.batting['sacrifice'] = percentile(random.randint(1,100),BAT_DIST['sacrifice'])
 		self.batting['GDP'] = percentile(random.randint(1,100),BAT_DIST['GDP'])
 		self.batting['error'] = percentile(random.randint(1,100),BAT_DIST['error'])
@@ -33,7 +34,8 @@ class Ratings(object):
 		self.pitching['triple'] = percentile((100-self.control), PITCH_DIST['triple'])
 		self.pitching['HR'] = percentile((100-self.control), PITCH_DIST['HR'])
 		self.pitching['inPlayOut'] = percentile(self.stuff, PITCH_DIST['inPlayOut'])
-		self.pitching['BB'] = percentile(self.control, PITCH_DIST['BB'])
+		self.pitching['BB'] = percentile((100-self.control), PITCH_DIST['BB'])
+		self.pitching['HBP'] = percentile((100-self.control), PITCH_DIST['HBP'])
 		self.pitching['sacrifice'] = percentile(random.randint(1,100), PITCH_DIST['sacrifice'])
 		self.pitching['GDP'] = percentile(self.composure, PITCH_DIST['GDP'])
 		self.pitching['error'] = percentile(random.randint(1,100), PITCH_DIST['error'])
@@ -45,17 +47,7 @@ class Player(object):
 		self.id = twitterUser['id']
 		self.handedness = random.choice(['L','R','S'])
 		self.uniNumber = random.randint(0,71)
-		
-class Batter(Player):
-
-	def __init__(self, twitterUser):
-		super().__init__(self, twitterUser)
-		self.attributes = Hitting.random()
-		
-class Pitcher(Player):
-	
-	def __init__(self, twitterUser):
-		super().__init__(self, twitterUser)
+		self.ratings = Ratings()
 		
 class Lineup(object):
 
