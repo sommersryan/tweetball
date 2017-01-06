@@ -138,7 +138,7 @@ class PlateAppearance(object):
 	
 	def endState(self):
 	
-		states = random.shuffle(self.transitions)
+		states = random.sample(self.transitions, len(self.transitions))
 		
 		for i in states:
 		
