@@ -21,16 +21,27 @@ class Matchup(object):
 
 class Event(object):
 
-	def __init__(self):
+	def __init__(self, type):
 	
-		self.type = ''
-		self.batterOut = False
-		self.outs = 0
+		self.type = type
 		
-	@classmethod
-	def fromString(cls):
-	
-		pass
+		if type in ['strikeout', 'inPlayOut', 'sacrifice', 'GDP']:
+			self.batterOut = True
+			
+		else:
+			self.batterOut = False
+			
+		if type in ['single', 'double', 'triple', 'HR']:
+			self.isHit = True
+			
+		else:
+			self.isHit = False
+			
+		if type in ['BB', 'HBP', 'sacrifice']:
+			self.isAB = False
+			
+		else:
+			self.isAB = True
 
 class BaseOutState(object):
 
@@ -88,6 +99,7 @@ class PlateAppearance(object):
 		self.batter = batter
 		self.pitcher = pitcher
 		self.transitions = transitions[baseState.getState()]
+		self.matchup = Matchup(batter.ratings.batting, pitcher.ratings.pitching)
 		self.event = None
 		
 	def advanceRunners(self, newBases, runs):
@@ -124,9 +136,9 @@ class PlateAppearance(object):
 			
 		return newState
 	
-	def selectOutcome(self):
+	def execute(self):
 	
-		pass
+		
 		
 class Game(object):
 

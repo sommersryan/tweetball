@@ -43,7 +43,7 @@ class Ratings(object):
 class Player(object):
 
 	def __init__(self, twitterUser):
-		#twitterUser is a tweepy user object. initialize some basic stuff here
+		#twitterUser is a tweepy user object
 		self.id = twitterUser['id']
 		self.handedness = random.choice(['L','R','S'])
 		self.uniNumber = random.randint(0,71)
