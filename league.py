@@ -63,8 +63,8 @@ BAT_AVG_OUTCOMES = {
 							},
 					'error' : {
 								'hi' : .010,
-								'mean' : .010,
-								'lo' : .010,
+								'mean' : .005,
+								'lo' : .001,
 								'sd' : .001
 							}
 				}
@@ -132,8 +132,8 @@ PITCH_AVG_OUTCOMES = {
 							},
 					'error' : {
 								'hi' : .010,
-								'mean' : .010,
-								'lo' : .010,
+								'mean' : .005,
+								'lo' : .001,
 								'sd' : .001
 							}
 				}				
@@ -149,11 +149,12 @@ def makeDist(outcomes):
 	
 		for i in range(0,100000):
 			
-			pick = -1
-			
-			while not value['lo'] <= pick <= value['hi']:
+			while True:
 				
 				pick = random.gauss(value['mean'], value['sd'])
+				
+				if value['lo'] <= pick <= value['hi']:
+					break
 				
 			v.append(pick)
 
