@@ -2,19 +2,8 @@ import random
 from league import BAT_DIST, PITCH_DIST
 from utils import percentile
 
-
 class Ratings(object):
-	
-	#Hitters: 
-	#	CON - more singles, less strikeouts
-	#   POW - more extra base hits, less inPlayOuts
-	#   DIS - more walks, less strikeouts
-	#
-	#Pitchers:
-	#	CTR - less walks, more inPlayOuts
-	#	STF - more strikeouts, less extra base hits
-	#	CMP - more GDP, less extra base hits 
-	
+
 	def __init__(self):
 		
 		self.contact = random.randint(1,100)
