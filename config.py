@@ -1,1 +1,1 @@
-RESULT_TYPES = ['single','double','triple','HR','strikeout','BB','HBP','inPlayOuts','GDP','sacrifice']
+RESULT_TYPES = ['single','double','triple','HR','strikeout','BB','HBP','inPlayOut','GDP','sacrifice','error']

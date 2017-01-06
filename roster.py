@@ -1,5 +1,6 @@
 import random
-from league import AVG_OUTCOMES
+from league import BAT_DIST, PITCH_DIST
+from utils import percentile
 
 
 class Ratings(object):
@@ -16,18 +17,38 @@ class Ratings(object):
 	
 	def __init__(self):
 		
-		self.contact = random.triangular(0,100,50)
-		self.power = random.triangular(0,100,50)
-		self.discipline = random.triangular(0,100,50)
-		self.control = random.triangular(0,100,50)
-		self.stuff = random.triangular(0,100,50)
-		self.composure = random.triangular(0,100,50)
+		self.contact = random.randint(1,100)
+		self.power = random.randint(1,100)
+		self.discipline = random.randint(1,100)
+		self.control = random.randint(1,100)
+		self.stuff = random.randint(1,100)
+		self.composure = random.randint(1,100)
 		
-		hitAttributes = AVG_OUTCOMES
-		pitchAttributes = AVG_OUTCOMES
-
+		self.batting = {}
+		self.pitching = {}
 		
+		self.batting['single'] = percentile(self.contact, BAT_DIST['single'])
+		self.batting['strikeout'] = percentile((100-self.contact), BAT_DIST['strikeout'])
+		self.batting['double'] = percentile(self.power, BAT_DIST['double'])
+		self.batting['triple'] = percentile(self.power, BAT_DIST['triple'])
+		self.batting['HR'] = percentile(self.power, BAT_DIST['HR'])
+		self.batting['inPlayOut'] = percentile((100-self.power), BAT_DIST['inPlayOut'])
+		self.batting['BB'] = percentile(self.discipline, BAT_DIST['BB'])
+		self.batting['sacrifice'] = percentile(random.randint(1,100),BAT_DIST['sacrifice'])
+		self.batting['GDP'] = percentile(random.randint(1,100),BAT_DIST['GDP'])
+		self.batting['error'] = percentile(random.randint(1,100),BAT_DIST['error'])
 		
+		self.pitching['single'] = percentile((100-self.stuff), PITCH_DIST['single'])
+		self.pitching['strikeout'] = percentile(self.stuff, PITCH_DIST['strikeout'])
+		self.pitching['double'] = percentile((100-self.control), PITCH_DIST['double'])
+		self.pitching['triple'] = percentile((100-self.control), PITCH_DIST['triple'])
+		self.pitching['HR'] = percentile((100-self.control), PITCH_DIST['HR'])
+		self.pitching['inPlayOut'] = percentile(self.stuff, PITCH_DIST['inPlayOut'])
+		self.pitching['BB'] = percentile(self.control, PITCH_DIST['BB'])
+		self.pitching['sacrifice'] = percentile(random.randint(1,100), PITCH_DIST['sacrifice'])
+		self.pitching['GDP'] = percentile(self.composure, PITCH_DIST['GDP'])
+		self.pitching['error'] = percentile(random.randint(1,100), PITCH_DIST['error'])
+			
 class Player(object):
 
 	def __init__(self, twitterUser):
