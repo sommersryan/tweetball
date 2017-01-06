@@ -157,8 +157,8 @@ class Game(object):
 
 	def __init__(homeTeam, awayTeam):
 	
-		self.homeTeam = None
-		self.awayTeam = None
+		self.homeTeam = homeTeam
+		self.awayTeam = awayTeam
 		self.homeScore = 0
 		self.awayScore = 0
 		self.PAs = []
