@@ -1,6 +1,7 @@
 import random
 from league import BAT_DIST, PITCH_DIST
 from utils import percentile
+from config import RESULT_TYPES
 
 class Ratings(object):
 
@@ -39,6 +40,7 @@ class Ratings(object):
 		self.pitching['sacrifice'] = percentile(random.randint(1,100), PITCH_DIST['sacrifice'])
 		self.pitching['GDP'] = percentile(self.composure, PITCH_DIST['GDP'])
 		self.pitching['error'] = percentile(random.randint(1,100), PITCH_DIST['error'])
+			
 			
 class Player(object):
 

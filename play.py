@@ -100,8 +100,8 @@ class PlateAppearance(object):
 		self.pitcher = pitcher
 		self.transitions = transitions[baseState.getState()]
 		self.matchup = Matchup(batter.ratings.batting, pitcher.ratings.pitching)
-		self.event = None
-		
+		self.event = Event(self.matchup.genResult())
+	
 	def advanceRunners(self, newBases, runs):
 		
 		oldState = self.baseState
@@ -136,10 +136,23 @@ class PlateAppearance(object):
 			
 		return newState
 	
-	def execute(self):
+	def endState(self):
 	
+		states = random.shuffle(self.transitions)
 		
+		for i in states:
 		
+			if self.event.type in i[1]:
+			
+				choice = i
+				break
+				
+		runs = choice[2]
+		newBases = self.advanceRunners(choice[0][0], runs)
+		newBases.outs = choice[0][1]
+		
+		return (runs, newBases)
+	
 class Game(object):
 
 	def __init__(self):
