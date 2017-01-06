@@ -155,7 +155,7 @@ class PlateAppearance(object):
 	
 class Game(object):
 
-	def __init__(self):
+	def __init__(homeTeam, awayTeam):
 	
 		self.homeTeam = None
 		self.awayTeam = None
