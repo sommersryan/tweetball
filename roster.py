@@ -7,12 +7,12 @@ class Ratings(object):
 
 	def __init__(self):
 		
-		self.contact = random.randint(1,100)
-		self.power = random.randint(1,100)
-		self.discipline = random.randint(1,100)
-		self.control = random.randint(1,100)
-		self.stuff = random.randint(1,100)
-		self.composure = random.randint(1,100)
+		self.contact = random.randint(1,99)
+		self.power = random.randint(1,99)
+		self.discipline = random.randint(1,99)
+		self.control = random.randint(1,99)
+		self.stuff = random.randint(1,99)
+		self.composure = random.randint(1,99)
 		
 		self.batting = {}
 		self.pitching = {}
