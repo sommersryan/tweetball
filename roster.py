@@ -53,16 +53,29 @@ class Player(object):
 		
 class Lineup(object):
 
-	def __init__(self, team):
+	def __init__(self):
 	
 		self.battingOrder = []
 		self.pitchers = []
-		self.team = team 
+		self.atBat = 0
+		self.onDeck = 1
 		
 	def random(self):
 		#load 9 random players and 3 or so pitchers from S3
 		pass
 		
+	def newBatter(self):
+		
+		nb = self.battingOrder[self.onDeck]
+		
+		if self.onDeck == 8:
+			self.onDeck = 0	
+		
+		else:
+			self.onDeck += 1
+			
+		return nb
+
 	def assignPositions(self):
 		pass
 		

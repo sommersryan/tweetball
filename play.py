@@ -163,7 +163,12 @@ class Game(object):
 		self.awayScore = 0
 		self.PAs = []
 		self.inning = 1
-		self.half = 'top'
+		self.top = True
 		self.startTime = datetime.datetime.now()
 		self.complete = False
 		
+	def play():
+	
+		while self.inning <= 8:
+		
+			
