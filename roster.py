@@ -86,6 +86,7 @@ class Team(object):
 		self.nickname = None
 		self.location = None
 		self.stadium = None
+		self.lineup = Lineup.random()
 		
 	def __str__(self):
 	

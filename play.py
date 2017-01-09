@@ -167,8 +167,22 @@ class Game(object):
 		self.startTime = datetime.datetime.now()
 		self.complete = False
 		
-	def play():
+	def iterate(currentPA):
 	
-		while self.inning <= 8:
+		self.PAs.append(currentPA)
 		
+		if self.top:
+		
+			self.awayScore += currentPA.endState()[0]
+			batter = self.awayTeam.lineup.newBatter()
+			pitcher = self.homeTeam.lineup.currentPitcher
 			
+			return PlateAppearance(self.inning, currentPA.endState()[1], batter, pitcher)
+			
+		elif not self.top:
+		
+			self.homeScore += currentPA.endState()[0]
+			batter = self.homeTeam.lineup.newBatteR()
+			pitcher = self.awayTeam.lineup.currentPitcher
+			
+			return PlateAppearance(self.inning, currentPA.endState()[1], batter, pitcher)
