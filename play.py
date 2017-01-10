@@ -161,7 +161,7 @@ class PlateAppearance(object):
 	
 class Game(object):
 
-	def __init__(homeTeam, awayTeam):
+	def __init__(self, homeTeam, awayTeam):
 	
 		self.homeTeam = homeTeam
 		self.awayTeam = awayTeam
@@ -188,7 +188,7 @@ class Game(object):
 		elif not self.top:
 		
 			self.homeScore += currentPA.endState()[0]
-			batter = self.homeTeam.lineup.newBatteR()
+			batter = self.homeTeam.lineup.newBatter()
 			pitcher = self.awayTeam.lineup.currentPitcher
 			
 			return PlateAppearance(self.inning, currentPA.endState()[1], batter, pitcher)
@@ -216,7 +216,7 @@ class Game(object):
 		
 		while True:
 		
-			currentPA = iterate(currentPA)
+			currentPA = self.iterate(currentPA)
 			
 			if self.inning >=9 and not self.top:
 				

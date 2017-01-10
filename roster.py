@@ -25,9 +25,9 @@ class Ratings(object):
 		self.batting['inPlayOut'] = percentile((100-self.power), BAT_DIST['inPlayOut'])
 		self.batting['BB'] = percentile(self.discipline, BAT_DIST['BB'])
 		self.batting['HBP'] = percentile(self.discipline, BAT_DIST['HBP'])
-		self.batting['sacrifice'] = percentile(random.randint(1,100),BAT_DIST['sacrifice'])
-		self.batting['GDP'] = percentile(random.randint(1,100),BAT_DIST['GDP'])
-		self.batting['error'] = percentile(random.randint(1,100),BAT_DIST['error'])
+		self.batting['sacrifice'] = percentile(random.randint(1,99),BAT_DIST['sacrifice'])
+		self.batting['GDP'] = percentile(random.randint(1,99),BAT_DIST['GDP'])
+		self.batting['error'] = percentile(random.randint(1,99),BAT_DIST['error'])
 		
 		self.pitching['single'] = percentile((100-self.stuff), PITCH_DIST['single'])
 		self.pitching['strikeout'] = percentile(self.stuff, PITCH_DIST['strikeout'])
@@ -37,9 +37,9 @@ class Ratings(object):
 		self.pitching['inPlayOut'] = percentile(self.stuff, PITCH_DIST['inPlayOut'])
 		self.pitching['BB'] = percentile((100-self.control), PITCH_DIST['BB'])
 		self.pitching['HBP'] = percentile((100-self.control), PITCH_DIST['HBP'])
-		self.pitching['sacrifice'] = percentile(random.randint(1,100), PITCH_DIST['sacrifice'])
+		self.pitching['sacrifice'] = percentile(random.randint(1,99), PITCH_DIST['sacrifice'])
 		self.pitching['GDP'] = percentile(self.composure, PITCH_DIST['GDP'])
-		self.pitching['error'] = percentile(random.randint(1,100), PITCH_DIST['error'])
+		self.pitching['error'] = percentile(random.randint(1,99), PITCH_DIST['error'])
 			
 			
 class Player(object):
