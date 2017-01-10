@@ -210,6 +210,13 @@ class Game(object):
 				self.complete = True
 				return True
 		
+		if self.inning == 9 and not self.top:
+		
+			if self.homeScore > self.awayScore:
+			
+				self.complete = True
+				return True
+		
 		if self.top:
 
 			batter = self.awayTeam.lineup.newBatter()
@@ -234,7 +241,9 @@ class Game(object):
 					return True
 			
 			if currentPA.endState.outs == 3:
-			
+				
+				self.PAs.append(currentPA)
+				
 				if not self.top:
 					self.inning += 1
 					self.top = not self.top
