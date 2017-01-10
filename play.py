@@ -51,7 +51,7 @@ class BaseOutState(object):
 		self.second = second
 		self.third = third
 		self.outs = outs
-		
+	
 	def getState(self):
 		
 		firstBase, secondBase, thirdBase = '', '', ''
@@ -132,6 +132,7 @@ class PlateAppearance(object):
 		
 		oldState = self.baseState
 		newState = BaseOutState()
+		newState.outs = newBases[1]
 		runners = oldState.queue()
 		
 		runners += [self.batter]
@@ -142,21 +143,21 @@ class PlateAppearance(object):
 		
 		if len(runners) > 0:
 		
-			if '3' in str(newBases):
+			if '3' in str(newBases[0]):
 			
 				newState.third = runners.pop()
 				self.narratives += ["{0} to third.".format(str(newState.third))]
 				
 		if len(runners) > 0:
 		
-			if '2' in str(newBases):
+			if '2' in str(newBases[0]):
 			
 				newState.second = runners.pop()
 				self.narratives += ["{0} to second.".format(str(newState.second))]
 				
 		if len(runners) > 0:
 		
-			if '1' in str(newBases):
+			if '1' in str(newBases[0]):
 			
 				newState.first = runners.pop()	
 
