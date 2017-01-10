@@ -200,6 +200,13 @@ class PlateAppearance(object):
 			runners.pop()
 			
 		return newState
+		
+	def __str__(self):
+	
+		preamble = "With {0}".format(baseState)
+		description = '. '.join(self.narratives)
+		
+		return "{0}, {1}".format(preamble, description)
 	
 class Game(object):
 
