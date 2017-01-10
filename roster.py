@@ -83,11 +83,9 @@ class Lineup(object):
 		pitchers = []
 		
 		for i in range(0,9):
-		
 			bOrder.append(Player.fake())
 			
 		for i in range(0,4):
-	
 			pitchers.append(Player.fake())
 			
 		inst = cls(bOrder, pitchers)
