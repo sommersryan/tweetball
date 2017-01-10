@@ -120,7 +120,7 @@ class PlateAppearance(object):
 				
 				if ev in i[1]:
 				
-					self.event = ev
+					self.event = Event(ev)
 					endBases = i[0]
 					self.runs = i[2]
 					choice = True
@@ -190,7 +190,7 @@ class Game(object):
 			batter = self.awayTeam.lineup.newBatter()
 			pitcher = self.homeTeam.lineup.currentPitcher
 			
-			return PlateAppearance(self.inning, self.top, currentPA.endState, batter, pitcher)
+			return PlateAppearance(self.top, self.inning, currentPA.endState, batter, pitcher)
 			
 		elif not self.top:
 		
@@ -198,7 +198,7 @@ class Game(object):
 			batter = self.homeTeam.lineup.newBatter()
 			pitcher = self.awayTeam.lineup.currentPitcher
 			
-			return PlateAppearance(self.inning, self.top, currentPA.endState, batter, pitcher)
+			return PlateAppearance(self.top, self.inning, currentPA.endState, batter, pitcher)
 			
 	def playInning(self):
 		
@@ -219,7 +219,7 @@ class Game(object):
 			batter = self.homeTeam.lineup.newBatter()
 			pitcher = self.awayTeam.lineup.currentPitcher
 		
-		currentPA = PlateAppearance(self.inning, self.top, BaseOutState(), batter, pitcher)
+		currentPA = PlateAppearance(self.top, self.inning, BaseOutState(), batter, pitcher)
 		
 		while True:
 		
