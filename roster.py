@@ -47,9 +47,20 @@ class Player(object):
 	def __init__(self, twitterUser):
 		#twitterUser is a tweepy user object
 		self.id = twitterUser['id']
+		self.name = twitterUser['screenname']
 		self.handedness = random.choice(['L','R','S'])
 		self.uniNumber = random.randint(0,71)
 		self.ratings = Ratings()
+		
+	@classmethod
+	def fake(cls)
+	
+		id = random.randint(111111,999999)
+		user = 'Player{0}'.format(random.randint(1,1000)
+		twitterUser = {'id' : id, 'screenname' : user }
+		inst = cls(twitterUser)
+		
+		return inst
 		
 class Lineup(object):
 
@@ -64,7 +75,13 @@ class Lineup(object):
 	def random(self):
 		#load 9 random players and 3 or so pitchers from S3
 		pass
+	
+	@classmethod
+	def dummy(cls):
 		
+		
+	
+	
 	def newBatter(self):
 		
 		nb = self.battingOrder[self.onDeck]
