@@ -24,6 +24,7 @@ class Event(object):
 	def __init__(self, type):
 	
 		self.type = type
+		self.narrative = self.genString()
 		
 		if type in ['strikeout', 'inPlayOut', 'sacrifice', 'GDP']:
 			self.batterOut = True
@@ -43,6 +44,33 @@ class Event(object):
 		else:
 			self.isAB = True
 
+	def genString(self):
+		
+		outfield = ['left', 'center', 'right']
+		infield = ['first', 'second', 'third', 'shortstop']
+		
+		outs = [
+					"lines out to {0}".format(random.choice(infield + outfield)),
+					"flies out to {0}".format(random.choice(outfield)),
+					"grounds out to {0}".format(random.choice(infield),
+				]
+				
+		strings = {
+					'strikeout' : 'strikes out',
+					'sacrifice' : 'sacrifices',
+					'GDP' : 'grounds into double play',
+					'inPlayOut' : random.choice(outs),
+					'single' : "singles to {0}".format(random.choice(outfield)),
+					'double' : "doubles to {0}".format(random.choice(outfield)),
+					'triple' : "triples to {0}".format(random.choice(outfield)),
+					'HR' : "homers to {0}".format(random.choice(outfield)),
+					'HBP' : "is hit by pitch",
+					'BB' : "walks",
+					'error' : "reaches on error"
+				}
+				
+		return strings[self.type]
+					
 class BaseOutState(object):
 
 	def __init__(self, first=None, second=None, third=None, outs=0):
@@ -254,4 +282,6 @@ class Game(object):
 				return True
 				
 	def play(self):
-		pass
+		
+		while not self.complete:
+			self.playInning()
