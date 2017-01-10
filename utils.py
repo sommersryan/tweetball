@@ -188,7 +188,7 @@ transitions = {
 								((23,1),['double'],2),
 								((123,1),['BB','HBP',],1),
 								((12,2),['sacrifice',],1),
-								((123,2),['strikeout','inPlayOut',],2),
+								((123,2),['strikeout','inPlayOut',],0),
 								((None,3),['GDP',],0)
 							],
 					(0,2) : [
