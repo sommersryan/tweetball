@@ -92,8 +92,9 @@ class BaseOutState(object):
 		
 class PlateAppearance(object):
 	
-	def __init__(self, inning, baseState, batter, pitcher):
+	def __init__(self, top, inning, baseState, batter, pitcher):
 		
+		self.top = top
 		self.inning = inning
 		self.baseState = baseState
 		self.batter = batter
@@ -113,6 +114,9 @@ class PlateAppearance(object):
 		oldState = self.baseState
 		newState = BaseOutState()
 		runners = oldState.queue()
+		
+		if self.event.type == 'HR':
+			runners += [self.batter]
 		
 		for i in range(0, runs):
 			
@@ -183,7 +187,7 @@ class Game(object):
 			batter = self.awayTeam.lineup.newBatter()
 			pitcher = self.homeTeam.lineup.currentPitcher
 			
-			return PlateAppearance(self.inning, currentPA.endState()[1], batter, pitcher)
+			return PlateAppearance(self.inning, self.top, currentPA.endState()[1], batter, pitcher)
 			
 		elif not self.top:
 		
@@ -191,7 +195,7 @@ class Game(object):
 			batter = self.homeTeam.lineup.newBatter()
 			pitcher = self.awayTeam.lineup.currentPitcher
 			
-			return PlateAppearance(self.inning, currentPA.endState()[1], batter, pitcher)
+			return PlateAppearance(self.inning, self.top, currentPA.endState()[1], batter, pitcher)
 			
 	def playInning(self):
 		
@@ -212,7 +216,7 @@ class Game(object):
 			batter = self.homeTeam.lineup.newBatter()
 			pitcher = self.awayTeam.lineup.currentPitcher
 		
-		currentPA = PlateAppearance(self.inning, BaseOutState(), batter, pitcher)
+		currentPA = PlateAppearance(self.inning, self.top, BaseOutState(), batter, pitcher)
 		
 		while True:
 		
