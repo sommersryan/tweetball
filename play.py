@@ -115,8 +115,7 @@ class PlateAppearance(object):
 		newState = BaseOutState()
 		runners = oldState.queue()
 		
-		if self.event.type == 'HR':
-			runners += [self.batter]
+		runners += [self.batter]
 		
 		for i in range(0, runs):
 			
@@ -140,9 +139,9 @@ class PlateAppearance(object):
 			
 				newState.first = runners.pop()	
 				
-		if not self.event.batterOut:
+		if self.event.batterOut:
 		
-			newState.first = self.batter
+			runners.pop()
 			
 		return newState
 	
