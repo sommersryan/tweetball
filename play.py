@@ -203,7 +203,7 @@ class PlateAppearance(object):
 		
 	def __str__(self):
 	
-		preamble = "With {0}".format(baseState)
+		preamble = "With {0}".format(self.baseState)
 		description = '. '.join(self.narratives)
 		
 		return "{0}, {1}".format(preamble, description)
@@ -298,3 +298,11 @@ class Game(object):
 		
 		while not self.complete:
 			self.playInning()
+			
+	def gameLog(self):
+	
+		for i in self.PAs:
+		
+			print(i)
+			
+		return True
