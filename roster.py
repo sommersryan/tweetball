@@ -62,6 +62,10 @@ class Player(object):
 		
 		return inst
 		
+	def __str__(self):
+	
+		return self.name
+		
 class Lineup(object):
 
 	def __init__(self, battingOrder, pitchers):

@@ -99,6 +99,7 @@ class PlateAppearance(object):
 		self.baseState = baseState
 		self.batter = batter
 		self.pitcher = pitcher
+		self.narratives = []
 		
 		if baseState.outs == 3:
 			self.transitions = [None,]
@@ -119,26 +120,28 @@ class PlateAppearance(object):
 		
 		for i in range(0, runs):
 			
-			runners.pop()
+			self.narratives += ["{0} scores".format(str(runners.pop()))]
 		
 		if len(runners) > 0:
 		
 			if '3' in str(newBases):
 			
 				newState.third = runners.pop()
+				self.narratives += ["{0} to third.".format(str(newState.third))]
 				
 		if len(runners) > 0:
 		
 			if '2' in str(newBases):
 			
 				newState.second = runners.pop()
+				self.narratives += ["{0} to second.".format(str(newState.second))]
 				
 		if len(runners) > 0:
 		
 			if '1' in str(newBases):
 			
 				newState.first = runners.pop()	
-				
+
 		if self.event.batterOut:
 		
 			runners.pop()
