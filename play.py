@@ -194,7 +194,14 @@ class Game(object):
 			return PlateAppearance(self.inning, currentPA.endState()[1], batter, pitcher)
 			
 	def playInning(self):
+		
+		if self.inning >= 10 and self.top:
+		
+			if self.awayScore > self.homeScore:
 			
+				self.complete = True
+				return True
+		
 		if self.top:
 
 			batter = self.awayTeam.lineup.newBatter()
@@ -211,6 +218,13 @@ class Game(object):
 		
 			currentPA = iterate(currentPA)
 			
+			if self.inning >=9 and not self.top:
+				
+				if self.homeScore > self.awayScore:
+				
+					self.complete = True
+					return True
+			
 			if currentPA.baseState.outs == 3:
 			
 				if not self.top:
@@ -221,3 +235,6 @@ class Game(object):
 					self.top = not self.top
 					
 				return True
+				
+	def play(self):
+		pass
