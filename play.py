@@ -108,13 +108,26 @@ class PlateAppearance(object):
 			self.transitions = transitions[baseState.getState()]
 			
 		self.matchup = Matchup(batter.ratings.batting, pitcher.ratings.pitching)
-		self.outcome = False
 		
-		while not self.outcome:
+		choice = False
 		
-			self.event = Event(self.matchup.genResult())
-			self.outcome = self.endState()
-	
+		while not choice:
+			
+			ev = self.matchup.genResult()
+			states = random.sample(self.transitions, len(self.transitions))
+			
+			for i in states: 
+				
+				if ev in i[1]:
+				
+					self.event = ev
+					endBases = i[0]
+					self.runs = i[2]
+					choice = True
+					break
+		
+		self.endState = self.advanceRunners(endBases, self.runs)
+		
 	def advanceRunners(self, newBases, runs):
 		
 		oldState = self.baseState
@@ -153,27 +166,6 @@ class PlateAppearance(object):
 			
 		return newState
 	
-	def endState(self):
-	
-		states = random.sample(self.transitions, len(self.transitions))
-		choice = False
-		
-		for i in states:
-		
-			if self.event.type in i[1]:
-			
-				choice = i
-				break
-				
-		if not choice:
-			return False
-		
-		runs = choice[2]
-		newBases = self.advanceRunners(choice[0][0], runs)
-		newBases.outs = choice[0][1]
-		
-		return (runs, newBases)
-	
 class Game(object):
 
 	def __init__(self, homeTeam, awayTeam):
@@ -194,19 +186,19 @@ class Game(object):
 		
 		if self.top:
 		
-			self.awayScore += currentPA.endState()[0]
+			self.awayScore += currentPA.runs
 			batter = self.awayTeam.lineup.newBatter()
 			pitcher = self.homeTeam.lineup.currentPitcher
 			
-			return PlateAppearance(self.inning, self.top, currentPA.endState()[1], batter, pitcher)
+			return PlateAppearance(self.inning, self.top, currentPA.endState, batter, pitcher)
 			
 		elif not self.top:
 		
-			self.homeScore += currentPA.endState()[0]
+			self.homeScore += currentPA.runs
 			batter = self.homeTeam.lineup.newBatter()
 			pitcher = self.awayTeam.lineup.currentPitcher
 			
-			return PlateAppearance(self.inning, self.top, currentPA.endState()[1], batter, pitcher)
+			return PlateAppearance(self.inning, self.top, currentPA.endState, batter, pitcher)
 			
 	def playInning(self):
 		
@@ -240,7 +232,7 @@ class Game(object):
 					self.complete = True
 					return True
 			
-			if currentPA.endState()[1].outs == 3:
+			if currentPA.endState.outs == 3:
 			
 				if not self.top:
 					self.inning += 1
