@@ -109,12 +109,21 @@ class Lineup(object):
 		
 class Team(object):
 
-	def __init__(self):
+	def __init__(self, nickname, location, lineup):
 	
-		self.nickname = None
-		self.location = None
-		self.stadium = None
-		self.lineup = Lineup.random()
+		self.nickname = nickname
+		self.location = location
+		self.lineup = lineup
+		
+	def dummy(cls):
+	
+		nickname = "{0}ers".format(random.randint(0,100))
+		location = "Place{0}".format(random.randint(0,100))
+		lineup = Lineup.dummy()
+		
+		inst = cls(nickname, location, lineup)
+		
+		return inst
 		
 	def __str__(self):
 	
