@@ -98,7 +98,13 @@ class PlateAppearance(object):
 		self.baseState = baseState
 		self.batter = batter
 		self.pitcher = pitcher
-		self.transitions = transitions[baseState.getState()]
+		
+		if baseState.outs == 3:
+			self.transitions = [None,]
+		
+		else:
+			self.transitions = transitions[baseState.getState()]
+			
 		self.matchup = Matchup(batter.ratings.batting, pitcher.ratings.pitching)
 		self.event = Event(self.matchup.genResult())
 	
@@ -167,7 +173,7 @@ class Game(object):
 		self.startTime = datetime.datetime.now()
 		self.complete = False
 		
-	def iterate(currentPA):
+	def iterate(self, currentPA):
 	
 		self.PAs.append(currentPA)
 		
@@ -186,3 +192,32 @@ class Game(object):
 			pitcher = self.awayTeam.lineup.currentPitcher
 			
 			return PlateAppearance(self.inning, currentPA.endState()[1], batter, pitcher)
+			
+	def playInning(self):
+			
+		if self.top:
+
+			batter = self.awayTeam.lineup.newBatter()
+			pitcher = self.homeTeam.lineup.currentPitcher
+		
+		elif not self.top:
+		
+			batter = self.homeTeam.lineup.newBatter()
+			pitcher = self.awayTeam.lineup.currentPitcher
+		
+		currentPA = PlateAppearance(self.inning, BaseOutState(), batter, pitcher)
+		
+		while True:
+		
+			currentPA = iterate(currentPA)
+			
+			if currentPA.baseState.outs == 3:
+			
+				if not self.top:
+					self.inning += 1
+					self.top = not self.top
+					
+				elif self.top:
+					self.top = not self.top
+					
+				return True

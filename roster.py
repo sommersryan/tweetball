@@ -57,6 +57,7 @@ class Lineup(object):
 	
 		self.battingOrder = []
 		self.pitchers = []
+		self.currentPitcher = None
 		self.atBat = 0
 		self.onDeck = 1
 		
