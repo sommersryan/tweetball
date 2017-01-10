@@ -303,6 +303,6 @@ class Game(object):
 	
 		for i in self.PAs:
 		
-			print(i)
+			print('Top ' if i.top else 'Bot ', i.inning, " | ", i)
 			
 		return True
