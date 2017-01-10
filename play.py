@@ -240,7 +240,7 @@ class Game(object):
 					self.complete = True
 					return True
 			
-			if currentPA.baseState.outs == 3:
+			if currentPA.endState()[1].outs == 3:
 			
 				if not self.top:
 					self.inning += 1
