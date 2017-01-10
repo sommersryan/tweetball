@@ -52,7 +52,7 @@ class Event(object):
 		outs = [
 					"lines out to {0}".format(random.choice(infield + outfield)),
 					"flies out to {0}".format(random.choice(outfield)),
-					"grounds out to {0}".format(random.choice(infield),
+					"grounds out to {0}".format(random.choice(infield))
 				]
 				
 		strings = {
