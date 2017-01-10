@@ -53,10 +53,10 @@ class Player(object):
 		self.ratings = Ratings()
 		
 	@classmethod
-	def fake(cls)
+	def fake(cls):
 	
 		id = random.randint(111111,999999)
-		user = 'Player{0}'.format(random.randint(1,1000)
+		user = 'Player{0}'.format(random.randint(1,1000))
 		twitterUser = {'id' : id, 'screenname' : user }
 		inst = cls(twitterUser)
 		
@@ -114,7 +114,8 @@ class Team(object):
 		self.nickname = nickname
 		self.location = location
 		self.lineup = lineup
-		
+	
+	@classmethod
 	def dummy(cls):
 	
 		nickname = "{0}ers".format(random.randint(0,100))
