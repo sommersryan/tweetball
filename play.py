@@ -154,6 +154,8 @@ class PlateAppearance(object):
 					choice = True
 					break
 		
+		self.narratives.append("{0} {1}".format(self.batter.name, self.event.narrative))
+		
 		self.endState = self.advanceRunners(endBases, self.runs)
 		
 	def advanceRunners(self, newBases, runs):
@@ -167,21 +169,25 @@ class PlateAppearance(object):
 		
 		for i in range(0, runs):
 			
-			self.narratives += ["{0} scores".format(str(runners.pop()))]
+			self.narratives += ["{0} scores.".format(str(runners.pop()))]
 		
 		if len(runners) > 0:
 		
 			if '3' in str(newBases[0]):
 			
 				newState.third = runners.pop()
-				self.narratives += ["{0} to third.".format(str(newState.third))]
+				
+				if newState.third != oldState.third:
+					self.narratives += ["{0} to third.".format(str(newState.third))]
 				
 		if len(runners) > 0:
 		
 			if '2' in str(newBases[0]):
 			
 				newState.second = runners.pop()
-				self.narratives += ["{0} to second.".format(str(newState.second))]
+				
+				if newState.second != oldState.second:
+					self.narratives += ["{0} to second.".format(str(newState.second))]
 				
 		if len(runners) > 0:
 		
