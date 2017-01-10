@@ -108,7 +108,12 @@ class PlateAppearance(object):
 			self.transitions = transitions[baseState.getState()]
 			
 		self.matchup = Matchup(batter.ratings.batting, pitcher.ratings.pitching)
-		self.event = Event(self.matchup.genResult())
+		self.outcome = False
+		
+		while not self.outcome:
+		
+			self.event = Event(self.matchup.genResult())
+			self.outcome = self.endState()
 	
 	def advanceRunners(self, newBases, runs):
 		
@@ -151,6 +156,7 @@ class PlateAppearance(object):
 	def endState(self):
 	
 		states = random.sample(self.transitions, len(self.transitions))
+		choice = False
 		
 		for i in states:
 		
@@ -159,6 +165,9 @@ class PlateAppearance(object):
 				choice = i
 				break
 				
+		if not choice:
+			return False
+		
 		runs = choice[2]
 		newBases = self.advanceRunners(choice[0][0], runs)
 		newBases.outs = choice[0][1]
