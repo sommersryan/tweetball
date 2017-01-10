@@ -64,11 +64,11 @@ class Player(object):
 		
 class Lineup(object):
 
-	def __init__(self):
+	def __init__(self, battingOrder, pitchers):
 	
-		self.battingOrder = []
-		self.pitchers = []
-		self.currentPitcher = None
+		self.battingOrder = battingOrder
+		self.pitchers = pitchers
+		self.currentPitcher = pitchers[0]
 		self.atBat = 0
 		self.onDeck = 1
 		
@@ -79,9 +79,21 @@ class Lineup(object):
 	@classmethod
 	def dummy(cls):
 		
+		bOrder = []
+		pitchers = []
 		
+		for i in range(0,9):
+		
+			bOrder.append(Player.fake())
+			
+		for i in range(0,4):
 	
-	
+			pitchers.append(Player.fake())
+			
+		inst = cls(bOrder, pitchers)
+		
+		return inst
+		
 	def newBatter(self):
 		
 		nb = self.battingOrder[self.onDeck]
