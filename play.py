@@ -169,7 +169,7 @@ class PlateAppearance(object):
 		
 		for i in range(0, runs):
 			
-			self.narratives += ["{0} scores.".format(str(runners.pop()))]
+			self.narratives += ["{0} scores".format(str(runners.pop()))]
 		
 		if len(runners) > 0:
 		
@@ -178,7 +178,7 @@ class PlateAppearance(object):
 				newState.third = runners.pop()
 				
 				if newState.third != oldState.third:
-					self.narratives += ["{0} to third.".format(str(newState.third))]
+					self.narratives += ["{0} to third".format(str(newState.third))]
 				
 		if len(runners) > 0:
 		
@@ -187,7 +187,7 @@ class PlateAppearance(object):
 				newState.second = runners.pop()
 				
 				if newState.second != oldState.second:
-					self.narratives += ["{0} to second.".format(str(newState.second))]
+					self.narratives += ["{0} to second".format(str(newState.second))]
 				
 		if len(runners) > 0:
 		
