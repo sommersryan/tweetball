@@ -165,7 +165,7 @@ class PlateAppearance(object):
 		newState.outs = newBases[1]
 		runners = oldState.queue()
 		
-		runners += [self.batter]
+		runners.insert(0, self.batter)
 		
 		for i in range(0, runs):
 			
