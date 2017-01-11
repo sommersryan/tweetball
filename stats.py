@@ -39,7 +39,9 @@ class LineScore(object):
 		return env.get_template('box.html').render(header = header, tops = self.tops, 
 									bottoms = self.bottoms, awayTeam = self.awayTeam, 
 									homeTeam = self.homeTeam)
-		
+	
 class BoxScore(object):
 
-	pass
+	def __init__(self, game):
+	
+		pass
