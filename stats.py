@@ -1,5 +1,6 @@
 from collections import Counter
 from itertools import groupby
+from jinja2 import Environment, FileSystemLoader
 
 class LineScore(object):
 
@@ -26,11 +27,12 @@ class LineScore(object):
 
 	def html(self):
 		
-		cols = len(self.bottoms)
+		env = Environment(loader = FileSystemLoader('/'), trim_blocks = True)
 		
+		cols = len(self.bottoms)
 		header = [i for i in range(1, cols+1)]
 		
-		return render_template('box.html', header=header, tops=self.tops, bottoms=self.bottoms)
+		return env.get_template('box.html').render(header = header, tops = self.tops, bottoms = self.bottoms, awayTeam = self.awayTeam, homeTeam = self.homeTeam)
 		
 class BoxScore(object):
 
