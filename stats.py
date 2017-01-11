@@ -26,23 +26,11 @@ class LineScore(object):
 
 	def html(self):
 		
-		cols = max(len(self.tops), len(self.bottoms))
-		header = "<th>TEAM</th>"
+		cols = len(self.bottoms)
 		
-		for i in range(1, cols+1):
-			header += "<th>{0}</th>".format(i)
+		header = [i for i in range(1, cols+1)]
 		
-		awayLine = "<td>{0}</td>".format(self.awayTeam)
-		
-		for i in self.tops:
-			awayLine += "<td>{0}</td>".format(i)
-			
-		homeLine = "<td>{0}</td>".format(self.homeTeam)
-		
-		for i in self.bottoms:
-			homeLine += "<td>{0}</td>".format(i)
-			
-		return "<table><tr>{0}</tr><tr>{1}</tr><tr>{2}</tr></table>".format(header, awayLine, homeLine)
+		return render_template('box.html', header=header, tops=self.tops, bottoms=self.bottoms)
 		
 class BoxScore(object):
 
