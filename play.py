@@ -196,9 +196,13 @@ class PlateAppearance(object):
 				newState.first = runners.pop()	
 
 		if self.event.batterOut:
-		
-			runners.pop()
-			
+			try: 
+				runners.pop()
+			except IndexError:
+				print(oldState)
+				print(newBases)
+				print(oldState.queue())
+				
 		return newState
 		
 	def __str__(self):
