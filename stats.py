@@ -55,10 +55,25 @@ class BoxScore(object):
 		
 			self.batters[pa.batter][pa.event.type] += 1
 			self.batters[pa.batter]['RBI'] += pa.runs
+			self.batters[pa.batter]['PA'] += 1
+			
+			if pa.event.type in ['single', 'double', 'triple', 'HR']:
+				self.batters[pa.batter]['H'] += 1
 			
 			if pa.event.type not in ['BB', 'HBP', 'sacrifice']:
 				self.batters[pa.batter]['AB'] += 1
 		
+		for k in list(self.batters.keys()):
+			
+			self.batters[k]['AVG'] = self.batters[k]['H'] / self.batters[k]['AB']
+			outs = self.batters[k]['inPlayOut'] + self.batters[k]['strikeout']
+			self.batters[k]['OBP'] = (self.batters[k]['PA'] - outs) / self.batters[k]['PA']
+			tb = self.batters[k]['single']
+			tb += self.batters[k]['double'] * 2
+			tb += self.batters[k]['triple'] * 3
+			tb += self.batters[k]['HR'] * 4
+			self.batters[k]['SLG'] = tb / self.batters[k]['AB']
+			
 class PlayerStats(object):
 
 	pass
