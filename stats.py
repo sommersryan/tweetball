@@ -43,5 +43,22 @@ class LineScore(object):
 class BoxScore(object):
 
 	def __init__(self, game):
-	
-		pass
+		
+		bList = game.homeTeam.lineup.battingOrder + game.awayTeam.lineup.battingOrder
+		self.batters = {}
+
+		for b in bList:
+		
+			self.batters.update({ b : Counter() })
+			
+		for pa in game.PAs:
+		
+			self.batters[pa.batter][pa.event.type] += 1
+			self.batters[pa.batter]['RBI'] += pa.runs
+			
+			if pa.event.type not in ['BB', 'HBP', 'sacrifice']:
+				self.batters[pa.batter]['AB'] += 1
+		
+class PlayerStats(object):
+
+	pass
