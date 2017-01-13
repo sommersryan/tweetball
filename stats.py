@@ -29,17 +29,6 @@ class LineScore(object):
 		self.awayScore = game.awayScore
 		self.homeScore = game.homeScore
 
-	def html(self):
-		
-		env = Environment(loader = FileSystemLoader(os.getcwd()), trim_blocks = True)
-		
-		cols = len(self.tops)
-		header = [i for i in range(1, cols+1)]
-		
-		return env.get_template('box.html').render(header = header, tops = self.tops, 
-									bottoms = self.bottoms, awayTeam = self.awayTeam, 
-									homeTeam = self.homeTeam)
-	
 class BoxScore(object):
 
 	def __init__(self, game):
@@ -49,6 +38,8 @@ class BoxScore(object):
 		
 		self.batters = {}
 		self.pitchers = {}
+		
+		self.linescore = LineScore(game)
 		
 		for b in bList:
 		
@@ -103,7 +94,26 @@ class BoxScore(object):
 				
 				self.pitchers[k]['IP'] = ip
 				self.pitchers[k]['RA'] = (self.pitchers[k]['R'] / self.pitchers[k]['IP']) * 9
+
+	def html(self):
 		
+		env = Environment(loader = FileSystemLoader(os.getcwd()), trim_blocks = True)
+		
+		cols = len(self.linescore.tops)
+		header = [i for i in range(1, cols+1)]
+		
+		kwargs = {
+					'header' : header
+					'tops' : self.linescore.tops
+					'bottoms' : self.linescore.bottoms
+					'awayTeam' : self.linescore.awayTeam
+					'homeTeam' : self.linescore.homeTeam
+					'batters' : self.batters
+					'pitchers' : self.pitchers
+				}
+		
+		return env.get_template('box.html').render(**kwargs)
+	
 class PlayerStats(object):
 
 	pass
