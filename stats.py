@@ -45,24 +45,35 @@ class BoxScore(object):
 	def __init__(self, game):
 		
 		bList = game.homeTeam.lineup.battingOrder + game.awayTeam.lineup.battingOrder
+		pList = game.homeTeam.lineup.pitchers + game.awayTeam.lineup.pitchers
+		
 		self.batters = {}
-
+		self.pitchers = {}
+		
 		for b in bList:
 		
 			self.batters.update({ b : Counter() })
 			
+		for p in pList:
+
+			self.pitchers.update({ p : Counter() })
+			
 		for pa in game.PAs:
 		
+			self.pitchers[pa.pitcher][pa.event.type] += 1
 			self.batters[pa.batter][pa.event.type] += 1
 			self.batters[pa.batter]['RBI'] += pa.runs
+			self.pitchers[pa.pitcher]['R'] += pa.runs
 			self.batters[pa.batter]['PA'] += 1
+			self.pitchers[pa.pitcher]['BF'] += 1
 			
 			if pa.event.type in ['single', 'double', 'triple', 'HR']:
 				self.batters[pa.batter]['H'] += 1
+				self.pitchers[pa.pitcher]['H'] += 1
 			
 			if pa.event.type not in ['BB', 'HBP', 'sacrifice']:
 				self.batters[pa.batter]['AB'] += 1
-		
+
 		for k in list(self.batters.keys()):
 			
 			self.batters[k]['AVG'] = self.batters[k]['H'] / self.batters[k]['AB']
@@ -74,6 +85,25 @@ class BoxScore(object):
 			tb += self.batters[k]['HR'] * 4
 			self.batters[k]['SLG'] = tb / self.batters[k]['AB']
 			
+		for k in list(self.pitchers.keys()):
+		
+			pitcherPAs = [a for a in game.PAs if pa.pitcher == k]
+			
+			if len(pitcherPAs) > 0:
+				ip = (pitcherPAs[-1].inning - pitcherPAs[0].inning)
+			
+				if pitcherPAs[-1].endState.outs == 3:
+					ip += 1
+				
+				elif pitcherPAs[-1].endState.outs == 2:
+					ip += 0.6666
+				
+				elif pitcherPAs[-1].endState.outs == 1:
+					ip += 0.3333
+				
+				self.pitchers[k]['IP'] = ip
+				self.pitchers[k]['RA'] = (self.pitchers[k]['R'] / self.pitchers[k]['IP']) * 9
+		
 class PlayerStats(object):
 
 	pass
