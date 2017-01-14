@@ -39,6 +39,12 @@ class BoxScore(object):
 		self.batters = {}
 		self.pitchers = {}
 		
+		self.doubles = Counter()
+		self.triples = Counter()
+		self.HR = Counter()
+		self.hHBP = Counter()
+		self.pHBP = Counter()
+		
 		self.linescore = LineScore(game)
 		
 		for b in bList:
@@ -58,10 +64,23 @@ class BoxScore(object):
 			self.batters[pa.batter]['PA'] += 1
 			self.pitchers[pa.pitcher]['BF'] += 1
 			
+			if pa.event.type = ['double']
+				self.doubles[pa.batter.name] += 1
+				
+			if pa.event.type = ['triple']
+				self.triples[pa.batter.name] += 1
+				
+			if pa.event.type = ['HR']
+				self.HR[pa.batter.name] += 1
+				
+			if pa.event.type = ['HBP']
+				self.hHBP[pa.batter.name] += 1
+				self.pHBP[pa.pitcher.name] += 1
+			
 			if pa.event.type in ['single', 'double', 'triple', 'HR']:
 				self.batters[pa.batter]['H'] += 1
 				self.pitchers[pa.pitcher]['H'] += 1
-			
+
 			if pa.event.type not in ['BB', 'HBP', 'sacrifice']:
 				self.batters[pa.batter]['AB'] += 1
 
@@ -75,7 +94,7 @@ class BoxScore(object):
 			tb += self.batters[k]['triple'] * 3
 			tb += self.batters[k]['HR'] * 4
 			self.batters[k]['SLG'] = tb / self.batters[k]['AB']
-			
+		
 		for k in list(self.pitchers.keys()):
 		
 			pitcherPAs = [a for a in game.PAs if pa.pitcher == k]
@@ -103,12 +122,12 @@ class BoxScore(object):
 		header = [i for i in range(1, cols+1)]
 		
 		kwargs = {
-					'header' : header
-					'tops' : self.linescore.tops
-					'bottoms' : self.linescore.bottoms
-					'awayTeam' : self.linescore.awayTeam
-					'homeTeam' : self.linescore.homeTeam
-					'batters' : self.batters
+					'header' : header,
+					'tops' : self.linescore.tops,
+					'bottoms' : self.linescore.bottoms,
+					'awayTeam' : self.linescore.awayTeam,
+					'homeTeam' : self.linescore.homeTeam,
+					'batters' : self.batters,
 					'pitchers' : self.pitchers
 				}
 		
