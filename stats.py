@@ -3,6 +3,22 @@ from itertools import groupby
 from jinja2 import Environment, FileSystemLoader
 import os
 
+class RateStat(object):
+
+	def __init__(self, rate):
+	
+		self.rate = rate
+		
+	def __str__(self):
+	
+		if self.rate >= 1:
+		
+			return "{:3.3f}".format(self.rate)
+			
+		else:
+		
+			return ".{:03.0f}".format(self.rate * 1000)
+
 class LineScore(object):
 
 	def __init__(self, game):
@@ -23,8 +39,8 @@ class LineScore(object):
 		if len(self.bottoms) < len(self.tops):
 			self.bottoms += ['x']
 		
-		self.awayTeam = game.awayTeam.location
-		self.homeTeam = game.homeTeam.location
+		self.awayTeam = game.awayTeam
+		self.homeTeam = game.homeTeam
 		
 		self.awayScore = game.awayScore
 		self.homeScore = game.homeScore
@@ -64,16 +80,16 @@ class BoxScore(object):
 			self.batters[pa.batter]['PA'] += 1
 			self.pitchers[pa.pitcher]['BF'] += 1
 			
-			if pa.event.type = ['double']
+			if pa.event.type == 'double':
 				self.doubles[pa.batter.name] += 1
 				
-			if pa.event.type = ['triple']
+			if pa.event.type == 'triple':
 				self.triples[pa.batter.name] += 1
 				
-			if pa.event.type = ['HR']
+			if pa.event.type == 'HR':
 				self.HR[pa.batter.name] += 1
 				
-			if pa.event.type = ['HBP']
+			if pa.event.type == 'HBP':
 				self.hHBP[pa.batter.name] += 1
 				self.pHBP[pa.pitcher.name] += 1
 			
@@ -86,14 +102,14 @@ class BoxScore(object):
 
 		for k in list(self.batters.keys()):
 			
-			self.batters[k]['AVG'] = self.batters[k]['H'] / self.batters[k]['AB']
+			self.batters[k]['AVG'] = RateStat(self.batters[k]['H'] / self.batters[k]['AB'])
 			outs = self.batters[k]['inPlayOut'] + self.batters[k]['strikeout']
-			self.batters[k]['OBP'] = (self.batters[k]['PA'] - outs) / self.batters[k]['PA']
+			self.batters[k]['OBP'] = RateStat((self.batters[k]['PA'] - outs) / self.batters[k]['PA'])
 			tb = self.batters[k]['single']
 			tb += self.batters[k]['double'] * 2
 			tb += self.batters[k]['triple'] * 3
 			tb += self.batters[k]['HR'] * 4
-			self.batters[k]['SLG'] = tb / self.batters[k]['AB']
+			self.batters[k]['SLG'] = RateStat(tb / self.batters[k]['AB'])
 		
 		for k in list(self.pitchers.keys()):
 		
@@ -128,7 +144,12 @@ class BoxScore(object):
 					'awayTeam' : self.linescore.awayTeam,
 					'homeTeam' : self.linescore.homeTeam,
 					'batters' : self.batters,
-					'pitchers' : self.pitchers
+					'pitchers' : self.pitchers,
+					'doubles' : self.doubles,
+					'triples' : self.triples,
+					'homers' : self.HR,
+					'hHBP' : self.hHBP,
+					'pHBP' : self.pHBP
 				}
 		
 		return env.get_template('box.html').render(**kwargs)
