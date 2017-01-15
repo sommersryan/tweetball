@@ -1,6 +1,6 @@
-import random, pickle
+import random, pickle, forgery_py
 from league import BAT_DIST, PITCH_DIST
-from utils import percentile
+from utils import percentile, nicknames
 from config import RESULT_TYPES
 from tweet import api
 from storage import playerStore
@@ -50,8 +50,9 @@ class Player(object):
 	def __init__(self, twitterUser):
 		#twitterUser is a tweepy user object
 		self.id = twitterUser.id
-		self.name = "@{0}".format(twitterUser.screen_name)
-		self.fullName = twitterUser.name
+		self.name = twitterUser.screen_name
+		self.fullName = twitterUser.name.encode('UTF-8')
+		self.handle = "@{0}".format(twitterUser.screen_name)
 		self.handedness = random.choice(['L','R','S'])
 		self.uniNumber = random.randint(0,71)
 		self.ratings = Ratings()
@@ -105,11 +106,7 @@ class Lineup(object):
 		self.currentPitcher = pitchers[0]
 		self.atBat = 0
 		self.onDeck = 1
-		
-	def random(self):
-		#load 9 random players and 3 or so pitchers from S3
-		pass
-	
+
 	@classmethod
 	def dummy(cls):
 		
@@ -149,17 +146,33 @@ class Team(object):
 		self.location = location
 		self.lineup = lineup
 	
-	@classmethod
-	def dummy(cls):
-	
-		nickname = "{0}ers".format(random.randint(0,100))
-		location = "Place{0}".format(random.randint(0,100))
-		lineup = Lineup.dummy()
-		
-		inst = cls(nickname, location, lineup)
-		
-		return inst
-		
 	def __str__(self):
 	
 		return "{0} {1}".format(self.location, self.nickname)
+
+def getTeams():
+
+	keys = list(playerStore.list())
+	pool = random.sample(keys,24)
+	homeHitters, homePitchers, awayHitters, awayPitchers = [], [], [], []
+	
+	for i in range(0,9):
+		homeHitters.append(Player.load(pool.pop().key))
+		awayHitters.append(Player.load(pool.pop().key))
+		
+	for i in range(0,3):
+		homePitchers.append(Player.load(pool.pop().key))
+		awayPitchers.append(Player.load(pool.pop().key))
+		
+	homeLoc = forgery_py.address.city()
+	awayLoc = forgery_py.address.city()
+	homeNick = random.choice(nicknames)
+	awayNick = random.choice(nicknames)
+	
+	homeLineup = Lineup(homeHitters, homePitchers)
+	awayLineup = Lineup(awayHitters, awayPitchers)
+	
+	homeTeam = Team(homeNick, homeLoc, homeLineup)
+	awayTeam = Team(awayNick, awayLoc, awayLineup)
+	
+	return(homeTeam, awayTeam)

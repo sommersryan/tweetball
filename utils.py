@@ -254,3 +254,21 @@ transitions = {
 								((None,3),['inPlayOut','strikeout',],0)
 							]
 				}
+				
+nicknames = ['Eagles','Tigers','Bulldogs','Panthers','Wildcats','Warriors',
+'Lions','Cougars','Knights','Mustangs','Falcons','Trojans',
+'Cardinals','Vikings','Pirates','Raiders','Rams','Spartans',
+'Bears','Hornets','Patriots','Hawks','Crusaders','Rebels',
+'Bobcats','Saints','Braves','Blue Devils','Titans','Wolverines',
+'Jaguars','Wolves','Dragons','Pioneers','Chargers','Rockets',
+'Huskies','Red Devils','Yellowjackets','Stars','Comets',
+'Colts','Lancers','Rangers','Broncos','Giants','Senators',
+'Bearcats','Thunder','Royals','Storm','Cowboys','Cubs'
+'Cavaliers','Golden Eagles','Generals','Owls','Buccaneers',
+'Hurricanes','Bruins','Grizzlies','Gators','Bombers',
+'Red Raiders','Flyers','Lakers','Miners','Coyotes','Longhorns',
+'Greyhounds','Beavers','Yellow Jackets','Outlaws','Reds',
+'Highlanders','Sharks','Oilers','Jets','Dodgers','Mountaineers',
+'Red Sox','Thunderbirds','Blazers','Clippers','Aces','Buffaloes',
+'Lightning','Bluejays','Gladiators','Mavericks','Monarchs',
+'Tornadoes','Blues','Cobras','Bulls','Express','Stallions']
