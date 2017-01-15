@@ -1,7 +1,10 @@
-import random
+import random, pickle
 from league import BAT_DIST, PITCH_DIST
 from utils import percentile
 from config import RESULT_TYPES
+from tweet import api
+from storage import playerStore
+from boto.s3.key import Key
 
 class Ratings(object):
 
@@ -46,8 +49,9 @@ class Player(object):
 
 	def __init__(self, twitterUser):
 		#twitterUser is a tweepy user object
-		self.id = twitterUser['id']
-		self.name = twitterUser['screenname']
+		self.id = twitterUser.id
+		self.name = "@{0}".format(twitterUser.screen_name)
+		self.fullName = twitterUser.name
 		self.handedness = random.choice(['L','R','S'])
 		self.uniNumber = random.randint(0,71)
 		self.ratings = Ratings()
@@ -61,10 +65,33 @@ class Player(object):
 		inst = cls(twitterUser)
 		
 		return inst
+	
+	def save(self):
+	
+		k = Key(playerStore)
+		k.key = self.id
+		zipped = pickle.dumps(self)
+		k.set_contents_from_string(zipped)
 		
+	def refresh(self):
+		
+		new = api.get_user(self.id)
+		self.id = new.id
+		self.name = "@{0}".format(new.screen_name)
+		self.fullName = new.name
+		
+		return True
+	
 	def __str__(self):
 	
 		return self.name
+		
+	@staticmethod
+	def load(playerID):
+	
+		k = playerStore.get_key(playerID)
+		raw = k.get_contents_as_string()
+		return pickle.loads(raw)
 		
 class Lineup(object):
 
