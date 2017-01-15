@@ -72,6 +72,9 @@ class Lineup(object):
 	
 		self.battingOrder = battingOrder
 		self.pitchers = pitchers
+		
+		self.pitchers.insert(0, random.choice(battingOrder))
+		
 		self.currentPitcher = pitchers[0]
 		self.atBat = 0
 		self.onDeck = 1
