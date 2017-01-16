@@ -254,6 +254,16 @@ transitions = {
 								((None,3),['inPlayOut','strikeout',],0)
 							]
 				}
+
+emojis = {	'top' : '\U0001F53C',
+			'bottom' : '\U0001F53D',
+			'empty' : '\U0000002A\U0000FE0F\U000020E3',
+			'first' : '\U00000031\U0000FE0F\U000020E3',
+			'second' : '\U00000032\U0000FE0F\U000020E3',
+			'third' : '\U00000033\U0000FE0F\U000020E3',
+			'out' : '\U000026AB',
+			'noOut' : '\U000026AA'
+			}
 				
 nicknames = ['Eagles','Tigers','Bulldogs','Panthers','Wildcats','Warriors',
 'Lions','Cougars','Knights','Mustangs','Falcons','Trojans',
