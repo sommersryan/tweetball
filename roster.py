@@ -51,22 +51,12 @@ class Player(object):
 		#twitterUser is a tweepy user object
 		self.id = twitterUser.id
 		self.name = twitterUser.screen_name
-		self.fullName = twitterUser.name.encode('UTF-8')
+		self.fullName = twitterUser.name
 		self.handle = "@{0}".format(twitterUser.screen_name)
 		self.handedness = random.choice(['L','R','S'])
 		self.uniNumber = random.randint(0,71)
 		self.ratings = Ratings()
-		
-	@classmethod
-	def fake(cls):
-	
-		id = random.randint(111111,999999)
-		user = 'Player{0}'.format(random.randint(1,1000))
-		twitterUser = {'id' : id, 'screenname' : user }
-		inst = cls(twitterUser)
-		
-		return inst
-	
+
 	def save(self):
 	
 		k = Key(playerStore)
@@ -82,6 +72,29 @@ class Player(object):
 		self.fullName = new.name
 		
 		return True
+	
+	def notifyAttributes(self):
+	
+		attrTweet = """{0}\r\n
+					HITTING:\r\n
+					Contact: {1}\r\nPower: {2}\r\nDiscipline: {3}\r\n
+					\r\n
+					PITCHING:\r\n
+					Control: {4}\r\nStuff: {5}\r\nComposure: {6}
+					""".format(self.handle,
+								self.ratings.contact,
+								self.ratings.power,
+								self.ratings.discipline,
+								self.ratings.control,
+								self.ratings.stuff,
+								self.ratings.composure)
+		
+		api.update_status(attrTweet)
+		return True
+		
+	def __repr__(self):
+	
+		return "<Player {0}>".format(self.name)
 	
 	def __str__(self):
 	
@@ -106,22 +119,6 @@ class Lineup(object):
 		self.currentPitcher = pitchers[0]
 		self.atBat = 0
 		self.onDeck = 1
-
-	@classmethod
-	def dummy(cls):
-		
-		bOrder = []
-		pitchers = []
-		
-		for i in range(0,9):
-			bOrder.append(Player.fake())
-			
-		for i in range(0,4):
-			pitchers.append(Player.fake())
-			
-		inst = cls(bOrder, pitchers)
-		
-		return inst
 		
 	def newBatter(self):
 		
