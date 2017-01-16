@@ -239,7 +239,7 @@ class PlateAppearance(object):
 		
 		narrative = str(self)
 		
-		t = "{0} | {1} | {2} | {3}".format(inningString, baseString, outString, narrative)
+		t = "{0} | {1} | {2} |\r\n {3}".format(inningString, baseString, outString, narrative)
 		
 		api.update_status(t)
 		
