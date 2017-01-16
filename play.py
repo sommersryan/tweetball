@@ -1,6 +1,7 @@
 import random, datetime, config
-from utils import baseNarratives, transitions, log5, weightedChoice
+from utils import baseNarratives, transitions, log5, weightedChoice, emojis
 from league import leagueMeans
+from tweet import api
 
 class Matchup(object):
 
@@ -204,13 +205,51 @@ class PlateAppearance(object):
 				print(oldState.queue())
 				
 		return newState
+	
+	def tweetPA(self):
+	
+		if self.top:
+			half = emojis['top']
+		else:
+			half = emojis['bottom']
+			
+		inningString = "{0}{1}".format(half, self.inning)
+		baseString = ""
 		
+		if self.baseState.first:
+			baseString += emojis['first']
+			
+		else:
+			baseString += emojis['empty']
+			
+		if self.baseState.second:
+			baseString += emojis['second']
+		
+		else:
+			baseString += emojis['empty']
+			
+		if self.baseState.third:
+			baseString += emojis['third']
+			
+		else:
+			baseString += emojis['empty']
+		
+		outString = emojis['out'] * self.baseState.outs
+		outString += emojis['noOut'] * (3 - self.baseState.outs)
+		
+		narrative = str(self)
+		
+		t = "{0} | {1} | {2} | {3}".format(inningString, baseString, outString, narrative)
+		
+		api.update_status(t)
+		
+		return True
+	
 	def __str__(self):
 	
-		preamble = "With {0}".format(self.baseState)
 		description = '. '.join(self.narratives)
 		
-		return "{0}, {1}".format(preamble, description)
+		return "{0}".format(description)
 	
 class Game(object):
 
