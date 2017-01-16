@@ -235,7 +235,7 @@ class PlateAppearance(object):
 			baseString += emojis['empty']
 		
 		outString = emojis['out'] * self.baseState.outs
-		outString += emojis['noOut'] * (3 - self.baseState.outs)
+		outString += emojis['noOut'] * (2 - self.baseState.outs)
 		
 		narrative = str(self)
 		

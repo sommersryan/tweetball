@@ -1,5 +1,8 @@
 import os
 
+#PA time in seconds
+PA_TIME = 134
+
 #Possible outcomes of a plate appearance
 RESULT_TYPES = ['single','double','triple','HR','strikeout','BB','HBP','inPlayOut','GDP','sacrifice','error']
 
