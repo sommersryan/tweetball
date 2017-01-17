@@ -64,6 +64,8 @@ class Player(object):
 		zipped = pickle.dumps(self)
 		k.set_contents_from_string(zipped)
 		
+		return True
+		
 	def refresh(self):
 		
 		new = api.get_user(self.id)
