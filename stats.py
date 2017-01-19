@@ -158,7 +158,7 @@ class BoxScore(object):
 	
 	def save(self):
 		
-		n = '{:%Y%m%d}'.format(datetime.utcnow())
+		n = '{:%Y%m%d}.html'.format(datetime.utcnow())
 		k = boxScoreBucket.new_key(n)
 		k.set_contents_from_string(self.html().encode('utf-8'))
 		k.set_canned_acl('public-read')
