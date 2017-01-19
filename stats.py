@@ -113,7 +113,7 @@ class BoxScore(object):
 		
 		for k in list(self.pitchers.keys()):
 		
-			pitcherPAs = [a for a in game.PAs if pa.pitcher == k]
+			pitcherPAs = [a for a in game.PAs if a.pitcher == k]
 			
 			if len(pitcherPAs) > 0:
 				ip = (pitcherPAs[-1].inning - pitcherPAs[0].inning)
