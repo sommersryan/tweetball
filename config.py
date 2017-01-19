@@ -9,8 +9,9 @@ RESULT_TYPES = ['single','double','triple','HR','strikeout','BB','HBP','inPlayOu
 #Twitter accounts for testing use
 TEST_ACCOUNTS = ['FoodNetwork', 'WWENetwork', 'nflnetwork', 'OnionSports', 'CNN', 'FoxNews', 'maddow', 'MSNBC', 'AV_Newswire']
 
-#S3 Bucket to store players
+#S3 Buckets
 PLAYERS_BUCKET = os.environ.get('PLAYERS_BUCKET')
+BOXSCORE_BUCKET = os.environ.get('BOXSCORE_BUCKET')
 
 #Twitter and S3 keys
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID") or ''

@@ -1,6 +1,8 @@
 from collections import Counter
 from itertools import groupby
 from jinja2 import Environment, FileSystemLoader
+from storage import boxScoreBucket
+from datetime import datetime
 import os
 
 class RateStat(object):
@@ -153,6 +155,17 @@ class BoxScore(object):
 				}
 		
 		return env.get_template('box.html').render(**kwargs)
+	
+	def save(self):
+		
+		n = '{:%Y%m%d}'.format(datetime.utcnow())
+		k = boxScoreBucket.new_key(n)
+		k.set_contents_from_string(self.html().encode('utf-8'))
+		k.set_canned_acl('public-read')
+		
+		url = k.generate_url(expires_in=0, query_auth=False)
+		
+		return url
 	
 class PlayerStats(object):
 
