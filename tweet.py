@@ -8,13 +8,13 @@ api = tweepy.API(auth)
 
 class GameTweeter(object):
 
-	def __init__(game):
+	def __init__(self, game):
 	
 		self.game = game
 		
 		sortWPA = sorted(game.PAs, key = lambda x: abs(x.wpa))
 		
-		self.threshold = sortWPA[-NUM_PAS]
+		self.threshold = sortWPA[-NUM_PAS].wpa
 		
 	def execute(self):
 	

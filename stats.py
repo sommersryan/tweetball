@@ -56,27 +56,44 @@ class BoxScore(object):
 		
 		for batter in game.awayTeam.lineup.battingOrder:
 		
-			batter.battingGameStats['AVG'] = batter.battingGameStats['H'] / batter.battingGameStats['AB']
-			batter.battingGameStats['OBP'] = 1 - ((batter.battingGameStats['strikeout'] + batter.battingGameStats['inPlayOut']) / batter.battingGameStats['PA'])
+			batter.battingGameStats['AVG'] = RateStat(batter.battingGameStats['H'] / batter.battingGameStats['AB'])
+			batter.battingGameStats['OBP'] = RateStat(1 - ((batter.battingGameStats['strikeout'] + batter.battingGameStats['inPlayOut']) / batter.battingGameStats['PA']))
 			tb = batter.battingGameStats['single']
 			tb += (batter.battingGameStats['double'] * 2)
 			tb += (batter.battingGameStats['triple'] * 3)
 			tb += (batter.battingGameStats['HR'] * 4)
 			
-			batter.battingGameStats['SLG'] = tb / batter.battingGameStats['AB']
+			batter.battingGameStats['SLG'] = RateStat(tb / batter.battingGameStats['AB'])
 			
 		for batter in game.homeTeam.lineup.battingOrder:
 		
-			batter.battingGameStats['AVG'] = batter.battingGameStats['H'] / batter.battingGameStats['AB']
-			batter.battingGameStats['OBP'] = 1 - ((batter.battingGameStats['strikeout'] + batter.battingGameStats['inPlayOut']) / batter.battingGameStats['PA'])
+			batter.battingGameStats['AVG'] = RateStat(batter.battingGameStats['H'] / batter.battingGameStats['AB'])
+			batter.battingGameStats['OBP'] = RateStat(1 - ((batter.battingGameStats['strikeout'] + batter.battingGameStats['inPlayOut']) / batter.battingGameStats['PA']))
 			tb = batter.battingGameStats['single']
 			tb += (batter.battingGameStats['double'] * 2)
 			tb += (batter.battingGameStats['triple'] * 3)
 			tb += (batter.battingGameStats['HR'] * 4)
 			
-			batter.battingGameStats['SLG'] = tb / batter.battingGameStats['AB']
+			batter.battingGameStats['SLG'] = RateStat(tb / batter.battingGameStats['AB'])
 		
-		for pitcher in game.awayTeam.pitchers:
+		for pitcher in game.awayTeam.lineup.pitchers:
+		
+			if pitcher.pitchingGameStats['BF'] > 0:
+			
+				pitcher.pitchingGameStats['RA'] = (pitcher.pitchingGameStats['R'] / float(pitcher.pitchingGameStats['IP'])) * 9
+					
+			ip = pitcher.pitchingGameStats['IP'].__floor__()
+			r = pitcher.pitchingGameStats['IP'] - ip
+			
+			if r.numerator == 1:
+				ip += .1
+				
+			if r.numerator == 2:
+				ip += .2
+					
+			pitcher.pitchingGameStats['printIP'] = ip
+			
+		for pitcher in game.homeTeam.lineup.pitchers:
 		
 			if pitcher.pitchingGameStats['BF'] > 0:
 			
@@ -122,7 +139,3 @@ class BoxScore(object):
 		url = k.generate_url(expires_in=0, query_auth=False)
 		
 		return url
-	
-class PlayerStats(object):
-
-	pass
