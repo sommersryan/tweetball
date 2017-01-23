@@ -57,8 +57,10 @@ class Player(object):
 		self.handedness = random.choice(['L','R','S'])
 		self.uniNumber = random.randint(0,71)
 		self.ratings = Ratings()
-		self.gameStats = Counter()
-		self.careerStats = Counter()
+		self.pitchingGameStats = Counter()
+		self.battingGameStats = Counter()
+		self.pitchingCareerStats = Counter()
+		self.battingCareerStats = Counter()
 
 	def save(self):
 	
