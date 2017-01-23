@@ -29,13 +29,13 @@
 		<table class="table table-bordered table-sm">
 			<thead><tr><th>Batter</th><th>AB</th><th>H</th><th>RBI</th><th>BB</th><th>SO</th><th>AVG</th><th>OBP</th><th>SLG</th></tr></thead>
 			{% for batter in awayTeam.lineup.battingOrder %}
-			<tr><td><a href="https://twitter.com/{{ batter.name }}">{{ batter.fullName }}</a></td><td>{{ batters[batter]['AB'] }}</td><td>{{ batters[batter]['H'] }}</td><td>{{ batters[batter]['RBI'] }}</td><td>{{ batters[batter]['BB'] }}</td><td>{{ batters[batter]['strikeout'] }}</td><td>{{ batters[batter]['AVG'] }}</td><td>{{ batters[batter]['OBP'] }}</td><td>{{ batters[batter]['SLG'] }}</td></tr>
+			<tr><td><a href="https://twitter.com/{{ batter.name }}">{{ batter.fullName }}</a></td><td>{{ batter.battingGameStats['AB'] }}</td><td>{{ batter.battingGameStats['H'] }}</td><td>{{ batter.battingGameStats['RBI'] }}</td><td>{{ batter.battingGameStats['BB'] }}</td><td>{{ batter.battingGameStats['strikeout'] }}</td><td>{{ batter.battingGameStats['AVG'] }}</td><td>{{ batter.battingGameStats['OBP'] }}</td><td>{{ batter.battingGameStats['SLG'] }}</td></tr>
 			{% endfor %}
 		</table>
-		<p><strong>| 2B:</strong> {% for batter in awayTeam.lineup.battingOrder %}{% if doubles[batter.name] == 1 %}{{ batter.fullName }}; {% elif doubles[batter.name] > 1 %} {{ batter.fullName }} ({{ doubles[batter.name] }}); {% endif %}{% endfor %} | 
-		<strong>3B:</strong> {% for batter in awayTeam.lineup.battingOrder %}{% if triples[batter.name] == 1 %}{{ batter.fullName }}; {% elif triples[batter.name] > 1 %} {{ batter.fullName }} ({{ triples[batter.name] }}); {% endif %}{% endfor %} | 
-		<strong>HR:</strong> {% for batter in awayTeam.lineup.battingOrder %}{% if homers[batter.name] == 1 %}{{ batter.fullName }}; {% elif homers[batter.name] > 1 %} {{ batter.fullName }} ({{ homers[batter.name] }}); {% endif %}{% endfor %} | 
-		<strong>HBP:</strong> {% for batter in awayTeam.lineup.battingOrder %}{% if hHBP[batter.name] == 1 %}{{ batter.fullName }}; {% elif hHBP[batter.name] > 1 %} {{ batter.fullName }} ({{ hHBP[batter.name] }}); {% endif %}{% endfor %} | </p>
+		<p><strong>| 2B:</strong> {% for batter in awayTeam.lineup.battingOrder %}{% if batter.battingGameStats['double'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['double'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['double'] }}); {% endif %}{% endfor %} | 
+		<strong>3B:</strong> {% for batter in awayTeam.lineup.battingOrder %}{% if batter.battingGameStats['triple'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['triple'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['triple'] }}); {% endif %}{% endfor %} | 
+		<strong>HR:</strong> {% for batter in awayTeam.lineup.battingOrder %}{% if batter.battingGameStats['HR'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['HR'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['HR'] }}); {% endif %}{% endfor %} | 
+		<strong>HBP:</strong> {% for batter in awayTeam.lineup.battingOrder %}{% if batter.battingGameStats['HBP'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['HBP'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['HBP'] }}); {% endif %}{% endfor %} | </p>
 	</div>
 	</div>
 	<div class="row">
@@ -44,7 +44,7 @@
 		<table class="table table-bordered table-sm">
 			<thead><tr><th>Pitcher</th><th>IP</th><th>H</th><th>R</th><th>BB</th><th>SO</th><th>HR</th><th>BF</th></tr></thead>
 			{% for pitcher in awayTeam.lineup.pitchers %}
-			{% if pitchers[pitcher]['BF'] > 0 %}<tr><td><a href="https://twitter.com/{{ pitcher.name }}">{{ pitcher.fullName }}</a></td><td>{{ pitchers[pitcher]['IP'] }}</td><td>{{ pitchers[pitcher]['H'] }}</td><td>{{ pitchers[pitcher]['R'] }}</td><td>{{ pitchers[pitcher]['BB'] }}</td><td>{{ pitchers[pitcher]['strikeout'] }}</td><td>{{ pitchers[pitcher]['HR'] }}</td><td>{{ pitchers[pitcher]['BF'] }}</td></tr>{% endif%}
+			{% if pitcher.pitchingGameStats['BF'] > 0 %}<tr><td><a href="https://twitter.com/{{ pitcher.name }}">{{ pitcher.fullName }}</a></td><td>{{ pitcher.pitchingGameStats['IP'] }}</td><td>{{ pitcher.pitchingGameStats['H'] }}</td><td>{{ pitcher.pitchingGameStats['R'] }}</td><td>{{ pitcher.pitchingGameStats['BB'] }}</td><td>{{ pitcher.pitchingGameStats['strikeout'] }}</td><td>{{ pitcher.pitchingGameStats['HR'] }}</td><td>{{ pitcher.pitchingGameStats['BF'] }}</td></tr>{% endif%}
 			{% endfor %}
 		</table>
 	</div>
@@ -56,13 +56,13 @@
 		<table class="table table-bordered table-sm">
 			<thead><tr><th>Batter</th><th>AB</th><th>H</th><th>RBI</th><th>BB</th><th>SO</th><th>AVG</th><th>OBP</th><th>SLG</th></tr></thead>
 			{% for batter in homeTeam.lineup.battingOrder %}
-			<tr><td><a href="https://twitter.com/{{ batter.name }}">{{ batter.fullName }}</a></td><td>{{ batters[batter]['AB'] }}</td><td>{{ batters[batter]['H'] }}</td><td>{{ batters[batter]['RBI'] }}</td><td>{{ batters[batter]['BB'] }}</td><td>{{ batters[batter]['strikeout'] }}</td><td>{{ batters[batter]['AVG'] }}</td><td>{{ batters[batter]['OBP'] }}</td><td>{{ batters[batter]['SLG'] }}</td></tr>
+			<tr><td><a href="https://twitter.com/{{ batter.name }}">{{ batter.fullName }}</a></td><td>{{ batter.battingGameStats['AB'] }}</td><td>{{ batter.battingGameStats['H'] }}</td><td>{{ batter.battingGameStats['RBI'] }}</td><td>{{ batter.battingGameStats['BB'] }}</td><td>{{ batter.battingGameStats['strikeout'] }}</td><td>{{ batter.battingGameStats['AVG'] }}</td><td>{{ batter.battingGameStats['OBP'] }}</td><td>{{ batter.battingGameStats['SLG'] }}</td></tr>
 			{% endfor %}
 		</table>
 		<p><strong>| 2B:</strong> {% for batter in homeTeam.lineup.battingOrder %}{% if doubles[batter.name] == 1 %}{{ batter.fullName }}; {% elif doubles[batter.name] > 1 %} {{ batter.fullName }} ({{ doubles[batter.name] }}); {% endif %}{% endfor %} | 
-		<strong>3B:</strong> {% for batter in homeTeam.lineup.battingOrder %}{% if triples[batter.name] == 1 %}{{ batter.fullName }}; {% elif triples[batter.name] > 1 %} {{ batter.fullName }} ({{ triples[batter.name] }}); {% endif %}{% endfor %} | 
-		<strong>HR:</strong> {% for batter in homeTeam.lineup.battingOrder %}{% if homers[batter.name] == 1 %}{{ batter.fullName }}; {% elif homers[batter.name] > 1 %} {{ batter.fullName }} ({{ homers[batter.name] }}); {% endif %}{% endfor %} | 
-		<strong>HBP:</strong> {% for batter in homeTeam.lineup.battingOrder %}{% if hHBP[batter.name] == 1 %}{{ batter.fullName }}; {% elif hHBP[batter.name] > 1 %} {{ batter.fullName }} ({{ hHBP[batter.name] }}); {% endif %}{% endfor %} | </p>
+		<strong>3B:</strong> {% for batter in homeTeam.lineup.battingOrder %}{% if batter.battingGameStats['triple'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['triple'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['triple'] }}); {% endif %}{% endfor %} | 
+		<strong>HR:</strong> {% for batter in homeTeam.lineup.battingOrder %}{% if batter.battingGameStats['HR'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['HR'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['HR'] }}); {% endif %}{% endfor %} | 
+		<strong>HBP:</strong> {% for batter in homeTeam.lineup.battingOrder %}{% if batter.battingGameStats['HBP'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['HBP'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['HBP'] }}); {% endif %}{% endfor %} | </p>
 	</div>
 	</div>
 	<div class="row">
@@ -71,7 +71,7 @@
 		<table class="table table-bordered table-sm">
 			<thead><tr><th>Pitcher</th><th>IP</th><th>H</th><th>R</th><th>BB</th><th>SO</th><th>HR</th><th>BF</th></tr></thead>
 			{% for pitcher in homeTeam.lineup.pitchers %}
-			{% if pitchers[pitcher]['BF'] > 0 %}<tr><td><a href="https://twitter.com/{{ pitcher.name }}">{{ pitcher.fullName }}</a></td><td>{{ pitchers[pitcher]['IP'] }}</td><td>{{ pitchers[pitcher]['H'] }}</td><td>{{ pitchers[pitcher]['R'] }}</td><td>{{ pitchers[pitcher]['BB'] }}</td><td>{{ pitchers[pitcher]['strikeout'] }}</td><td>{{ pitchers[pitcher]['HR'] }}</td><td>{{ pitchers[pitcher]['BF'] }}</td></tr>{% endif%}
+			{% if pitcher.pitchingGameStats['BF'] > 0 %}<tr><td><a href="https://twitter.com/{{ pitcher.name }}">{{ pitcher.fullName }}</a></td><td>{{ pitcher.pitchingGameStats['IP'] }}</td><td>{{ pitcher.pitchingGameStats['H'] }}</td><td>{{ pitcher.pitchingGameStats['R'] }}</td><td>{{ pitcher.pitchingGameStats['BB'] }}</td><td>{{ pitcher.pitchingGameStats['strikeout'] }}</td><td>{{ pitcher.pitchingGameStats['HR'] }}</td><td>{{ pitcher.pitchingGameStats['BF'] }}</td></tr>{% endif%}
 			{% endfor %}
 		</table>
 	</div>
