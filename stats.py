@@ -51,87 +51,48 @@ class BoxScore(object):
 
 	def __init__(self, game):
 		
-		bList = game.homeTeam.lineup.battingOrder + game.awayTeam.lineup.battingOrder
-		pList = game.homeTeam.lineup.pitchers + game.awayTeam.lineup.pitchers
-		
-		self.batters = {}
-		self.pitchers = {}
-		
-		self.doubles = Counter()
-		self.triples = Counter()
-		self.HR = Counter()
-		self.hHBP = Counter()
-		self.pHBP = Counter()
-		
+		self.game = game
 		self.linescore = LineScore(game)
 		
-		for b in bList:
+		for batter in game.awayTeam.lineup.battingOrder:
 		
-			self.batters.update({ b : Counter() })
+			batter.battingGameStats['AVG'] = batter.battingGameStats['H'] / batter.battingGameStats['AB']
+			batter.battingGameStats['OBP'] = 1 - ((batter.battingGameStats['strikeout'] + batter.battingGameStats['inPlayOut']) / batter.battingGameStats['PA'])
+			tb = batter.battingGameStats['single']
+			tb += (batter.battingGameStats['double'] * 2)
+			tb += (batter.battingGameStats['triple'] * 3)
+			tb += (batter.battingGameStats['HR'] * 4)
 			
-		for p in pList:
-
-			self.pitchers.update({ p : Counter() })
+			batter.battingGameStats['SLG'] = tb / batter.battingGameStats['AB']
 			
-		for pa in game.PAs:
+		for batter in game.homeTeam.lineup.battingOrder:
 		
-			self.pitchers[pa.pitcher][pa.event.type] += 1
-			self.batters[pa.batter][pa.event.type] += 1
-			self.batters[pa.batter]['RBI'] += pa.runs
-			self.pitchers[pa.pitcher]['R'] += pa.runs
-			self.batters[pa.batter]['PA'] += 1
-			self.pitchers[pa.pitcher]['BF'] += 1
+			batter.battingGameStats['AVG'] = batter.battingGameStats['H'] / batter.battingGameStats['AB']
+			batter.battingGameStats['OBP'] = 1 - ((batter.battingGameStats['strikeout'] + batter.battingGameStats['inPlayOut']) / batter.battingGameStats['PA'])
+			tb = batter.battingGameStats['single']
+			tb += (batter.battingGameStats['double'] * 2)
+			tb += (batter.battingGameStats['triple'] * 3)
+			tb += (batter.battingGameStats['HR'] * 4)
 			
-			if pa.event.type == 'double':
-				self.doubles[pa.batter.name] += 1
-				
-			if pa.event.type == 'triple':
-				self.triples[pa.batter.name] += 1
-				
-			if pa.event.type == 'HR':
-				self.HR[pa.batter.name] += 1
-				
-			if pa.event.type == 'HBP':
-				self.hHBP[pa.batter.name] += 1
-				self.pHBP[pa.pitcher.name] += 1
-			
-			if pa.event.type in ['single', 'double', 'triple', 'HR']:
-				self.batters[pa.batter]['H'] += 1
-				self.pitchers[pa.pitcher]['H'] += 1
-
-			if pa.event.type not in ['BB', 'HBP', 'sacrifice']:
-				self.batters[pa.batter]['AB'] += 1
-
-		for k in list(self.batters.keys()):
-			
-			self.batters[k]['AVG'] = RateStat(self.batters[k]['H'] / self.batters[k]['AB'])
-			outs = self.batters[k]['inPlayOut'] + self.batters[k]['strikeout']
-			self.batters[k]['OBP'] = RateStat((self.batters[k]['PA'] - outs) / self.batters[k]['PA'])
-			tb = self.batters[k]['single']
-			tb += self.batters[k]['double'] * 2
-			tb += self.batters[k]['triple'] * 3
-			tb += self.batters[k]['HR'] * 4
-			self.batters[k]['SLG'] = RateStat(tb / self.batters[k]['AB'])
+			batter.battingGameStats['SLG'] = tb / batter.battingGameStats['AB']
 		
-		for k in list(self.pitchers.keys()):
+		for pitcher in game.awayTeam.pitchers:
 		
-			pitcherPAs = [a for a in game.PAs if a.pitcher == k]
+			if pitcher.pitchingGameStats['BF'] > 0:
 			
-			if len(pitcherPAs) > 0:
-				ip = (pitcherPAs[-1].inning - pitcherPAs[0].inning)
+				pitcher.pitchingGameStats['RA'] = (pitcher.pitchingGameStats['R'] / float(pitcher.pitchingGameStats['IP'])) * 9
+					
+			ip = pitcher.pitchingGameStats['IP'].__floor__()
+			r = pitcher.pitchingGameStats['IP'] - ip
 			
-				if pitcherPAs[-1].endState.outs == 3:
-					ip += 1
+			if r.numerator == 1:
+				ip += .1
 				
-				elif pitcherPAs[-1].endState.outs == 2:
-					ip += 0.6666
-				
-				elif pitcherPAs[-1].endState.outs == 1:
-					ip += 0.3333
-				
-				self.pitchers[k]['IP'] = ip
-				self.pitchers[k]['RA'] = (self.pitchers[k]['R'] / self.pitchers[k]['IP']) * 9
-
+			if r.numerator == 2:
+				ip += .2
+					
+			pitcher.pitchingGameStats['printIP'] = ip
+			
 	def html(self):
 		
 		env = Environment(loader = FileSystemLoader(os.getcwd()), trim_blocks = True)
@@ -145,13 +106,7 @@ class BoxScore(object):
 					'bottoms' : self.linescore.bottoms,
 					'awayTeam' : self.linescore.awayTeam,
 					'homeTeam' : self.linescore.homeTeam,
-					'batters' : self.batters,
-					'pitchers' : self.pitchers,
-					'doubles' : self.doubles,
-					'triples' : self.triples,
-					'homers' : self.HR,
-					'hHBP' : self.hHBP,
-					'pHBP' : self.pHBP
+					'game' : self.game
 				}
 		
 		return env.get_template('box.html').render(**kwargs)
