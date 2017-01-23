@@ -216,7 +216,7 @@ class PlateAppearance(object):
 		if self.top:
 			startDiff = self.awayScore - self.homeScore
 			endDiff = ((self.awayScore + self.runs) - self.homeScore)
-			team = "A"
+			team = "V"
 			
 		else:
 			startDiff = self.homeScore - self.awayScore
@@ -229,7 +229,13 @@ class PlateAppearance(object):
 		if startDiff < -6:
 			startDiff = -6
 		
-		startState = (team, self.inning, *self.baseState.getState(), startDiff)
+		if self.inning > 9:
+			inn = 9
+			
+		else:
+			inn = self.inning
+		
+		startState = (team, inn, *self.baseState.getState(), startDiff)
 		startWP = winProb[startState]
 		
 		if self.endState.outs == 3:
@@ -239,18 +245,21 @@ class PlateAppearance(object):
 				inn = self.inning
 				
 			else:
-				team = "A"
+				team = "V"
 				inn = self.inning + 1
-				
+			
+			if inn > 9:
+				inn = 9
+			
 			bases = BaseOutState()
 			diff = -endDiff
 			
-			endState = (team, inn, *bases, diff)
+			endState = (team, inn, *bases.getState(), diff)
 			endWP = 1 - winProb[endState]
 		
 		else:
 			
-			endState = (team, self.inning, *self.endState.getState(), endDiff)
+			endState = (team, inn, *self.endState.getState(), endDiff)
 			endWP = winProb[endState]
 		
 		return endWP - startWP
