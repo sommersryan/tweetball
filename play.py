@@ -168,11 +168,11 @@ class PlateAppearance(object):
 		self.batter.gameStats[self.event.type] += 1
 		self.pitcher.gameStats[self.event.type] += 1
 		
-		if pa.event.type in ['single', 'double', 'triple', 'HR']:
+		if self.event.type in ['single', 'double', 'triple', 'HR']:
 			self.batter.gameStats['H'] +=1
 			self.pitcher.gameStats['H'] +=1
 		
-		if pa.event.type not in ['BB', 'HBP', 'sacrifice']:
+		if self.event.type not in ['BB', 'HBP', 'sacrifice']:
 			self.batter.gameStats['AB'] += 1
 			
 		self.batter.gameStats['PA'] += 1
