@@ -3,6 +3,7 @@ from utils import baseNarratives, transitions, log5, weightedChoice, emojis
 from league import leagueMeans
 from tweet import api
 from wpa import winProb
+from fractions import Fraction
 
 class Matchup(object):
 
@@ -163,6 +164,25 @@ class PlateAppearance(object):
 		self.endState = self.advanceRunners(endBases, self.runs)
 		
 		self.wpa = self.getWPA()
+		
+		self.batter.gameStats[self.event.type] += 1
+		self.pitcher.gameStats[self.event.type] += 1
+		
+		if pa.event.type in ['single', 'double', 'triple', 'HR']:
+			self.batter.gameStats['H'] +=1
+			self.pitcher.gameStats['H'] +=1
+		
+		if pa.event.type not in ['BB', 'HBP', 'sacrifice']:
+			self.batter.gameStats['AB'] += 1
+			
+		self.batter.gameStats['PA'] += 1
+		self.pitcher.gameStats['BF'] += 1
+		
+		self.batter.gameStats['RBI'] += self.runs
+		self.pitcher.gameStats['R'] += self.runs
+		
+		if self.endState.outs != self.baseState.outs:
+			self.pitcher.gameStats['IP'] += Fraction(1,3)
 		
 	def advanceRunners(self, newBases, runs):
 		
