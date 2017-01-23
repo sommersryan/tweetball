@@ -232,8 +232,26 @@ class PlateAppearance(object):
 		startState = (team, self.inning, *self.baseState.getState(), startDiff)
 		startWP = winProb[startState]
 		
-		endState = (team, self.inning, *self.endState.getState(), endDiff)
-		endWP = winProb[endState]
+		if self.endState.outs == 3:
+		
+			if self.top:
+				team = "H"
+				inn = self.inning
+				
+			else:
+				team = "A"
+				inn = self.inning + 1
+				
+			bases = BaseOutState()
+			diff = -endDiff
+			
+			endState = (team, inn, *bases, diff)
+			endWP = winProb[endState]
+		
+		else:
+			
+			endState = (team, self.inning, *self.endState.getState(), endDiff)
+			endWP = winProb[endState]
 		
 		return endWP - startWP
 		
