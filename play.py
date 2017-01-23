@@ -246,7 +246,7 @@ class PlateAppearance(object):
 			diff = -endDiff
 			
 			endState = (team, inn, *bases, diff)
-			endWP = winProb[endState]
+			endWP = 1 - winProb[endState]
 		
 		else:
 			
