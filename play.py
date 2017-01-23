@@ -162,7 +162,7 @@ class PlateAppearance(object):
 		
 		self.endState = self.advanceRunners(endBases, self.runs)
 		
-		self.wpa = 
+		self.wpa = self.getWPA()
 		
 	def advanceRunners(self, newBases, runs):
 		
