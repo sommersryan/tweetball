@@ -2,6 +2,7 @@ import random, datetime, config
 from utils import baseNarratives, transitions, log5, weightedChoice, emojis
 from league import leagueMeans
 from tweet import api
+from wpa import winProb
 
 class Matchup(object):
 
@@ -121,10 +122,12 @@ class BaseOutState(object):
 		
 class PlateAppearance(object):
 	
-	def __init__(self, top, inning, baseState, batter, pitcher):
+	def __init__(self, top, inning, awayScore, homeScore, baseState, batter, pitcher):
 		
 		self.top = top
 		self.inning = inning
+		self.awayScore = awayScore
+		self.homeScore = homeScore
 		self.baseState = baseState
 		self.batter = batter
 		self.pitcher = pitcher
@@ -158,6 +161,8 @@ class PlateAppearance(object):
 		self.narratives.append("{0} {1}".format(self.batter.name, self.event.narrative))
 		
 		self.endState = self.advanceRunners(endBases, self.runs)
+		
+		self.wpa = 
 		
 	def advanceRunners(self, newBases, runs):
 		
@@ -205,7 +210,33 @@ class PlateAppearance(object):
 				print(oldState.queue())
 				
 		return newState
+
+	def getWPA(self):
 	
+		if self.top:
+			startDiff = self.awayScore - self.homeScore
+			endDiff = ((self.awayScore + self.runs) - self.homeScore)
+			team = "A"
+			
+		else:
+			startDiff = self.homeScore - self.awayScore
+			endDiff = ((self.homeScore + self.runs) - self.awayScore)
+			team = "H"
+			
+		if startDiff > 6:
+			startDiff = 6
+			
+		if startDiff < -6:
+			startDiff = -6
+		
+		startState = (team, self.inning, *self.baseState.getState(), startDiff)
+		startWP = winProb[startState]
+		
+		endState = (team, self.inning, *self.endState.getState(), endDiff)
+		endWP = winProb[endState]
+		
+		return endWP - startWP
+		
 	def tweetPA(self):
 	
 		if self.top:
@@ -275,7 +306,7 @@ class Game(object):
 			batter = self.awayTeam.lineup.newBatter()
 			pitcher = self.homeTeam.lineup.currentPitcher
 			
-			return PlateAppearance(self.top, self.inning, currentPA.endState, batter, pitcher)
+			return PlateAppearance(self.top, self.inning, self.awayScore, self.homeScore, currentPA.endState, batter, pitcher)
 			
 		elif not self.top:
 		
@@ -283,7 +314,7 @@ class Game(object):
 			batter = self.homeTeam.lineup.newBatter()
 			pitcher = self.awayTeam.lineup.currentPitcher
 			
-			return PlateAppearance(self.top, self.inning, currentPA.endState, batter, pitcher)
+			return PlateAppearance(self.top, self.inning, self.awayScore, self.homeScore, currentPA.endState, batter, pitcher)
 			
 	def playInning(self):
 		
@@ -311,7 +342,7 @@ class Game(object):
 			batter = self.homeTeam.lineup.newBatter()
 			pitcher = self.awayTeam.lineup.currentPitcher
 		
-		currentPA = PlateAppearance(self.top, self.inning, BaseOutState(), batter, pitcher)
+		currentPA = PlateAppearance(self.top, self.inning, self.awayScore, self.homeScore, BaseOutState(), batter, pitcher)
 		
 		while True:
 		
