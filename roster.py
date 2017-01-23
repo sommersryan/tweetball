@@ -4,6 +4,7 @@ from utils import percentile, nicknames
 from config import RESULT_TYPES
 from tweet import api
 from storage import playerStore
+from collections import Counter
 from boto.s3.key import Key
 
 class Ratings(object):
@@ -56,6 +57,8 @@ class Player(object):
 		self.handedness = random.choice(['L','R','S'])
 		self.uniNumber = random.randint(0,71)
 		self.ratings = Ratings()
+		self.gameStats = Counter()
+		self.careerStats = Counter()
 
 	def save(self):
 	
