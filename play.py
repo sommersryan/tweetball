@@ -159,7 +159,7 @@ class PlateAppearance(object):
 					choice = True
 					break
 		
-		self.narratives.append("{0} {1}".format(self.batter.name, self.event.narrative))
+		self.narratives.append("{0} {1}".format(self.batter.handle, self.event.narrative))
 		
 		self.endState = self.advanceRunners(endBases, self.runs)
 		

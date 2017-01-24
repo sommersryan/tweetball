@@ -105,7 +105,7 @@ class Player(object):
 	
 	def __str__(self):
 	
-		return self.name
+		return self.handle
 		
 	@staticmethod
 	def load(playerID):
