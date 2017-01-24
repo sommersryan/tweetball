@@ -14,7 +14,7 @@ class GameTweeter(object):
 		
 		sortWPA = sorted(game.PAs, key = lambda x: abs(x.wpa))
 		
-		self.threshold = sortWPA[-NUM_PAS].wpa
+		self.threshold = abs(sortWPA[-NUM_PAS].wpa)
 		
 	def execute(self):
 	
