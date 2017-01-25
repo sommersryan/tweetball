@@ -405,6 +405,7 @@ class Game(object):
 				if self.homeTeam.lineup.pitchers:
 					print("changing home pitcher")
 					self.homeTeam.lineup.currentPitcher = self.homeTeam.lineup.pitchers.pop(0)
+					homeTeam.lineup.usedPitchers += self.homeTeam.lineup.currentPitcher
 			
 			batter = self.awayTeam.lineup.newBatter()
 			pitcher = self.homeTeam.lineup.currentPitcher
@@ -416,6 +417,7 @@ class Game(object):
 				if self.awayTeam.lineup.pitchers:
 					print("changing away pitcher")
 					self.awayTeam.lineup.currentPitcher = self.awayTeam.lineup.pitchers.pop(0)
+					awayTeam.lineup.usedPitchers += self.awayTeam.lineup.currentPitcher
 			
 			batter = self.homeTeam.lineup.newBatter()
 			pitcher = self.awayTeam.lineup.currentPitcher
