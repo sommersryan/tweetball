@@ -251,6 +251,12 @@ class PlateAppearance(object):
 			
 		if startDiff < -6:
 			startDiff = -6
+			
+		if endDiff > 6:
+			endDiff = 6
+			
+		if endDiff < -6:
+			endDiff = -6
 		
 		if self.inning > 9:
 			inn = 9
@@ -283,8 +289,13 @@ class PlateAppearance(object):
 		else:
 			
 			endState = (team, inn, *self.endState.getState(), endDiff)
-			endWP = winProb[endState]
-		
+			
+			try:
+				endWP = winProb[endState]
+			
+			except KeyError:
+				endWP = 1
+			
 		return endWP - startWP
 		
 	def tweetPA(self):
@@ -361,6 +372,11 @@ class Game(object):
 		elif not self.top:
 		
 			self.homeScore += currentPA.runs
+			
+			if self.inning >= 9 and self.homeScore > self.awayScore:
+			
+				return False
+			
 			batter = self.homeTeam.lineup.newBatter()
 			pitcher = self.awayTeam.lineup.currentPitcher
 			
@@ -387,6 +403,7 @@ class Game(object):
 			if self.inning >= 6 and self.homeTeam.lineup.currentPitcher.pitchingGameStats['wpa'] < 0 and random.randint(0,100) > 50:
 				
 				if self.homeTeam.lineup.pitchers:
+					print("changing home pitcher")
 					self.homeTeam.lineup.currentPitcher = self.homeTeam.lineup.pitchers.pop(0)
 			
 			batter = self.awayTeam.lineup.newBatter()
@@ -397,6 +414,7 @@ class Game(object):
 			if self.inning >=6 and self.awayTeam.lineup.currentPitcher.pitchingGameStats['wpa'] < 0 and random.randint(0,100) > 50:
 			
 				if self.awayTeam.lineup.pitchers:
+					print("changing away pitcher")
 					self.awayTeam.lineup.currentPitcher = self.awayTeam.lineup.pitchers.pop(0)
 			
 			batter = self.homeTeam.lineup.newBatter()
@@ -408,10 +426,8 @@ class Game(object):
 		
 			currentPA = self.iterate(currentPA)
 			
-			if self.inning >=9 and not self.top:
-				
-				if self.homeScore > self.awayScore:
-				
+			if not currentPA:
+			
 					self.complete = True
 					return True
 			
