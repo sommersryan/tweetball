@@ -76,7 +76,7 @@ class BoxScore(object):
 			
 			batter.battingGameStats['SLG'] = RateStat(tb / batter.battingGameStats['AB'])
 		
-		for pitcher in game.awayTeam.lineup.pitchers:
+		for pitcher in game.awayTeam.lineup.usedPitchers:
 		
 			if pitcher.pitchingGameStats['BF'] > 0:
 			
@@ -93,7 +93,7 @@ class BoxScore(object):
 					
 			pitcher.pitchingGameStats['printIP'] = ip
 			
-		for pitcher in game.homeTeam.lineup.pitchers:
+		for pitcher in game.homeTeam.lineup.usedPitchers:
 		
 			if pitcher.pitchingGameStats['BF'] > 0:
 			

@@ -61,6 +61,8 @@ class Player(object):
 		self.battingGameStats = Counter()
 		self.pitchingCareerStats = Counter()
 		self.battingCareerStats = Counter()
+		self.active = True
+		self.sub = False
 
 	def save(self):
 	
@@ -120,22 +122,27 @@ class Lineup(object):
 	
 		self.battingOrder = battingOrder
 		self.pitchers = pitchers
-		
 		self.pitchers.insert(0, random.choice(battingOrder))
-		
 		self.currentPitcher = pitchers.pop(0)
+		self.usedPitchers = [self.currentPitcher,]
 		self.atBat = 0
 		self.onDeck = 1
 		
 	def newBatter(self):
 		
-		nb = self.battingOrder[self.onDeck]
+		isActive = False
 		
-		if self.onDeck == 8:
-			self.onDeck = 0	
+		while not isActive:
 		
-		else:
-			self.onDeck += 1
+			try:
+				nb = self.battingOrder[self.onDeck]
+				self.onDeck += 1
+		
+			except IndexError:
+				nb = self.battingOrder[0]
+				self.onDeck = 1
+			
+			isActive = nb.active
 			
 		return nb
 

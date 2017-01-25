@@ -43,7 +43,7 @@
 		
 		<table class="table table-bordered table-sm">
 			<thead><tr><th>Pitcher</th><th>IP</th><th>H</th><th>R</th><th>BB</th><th>SO</th><th>HR</th><th>BF</th></tr></thead>
-			{% for pitcher in awayTeam.lineup.pitchers %}
+			{% for pitcher in awayTeam.lineup.usedPitchers %}
 			{% if pitcher.pitchingGameStats['BF'] > 0 %}<tr><td><a href="https://twitter.com/{{ pitcher.name }}">{{ pitcher.fullName }}</a></td><td>{{ pitcher.pitchingGameStats['printIP'] }}</td><td>{{ pitcher.pitchingGameStats['H'] }}</td><td>{{ pitcher.pitchingGameStats['R'] }}</td><td>{{ pitcher.pitchingGameStats['BB'] }}</td><td>{{ pitcher.pitchingGameStats['strikeout'] }}</td><td>{{ pitcher.pitchingGameStats['HR'] }}</td><td>{{ pitcher.pitchingGameStats['BF'] }}</td></tr>{% endif%}
 			{% endfor %}
 		</table>
@@ -70,7 +70,7 @@
 		
 		<table class="table table-bordered table-sm">
 			<thead><tr><th>Pitcher</th><th>IP</th><th>H</th><th>R</th><th>BB</th><th>SO</th><th>HR</th><th>BF</th></tr></thead>
-			{% for pitcher in homeTeam.lineup.pitchers %}
+			{% for pitcher in homeTeam.lineup.usedPitchers %}
 			{% if pitcher.pitchingGameStats['BF'] > 0 %}<tr><td><a href="https://twitter.com/{{ pitcher.name }}">{{ pitcher.fullName }}</a></td><td>{{ pitcher.pitchingGameStats['printIP'] }}</td><td>{{ pitcher.pitchingGameStats['H'] }}</td><td>{{ pitcher.pitchingGameStats['R'] }}</td><td>{{ pitcher.pitchingGameStats['BB'] }}</td><td>{{ pitcher.pitchingGameStats['strikeout'] }}</td><td>{{ pitcher.pitchingGameStats['HR'] }}</td><td>{{ pitcher.pitchingGameStats['BF'] }}</td></tr>{% endif%}
 			{% endfor %}
 		</table>
