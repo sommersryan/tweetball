@@ -383,12 +383,22 @@ class Game(object):
 				return True
 		
 		if self.top:
-
+			
+			if self.inning >= 6 and self.homeTeam.lineup.currentPitcher.pitchingGameStats.wpa < 0 and random.randint(0,100) > 50:
+				
+				if self.homeTeam.lineup.pitchers:
+					self.homeTeam.lineup.currentPitcher = self.homeTeam.lineup.pitchers.pop(0)
+			
 			batter = self.awayTeam.lineup.newBatter()
 			pitcher = self.homeTeam.lineup.currentPitcher
 		
 		elif not self.top:
-		
+			
+			if self.inning >=6 and self.awayTeam.lineup.currentPitcher.pitchingGameStats.wpa < 0 and random.randint(0,100) > 50:
+			
+				if self.awayTeam.lineup.pitchers:
+					self.awayTeam.lineup.currentPitcher = self.awayTeam.lineup.pitchers.pop(0)
+			
 			batter = self.homeTeam.lineup.newBatter()
 			pitcher = self.awayTeam.lineup.currentPitcher
 		

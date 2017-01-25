@@ -123,7 +123,7 @@ class Lineup(object):
 		
 		self.pitchers.insert(0, random.choice(battingOrder))
 		
-		self.currentPitcher = pitchers[0]
+		self.currentPitcher = pitchers.pop(0)
 		self.atBat = 0
 		self.onDeck = 1
 		
