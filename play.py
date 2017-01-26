@@ -183,6 +183,9 @@ class PlateAppearance(object):
 		
 		if self.endState.outs != self.baseState.outs:
 			self.pitcher.pitchingGameStats['IP'] += Fraction(1,3)
+			
+		elif self.event.type == 'GDP':
+			self.pitcher.pitchingGameStats['IP'] += Fraction(2,3)
 		
 		self.batter.battingGameStats['WPA'] += self.wpa
 		self.pitcher.pitchingGameStats['WPA'] += -self.wpa
