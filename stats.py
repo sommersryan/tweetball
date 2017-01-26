@@ -128,9 +128,9 @@ class BoxScore(object):
 		
 		return env.get_template('box.html').render(**kwargs)
 	
-	def save(self):
+	def save(self, name='{:%Y%m%d}'.format(datetime.utcnow())):
 		
-		n = '{:%Y%m%d}'.format(datetime.utcnow())
+		n = name
 		k = boxScoreBucket.new_key(n)
 		k.set_metadata('Content-Type', 'text/html')
 		k.set_contents_from_string(self.html().encode('utf-8'))
