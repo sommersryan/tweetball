@@ -66,14 +66,14 @@ class BoxScore(object):
 				batter.battingGameStats['SLG'] = RateStat(tb / batter.battingGameStats['AB'])
 			
 			else:
-				batter.battingGameStats['AVG'] = 0
-				batter.battingGameStats['SLG'] = 0
+				batter.battingGameStats['AVG'] = RateStat(0)
+				batter.battingGameStats['SLG'] = RateStat(0)
 				
 			if batter.battingGameStats['PA'] > 0:
 				batter.battingGameStats['OBP'] = RateStat(1 - ((batter.battingGameStats['strikeout'] + batter.battingGameStats['inPlayOut']) / batter.battingGameStats['PA']))
 			
 			else:
-				batter.battingGameStats['OBP'] = 0
+				batter.battingGameStats['OBP'] = RateStat(0)
 			
 		for batter in game.homeTeam.lineup.battingOrder:
 			
@@ -87,14 +87,14 @@ class BoxScore(object):
 				batter.battingGameStats['SLG'] = RateStat(tb / batter.battingGameStats['AB'])
 		
 			else:
-				batter.battingGameStats['AVG'] = 0
-				batter.battingGameStats['SLG'] = 0
+				batter.battingGameStats['AVG'] = RateStat(0)
+				batter.battingGameStats['SLG'] = RateStat(0)
 				
 			if batter.battingGameStats['PA'] > 0:
 				batter.battingGameStats['OBP'] = RateStat(1 - ((batter.battingGameStats['strikeout'] + batter.battingGameStats['inPlayOut']) / batter.battingGameStats['PA']))
 			
 			else:
-				batter.battingGameStats['OBP'] = 0
+				batter.battingGameStats['OBP'] = RateStat(0)
 
 		for pitcher in game.awayTeam.lineup.usedPitchers:
 		

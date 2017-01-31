@@ -16,9 +16,9 @@
 	<div class="col xs-12 md-12">
 	<h1>{{ awayTeam.location }} {{ awayTeam.nickname }} at {{ homeTeam.location }} {{ homeTeam.nickname }}</h1>
 		<table class="table table-bordered table-sm">
-			<thead><tr><th>TEAM</th>{% for h in header %}<th>{{ h }}</th>{% endfor %}</tr></thead>
-			<tr><td>{{ awayTeam.location }}</td>{% for t in tops %}<td>{{ t }}</td>{% endfor %}</tr>
-			<tr><td>{{ homeTeam.location }}</td>{% for b in bottoms %}<td>{{ b }}</td>{% endfor %}</tr>
+			<thead><tr><th>TEAM</th>{% for h in header %}<th>{{ h }}</th>{% endfor %}<th>T</th></tr></thead>
+			<tr><td>{{ awayTeam.location }}</td>{% for t in tops %}<td>{{ t }}</td>{% endfor %}<td><strong>{{ game.awayScore }}</strong></td></tr>
+			<tr><td>{{ homeTeam.location }}</td>{% for b in bottoms %}<td>{{ b }}</td>{% endfor %}<td><strong>{{ game.homeScore }}</strong></td></tr>
 		</table>
 	</div>
 	</div>
