@@ -149,7 +149,7 @@ class Lineup(object):
 	def assignPositions(self):
 		pass
 		
-	def subPitcher():
+	def subPitcher(self):
 	
 		if self.pitchers:
 		
