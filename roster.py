@@ -128,6 +128,7 @@ class Lineup(object):
 		self.usedPitchers = [self.currentPitcher,]
 		self.atBat = 0
 		self.onDeck = 1
+		self.assignPositions()
 		
 	def newBatter(self):
 		
@@ -169,6 +170,7 @@ class Lineup(object):
 			self.currentPitcher.active = False
 			substitute = self.pitchers.pop(0)
 			substitute.sub = True
+			substitute.position = 'P'
 			self.battingOrder.insert(self.battingOrder.index(self.currentPitcher) + 1, substitute)
 			self.currentPitcher = substitute
 			self.usedPitchers += [self.currentPitcher]
