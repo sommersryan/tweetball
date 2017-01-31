@@ -63,6 +63,7 @@ class Player(object):
 		self.battingCareerStats = Counter()
 		self.active = True
 		self.sub = False
+		self.position = None
 
 	def save(self):
 	
@@ -147,7 +148,19 @@ class Lineup(object):
 		return nb
 
 	def assignPositions(self):
-		pass
+		
+		positions = ['C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF']
+		random.shuffle(positions)
+		
+		for player in self.battingOrder:
+			
+			if player == self.currentPitcher:
+				player.position = 'P'
+				
+			else:
+				player.position = positions.pop()
+		
+		return True
 		
 	def subPitcher(self):
 	
