@@ -29,7 +29,7 @@
 		<table class="table table-bordered table-sm">
 			<thead><tr><th>Batter</th><th>AB</th><th>H</th><th>RBI</th><th>BB</th><th>SO</th><th>AVG</th><th>OBP</th><th>SLG</th></tr></thead>
 			{% for batter in awayTeam.lineup.battingOrder %}
-			<tr><td><a href="https://twitter.com/{{ batter.name }}">{% if batter.sub == True %}---{% endif %}{{ batter.fullName }}</a></td><td>{{ batter.battingGameStats['AB'] }}</td><td>{{ batter.battingGameStats['H'] }}</td><td>{{ batter.battingGameStats['RBI'] }}</td><td>{{ batter.battingGameStats['BB'] }}</td><td>{{ batter.battingGameStats['strikeout'] }}</td><td>{{ batter.battingGameStats['AVG'] }}</td><td>{{ batter.battingGameStats['OBP'] }}</td><td>{{ batter.battingGameStats['SLG'] }}</td></tr>
+			<tr><td><a href="https://twitter.com/{{ batter.name }}">{% if batter.sub == True %}*---{% endif %}{{ batter.fullName }}</a></td><td>{{ batter.battingGameStats['AB'] }}</td><td>{{ batter.battingGameStats['H'] }}</td><td>{{ batter.battingGameStats['RBI'] }}</td><td>{{ batter.battingGameStats['BB'] }}</td><td>{{ batter.battingGameStats['strikeout'] }}</td><td>{{ batter.battingGameStats['AVG'] }}</td><td>{{ batter.battingGameStats['OBP'] }}</td><td>{{ batter.battingGameStats['SLG'] }}</td></tr>
 			{% endfor %}
 		</table>
 		<p><strong>| 2B:</strong> {% for batter in awayTeam.lineup.battingOrder %}{% if batter.battingGameStats['double'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['double'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['double'] }}); {% endif %}{% endfor %} | 
@@ -56,7 +56,7 @@
 		<table class="table table-bordered table-sm">
 			<thead><tr><th>Batter</th><th>AB</th><th>H</th><th>RBI</th><th>BB</th><th>SO</th><th>AVG</th><th>OBP</th><th>SLG</th></tr></thead>
 			{% for batter in homeTeam.lineup.battingOrder %}
-			<tr><td><a href="https://twitter.com/{{ batter.name }}">{{ batter.fullName }}</a></td><td>{{ batter.battingGameStats['AB'] }}</td><td>{{ batter.battingGameStats['H'] }}</td><td>{{ batter.battingGameStats['RBI'] }}</td><td>{{ batter.battingGameStats['BB'] }}</td><td>{{ batter.battingGameStats['strikeout'] }}</td><td>{{ batter.battingGameStats['AVG'] }}</td><td>{{ batter.battingGameStats['OBP'] }}</td><td>{{ batter.battingGameStats['SLG'] }}</td></tr>
+			<tr><td><a href="https://twitter.com/{{ batter.name }}">{% if batter.sub == True %}*---{% endif %}{{ batter.fullName }}</a></td><td>{{ batter.battingGameStats['AB'] }}</td><td>{{ batter.battingGameStats['H'] }}</td><td>{{ batter.battingGameStats['RBI'] }}</td><td>{{ batter.battingGameStats['BB'] }}</td><td>{{ batter.battingGameStats['strikeout'] }}</td><td>{{ batter.battingGameStats['AVG'] }}</td><td>{{ batter.battingGameStats['OBP'] }}</td><td>{{ batter.battingGameStats['SLG'] }}</td></tr>
 			{% endfor %}
 		</table>
 		<p><strong>| 2B:</strong> {% for batter in homeTeam.lineup.battingOrder %}{% if batter.battingGameStats['double'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['double'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['double'] }}); {% endif %}{% endfor %} | 
