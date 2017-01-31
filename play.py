@@ -405,13 +405,8 @@ class Game(object):
 			
 			if self.inning >= 6 and self.homeTeam.lineup.currentPitcher.pitchingGameStats['WPA'] < 0 and random.randint(0,100) > 50:
 				
-				if self.homeTeam.lineup.pitchers:
-					print("changing home pitcher")
-					self.homeTeam.lineup.currentPitcher.active = False
-					self.homeTeam.lineup.currentPitcher = self.homeTeam.lineup.pitchers.pop(0)
-					self.homeTeam.lineup.currentPitcher.sub = True
-					self.homeTeam.lineup.usedPitchers += [self.homeTeam.lineup.currentPitcher]
-			
+				self.homeTeam.lineup.subPitcher()
+				
 			batter = self.awayTeam.lineup.newBatter()
 			pitcher = self.homeTeam.lineup.currentPitcher
 		
@@ -419,13 +414,8 @@ class Game(object):
 			
 			if self.inning >=6 and self.awayTeam.lineup.currentPitcher.pitchingGameStats['WPA'] < 0 and random.randint(0,100) > 50:
 			
-				if self.awayTeam.lineup.pitchers:
-					print("changing away pitcher")
-					self.awayTeam.lineup.currentPitcher.active = False
-					self.awayTeam.lineup.currentPitcher = self.awayTeam.lineup.pitchers.pop(0)
-					self.awayTeam.lineup.currentPitcher.sub = True
-					self.awayTeam.lineup.usedPitchers += [self.awayTeam.lineup.currentPitcher]
-			
+				self.awayTeam.lineup.subPitcher()
+				
 			batter = self.homeTeam.lineup.newBatter()
 			pitcher = self.awayTeam.lineup.currentPitcher
 		
