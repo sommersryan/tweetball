@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
 		<meta http-equiv="x-ua-compatible" content="ie=edge">
 
 		<title>{{ awayTeam.location }} {{ awayTeam.nickname }} vs. {{ homeTeam.location }} {{ homeTeam.nickname }}</title>
@@ -11,7 +11,7 @@
 	</head>
 	
 	<body>
-	<div class="container">
+	<div class="container-fluid">
 	<div class="row">
 	<div class="col xs-12 md-12">
 	<h1>{{ awayTeam.location }} {{ awayTeam.nickname }} at {{ homeTeam.location }} {{ homeTeam.nickname }}</h1>
@@ -49,7 +49,7 @@
 		</table>
 	</div>
 	</div>
-		<div class="row">
+	<div class="row">
 	<div class="col xs-12 md-12">
 		<h2>{{ homeTeam.location }}</h2>
 	
@@ -66,7 +66,7 @@
 	</div>
 	</div>
 	<div class="row">
-	<div class="col xs-12 md 12">
+	<div class="col xs-12 md-12">
 		
 		<table class="table table-bordered table-sm">
 			<thead><tr><th>Pitcher</th><th>IP</th><th>H</th><th>R</th><th>BB</th><th>SO</th><th>HR</th><th>BF</th></tr></thead>
@@ -74,6 +74,17 @@
 			{% if pitcher.pitchingGameStats['BF'] > 0 %}<tr><td><a href="https://twitter.com/{{ pitcher.name }}">{{ pitcher.fullName }}</a></td><td>{{ pitcher.pitchingGameStats['printIP'] }}</td><td>{{ pitcher.pitchingGameStats['H'] }}</td><td>{{ pitcher.pitchingGameStats['R'] }}</td><td>{{ pitcher.pitchingGameStats['BB'] }}</td><td>{{ pitcher.pitchingGameStats['strikeout'] }}</td><td>{{ pitcher.pitchingGameStats['HR'] }}</td><td>{{ pitcher.pitchingGameStats['BF'] }}</td></tr>{% endif%}
 			{% endfor %}
 		</table>
+	</div>
+	</div>
+	<div class="row">
+	<div class="col xs-12 md-12">
+	<h2> Game Log </h2>
+	<table class="table table-bordered table-sm">
+	<thead><tr><th>Inn</th><th>Away</th><th>Home</th><th>Pitching</th><th>Batting</th><th>Outs</th><th>Event</th></tr></thead>
+	{% for pa in game.PAs %}
+	<tr><td>{% if pa.top %}Top {{ pa.inning }}{% else %}Bot {{ pa.inning }}{% endif %}</td><td>{{ pa.awayScore }}</td><td>{{ pa.homeScore }}</td><td><a href="https://twitter.com/{{ pa.pitcher.name }}">{{ pa.pitcher.fullName }}</a></td><td><a href="https://twitter.com/{{ pa.batter.name }}">{{ pa.batter.fullName }}</a></td><td>{{ pa.baseState.outs }}</td><td>{{ pa }}</td></tr>
+	{% endfor %}
+	</table>
 	</div>
 	</div>
 	</div>
