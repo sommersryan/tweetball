@@ -156,7 +156,7 @@ class Lineup(object):
 			self.currentPitcher.active = False
 			substitute = self.pitchers.pop(0)
 			substitute.sub = True
-			self.battingOrder.insert(self.battingOrder.index(self.currentPitcher + 1), substitute)
+			self.battingOrder.insert(self.battingOrder.index(self.currentPitcher) + 1, substitute)
 			self.currentPitcher = substitute
 			self.usedPitchers += [self.currentPitcher]
 		
