@@ -336,7 +336,7 @@ class PlateAppearance(object):
 		
 		t = "{0} | {1} | {2} |\r\n {3}".format(inningString, baseString, outString, narrative)
 		
-		tweetID = api.update_status(t).id
+		tweetID = api.update_status(t, in_reply_to_status_id = replyTo).id
 		
 		return tweetID
 	
