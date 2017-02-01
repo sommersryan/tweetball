@@ -48,13 +48,23 @@ class GameTweeter(object):
 		
 		prevID = api.update_status(self.intro).id
 		
+		time.sleep(60)
+		
 		prevID = api.update_status(self.awayLineupTop, in_reply_to_status_id = prevID).id
+		
+		time.sleep(5)
 		
 		prevID = api.update_status(self.awayLineupBot, in_reply_to_status_id = prevID).id
 		
+		time.sleep(30)
+		
 		prevID = api.update_status(self.homeLineupTop, in_reply_to_status_id = prevID).id
 		
+		time.sleep(5)
+		
 		prevID = api.update_status(self.homeLineupBot, in_reply_to_status_id = prevID).id
+		
+		time.sleep(60)
 		
 		for i, pa in enumerate(self.game.PAs):
 		
