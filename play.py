@@ -305,8 +305,13 @@ class PlateAppearance(object):
 	
 		if self.top:
 			half = emojis['top']
+			aScore = self.awayScore + self.runs
+			hScore = self.homeScore
+			
 		else:
 			half = emojis['bottom']
+			aScore = self.awayScore
+			hScore = self.homeScore + self.runs
 			
 		inningString = "{0}{1}".format(half, self.inning)
 		baseString = ""
@@ -334,7 +339,12 @@ class PlateAppearance(object):
 		
 		narrative = str(self)
 		
-		t = "{0} | {1} | {2} |\r\n {3}".format(inningString, baseString, outString, narrative)
+		if self.runs > 0:
+			scoreString = "{0} -- {1}".format(self.awayScore, self.homeScore)
+		else:
+			scoreString = ""
+		
+		t = "{0} | {1} | {2} |\r\n {3}. {4}".format(inningString, baseString, outString, narrative, scoreString)
 		
 		tweetID = api.update_status(t, in_reply_to_status_id = replyTo).id
 		
