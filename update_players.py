@@ -19,7 +19,7 @@ for addition in addList:
 	player = roster.Player(api.get_user(addition))
 	player.save()
 	player.notifyAttributes()
-	time.sleep(90)
+	time.sleep(120)
 	
 for removal in removeList:
 
