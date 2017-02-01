@@ -19,22 +19,30 @@ class GameTweeter(object):
 		self.awayLineupBot = "{0} (a) cont.\r\n".format(game.awayTeam)
 		self.homeLineupBot = "{0} (h) cont.\r\n".format(game.homeTeam)
 		
-		for i, p in enumerate(game.awayTeam.lineup.battingOrder[:5]):
-			if not p.sub:
-				self.awayLineupTop += "{0}. {1} {2}\r\n".format(i+1, p.handle, p.position)
-			
-		for i, p in enumerate(game.homeTeam.lineup.battingOrder[:5]):
-			if not p.sub:
-				self.homeLineupTop += "{0}. {1} {2}\r\n".format(i+1, p.handle, p.position)
+		num = 1
 		
-		for i, p in enumerate(game.awayTeam.lineup.battingOrder[5:]):
+		for p in game.awayTeam.lineup.battingOrder[:5]:
 			if not p.sub:
-				self.awayLineupBot += "{0}. {1} {2}\r\n".format(i+6, p.handle, p.position)
-			
-		for i, p in enumerate(game.homeTeam.lineup.battingOrder[5:]):
+				self.awayLineupTop += "{0}. {1} {2}\r\n".format(num, p.handle, p.position)
+				num += 1
+				
+		for p in game.awayTeam.lineup.battingOrder[5:]:
 			if not p.sub:
-				self.homeLineupBot += "{0}. {1} {2}\r\n".format(i+6, p.handle, p.position)
+				self.awayLineupBot += "{0}. {1} {2}\r\n".format(num, p.handle, p.position)
+				num += 1
+				
+		num = 1
 		
+		for p in game.homeTeam.lineup.battingOrder[:5]:
+			if not p.sub:
+				self.homeLineupTop += "{0}. {1} {2}\r\n".format(num, p.handle, p.position)
+				num += 1
+				
+		for p in game.homeTeam.lineup.battingOrder[5:]:
+			if not p.sub:
+				self.homeLineupBot += "{0}. {1} {2}\r\n".format(num, p.handle, p.position)
+				num += 1
+				
 		bs = stats.BoxScore(self.game)
 		self.boxURL = bs.save()
 		
