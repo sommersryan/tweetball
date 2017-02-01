@@ -66,7 +66,16 @@ class Player(object):
 		self.position = None
 
 	def save(self):
-	
+		
+		self.pitchingCareerStats += self.pitchingGameStats
+		self.battingCareerStats += self.battingGameStats
+		
+		self.pitchingGameStats.clear()
+		self.battingGameStats.clear()
+		self.sub = False
+		self.position = None
+		self.active = True
+		
 		k = Key(playerStore)
 		k.key = self.id
 		zipped = pickle.dumps(self)
