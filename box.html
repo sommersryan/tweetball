@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+		<meta http-equiv="x-ua-compatible" content="ie=edge">
+
+		<title>{{ awayTeam.location }} {{ awayTeam.nickname }} vs. {{ homeTeam.location }} {{ homeTeam.nickname }}</title>
+
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css" integrity="sha384-2hfp1SzUoho7/TsGGGDaFdsuuDL0LX2hnUp6VkX3CUQ2K4K+xjboZdsXyp4oUHZj" crossorigin="anonymous">
+	</head>
+	
+	<body>
+	<div class="container-fluid">
+	<div class="row">
+	<div class="col xs-12 md-12">
+	<h1>{{ awayTeam.location }} {{ awayTeam.nickname }} at {{ homeTeam.location }} {{ homeTeam.nickname }}</h1>
+		<table class="table table-bordered table-sm">
+			<thead><tr><th>TEAM</th>{% for h in header %}<th>{{ h }}</th>{% endfor %}<th>T</th></tr></thead>
+			<tr><td>{{ awayTeam.location }}</td>{% for t in tops %}<td>{{ t }}</td>{% endfor %}<td><strong>{{ game.awayScore }}</strong></td></tr>
+			<tr><td>{{ homeTeam.location }}</td>{% for b in bottoms %}<td>{{ b }}</td>{% endfor %}<td><strong>{{ game.homeScore }}</strong></td></tr>
+		</table>
+	</div>
+	</div>
+	<div class="row">
+	<div class="col xs-12 md-12">
+		<h2>{{ awayTeam.location }}</h2>
+	
+		<table class="table table-bordered table-sm">
+			<thead><tr><th>Batter</th><th>Pos</th><th>AB</th><th>H</th><th>RBI</th><th>BB</th><th>SO</th><th>AVG</th><th>OBP</th><th>SLG</th></tr></thead>
+			{% for batter in awayTeam.lineup.battingOrder %}
+			<tr><td><a href="https://twitter.com/{{ batter.name }}">{% if batter.sub == True %}*---{% endif %}{{ batter.fullName }}</a></td><td>{{ batter.position }}</td><td>{{ batter.battingGameStats['AB'] }}</td><td>{{ batter.battingGameStats['H'] }}</td><td>{{ batter.battingGameStats['RBI'] }}</td><td>{{ batter.battingGameStats['BB'] }}</td><td>{{ batter.battingGameStats['strikeout'] }}</td><td>{{ batter.battingGameStats['AVG'] }}</td><td>{{ batter.battingGameStats['OBP'] }}</td><td>{{ batter.battingGameStats['SLG'] }}</td></tr>
+			{% endfor %}
+		</table>
+		<p><strong>| 2B:</strong> {% for batter in awayTeam.lineup.battingOrder %}{% if batter.battingGameStats['double'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['double'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['double'] }}); {% endif %}{% endfor %} | 
+		<strong>3B:</strong> {% for batter in awayTeam.lineup.battingOrder %}{% if batter.battingGameStats['triple'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['triple'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['triple'] }}); {% endif %}{% endfor %} | 
+		<strong>HR:</strong> {% for batter in awayTeam.lineup.battingOrder %}{% if batter.battingGameStats['HR'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['HR'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['HR'] }}); {% endif %}{% endfor %} | 
+		<strong>HBP:</strong> {% for batter in awayTeam.lineup.battingOrder %}{% if batter.battingGameStats['HBP'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['HBP'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['HBP'] }}); {% endif %}{% endfor %} | </p>
+	</div>
+	</div>
+	<div class="row">
+	<div class="col xs-12 md 12">
+		
+		<table class="table table-bordered table-sm">
+			<thead><tr><th>Pitcher</th><th>IP</th><th>H</th><th>R</th><th>BB</th><th>SO</th><th>HR</th><th>BF</th></tr></thead>
+			{% for pitcher in awayTeam.lineup.usedPitchers %}
+			{% if pitcher.pitchingGameStats['BF'] > 0 %}<tr><td><a href="https://twitter.com/{{ pitcher.name }}">{{ pitcher.fullName }}</a></td><td>{{ pitcher.pitchingGameStats['printIP'] }}</td><td>{{ pitcher.pitchingGameStats['H'] }}</td><td>{{ pitcher.pitchingGameStats['R'] }}</td><td>{{ pitcher.pitchingGameStats['BB'] }}</td><td>{{ pitcher.pitchingGameStats['strikeout'] }}</td><td>{{ pitcher.pitchingGameStats['HR'] }}</td><td>{{ pitcher.pitchingGameStats['BF'] }}</td></tr>{% endif%}
+			{% endfor %}
+		</table>
+	</div>
+	</div>
+	<div class="row">
+	<div class="col xs-12 md-12">
+		<h2>{{ homeTeam.location }}</h2>
+	
+		<table class="table table-bordered table-sm">
+			<thead><tr><th>Batter</th><th>Pos</th><th>AB</th><th>H</th><th>RBI</th><th>BB</th><th>SO</th><th>AVG</th><th>OBP</th><th>SLG</th></tr></thead>
+			{% for batter in homeTeam.lineup.battingOrder %}
+			<tr><td><a href="https://twitter.com/{{ batter.name }}">{% if batter.sub == True %}*---{% endif %}{{ batter.fullName }}</a></td><td>{{ batter.position }}</td><td>{{ batter.battingGameStats['AB'] }}</td><td>{{ batter.battingGameStats['H'] }}</td><td>{{ batter.battingGameStats['RBI'] }}</td><td>{{ batter.battingGameStats['BB'] }}</td><td>{{ batter.battingGameStats['strikeout'] }}</td><td>{{ batter.battingGameStats['AVG'] }}</td><td>{{ batter.battingGameStats['OBP'] }}</td><td>{{ batter.battingGameStats['SLG'] }}</td></tr>
+			{% endfor %}
+		</table>
+		<p><strong>| 2B:</strong> {% for batter in homeTeam.lineup.battingOrder %}{% if batter.battingGameStats['double'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['double'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['double'] }}); {% endif %}{% endfor %} | 
+		<strong>3B:</strong> {% for batter in homeTeam.lineup.battingOrder %}{% if batter.battingGameStats['triple'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['triple'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['triple'] }}); {% endif %}{% endfor %} | 
+		<strong>HR:</strong> {% for batter in homeTeam.lineup.battingOrder %}{% if batter.battingGameStats['HR'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['HR'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['HR'] }}); {% endif %}{% endfor %} | 
+		<strong>HBP:</strong> {% for batter in homeTeam.lineup.battingOrder %}{% if batter.battingGameStats['HBP'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['HBP'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['HBP'] }}); {% endif %}{% endfor %} | </p>
+	</div>
+	</div>
+	<div class="row">
+	<div class="col xs-12 md-12">
+		
+		<table class="table table-bordered table-sm">
+			<thead><tr><th>Pitcher</th><th>IP</th><th>H</th><th>R</th><th>BB</th><th>SO</th><th>HR</th><th>BF</th></tr></thead>
+			{% for pitcher in homeTeam.lineup.usedPitchers %}
+			{% if pitcher.pitchingGameStats['BF'] > 0 %}<tr><td><a href="https://twitter.com/{{ pitcher.name }}">{{ pitcher.fullName }}</a></td><td>{{ pitcher.pitchingGameStats['printIP'] }}</td><td>{{ pitcher.pitchingGameStats['H'] }}</td><td>{{ pitcher.pitchingGameStats['R'] }}</td><td>{{ pitcher.pitchingGameStats['BB'] }}</td><td>{{ pitcher.pitchingGameStats['strikeout'] }}</td><td>{{ pitcher.pitchingGameStats['HR'] }}</td><td>{{ pitcher.pitchingGameStats['BF'] }}</td></tr>{% endif%}
+			{% endfor %}
+		</table>
+	</div>
+	</div>
+	<div class="row">
+	<div class="col xs-12 md-12">
+	<h2> Game Log </h2>
+	<table class="table table-bordered table-sm">
+	<thead><tr><th>Inn</th><th>Away</th><th>Home</th><th>Pitching</th><th>Batting</th><th>Outs</th><th>Event</th></tr></thead>
+	{% for pa in game.PAs %}
+	<tr><td>{% if pa.top %}Top {{ pa.inning }}{% else %}Bot {{ pa.inning }}{% endif %}</td><td>{{ pa.awayScore }}</td><td>{{ pa.homeScore }}</td><td><a href="https://twitter.com/{{ pa.pitcher.name }}">{{ pa.pitcher.fullName }}</a></td><td><a href="https://twitter.com/{{ pa.batter.name }}">{{ pa.batter.fullName }}</a></td><td>{{ pa.baseState.outs }}</td><td>{{ pa }}</td></tr>
+	{% endfor %}
+	</table>
+	</div>
+	</div>
+	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js" integrity="sha384-THPy051/pYDQGanwU6poAc/hOdQxjnOEXzbT+OuUAFqNqFjL+4IGLBgCJC3ZOShY" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js" integrity="sha384-Plbmg8JY28KFelvJVai01l8WyZzrYWG825m+cZ0eDDS1f7d/js6ikvy1+X+guPIB" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.4/js/bootstrap.min.js" integrity="sha384-VjEeINv9OSwtWFLAtmc4JCtEJXXBub00gtSnszmspDLCtC0I4z4nqz7rEFbIZLLU" crossorigin="anonymous"></script>
+	</body>
+</html>
