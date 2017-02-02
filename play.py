@@ -340,7 +340,10 @@ class PlateAppearance(object):
 		narrative = str(self)
 		
 		if self.runs > 0:
-			scoreString = "{0} -- {1}".format(aScore, hScore)
+			if self.top:
+				scoreString = "{0} -- {1}".format(aScore, hScore)
+			else:
+				scoreString = "{0} -- {1}".format(hScore, aScore)
 		else:
 			scoreString = ""
 		
