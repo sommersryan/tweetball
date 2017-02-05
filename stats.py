@@ -3,14 +3,32 @@ from itertools import groupby
 from jinja2 import Environment, FileSystemLoader
 from storage import boxScoreBucket
 from datetime import datetime
+from functools import total_ordering
 import os
 
+@total_ordering
 class RateStat(object):
 
 	def __init__(self, rate):
 	
 		self.rate = rate
+	
+	def __add__(self, num):
+	
+		return RateStat(0)
+	
+	def __radd__(self, num):
+	
+		return RateStat(0)
 		
+	def __eq__(self, num):
+	
+		return self.rate == num
+		
+	def __lt__(self, num):
+	
+		return self.rate < num
+	
 	def __str__(self):
 	
 		if self.rate >= 1:
