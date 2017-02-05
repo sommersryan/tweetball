@@ -199,16 +199,18 @@ class Team(object):
 def getTeams():
 
 	keys = list(playerStore.list())
-	pool = random.sample(keys,24)
+	players = [Player.load(a) for a in keys]
+	playersSorted = sorted(players, key = lambda x: x.battingCareerStats['PA'])
+	pool = playersSorted[:24]
 	homeHitters, homePitchers, awayHitters, awayPitchers = [], [], [], []
 	
 	for i in range(0,9):
-		homeHitters.append(Player.load(pool.pop().key))
-		awayHitters.append(Player.load(pool.pop().key))
+		homeHitters.append(pool.pop())
+		awayHitters.append(pool.pop())
 		
 	for i in range(0,3):
-		homePitchers.append(Player.load(pool.pop().key))
-		awayPitchers.append(Player.load(pool.pop().key))
+		homePitchers.append(pool.pop())
+		awayPitchers.append(pool.pop())
 		
 	homeLoc = forgery_py.address.city()
 	awayLoc = forgery_py.address.city()
