@@ -140,6 +140,10 @@ class PlateAppearance(object):
 		## should I use a singledispatch decorator to make multiple advancement functions depending on event?
 		## should I add the batter to the baseState and drive the PAs that way
 		## yes and yes. Each generated advancement function handles every base in a possible state
+		## advancment methods are static methods of Event class
+		## matchup function picks from a dict of these methods provided by Event class 
+		## use kwargs to pass every possible piece of information down through the classes, only pass
+		## to each what is needed 
 		self.endState, self.runs = self.advancement(beginState)
 		
 		self.narratives = kwargs.pop('narratives')
