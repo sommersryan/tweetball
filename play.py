@@ -123,72 +123,20 @@ class BaseOutState(object):
 		
 class PlateAppearance(object):
 	
-	def __init__(self, top, inning, awayScore, homeScore, baseState, batter, pitcher):
+	def __init__(self, **kwargs):
 		
-		self.top = top
-		self.inning = inning
-		self.awayScore = awayScore
-		self.homeScore = homeScore
-		self.baseState = baseState
-		self.batter = batter
-		self.pitcher = pitcher
-		self.narratives = []
-		
-		if baseState.outs == 3:
-			self.transitions = [None,]
-		
-		else:
-			self.transitions = transitions[baseState.getState()]
-			
-		self.matchup = Matchup(batter.ratings.batting, pitcher.ratings.pitching)
-		
-		choice = False
-		
-		while not choice:
-			
-			ev = self.matchup.genResult()
-			states = random.sample(self.transitions, len(self.transitions))
-			
-			for i in states: 
-				
-				if ev in i[1]:
-				
-					self.event = Event(ev)
-					endBases = i[0]
-					self.runs = i[2]
-					choice = True
-					break
-		
-		self.narratives.append("{0} {1}".format(self.batter.handle, self.event.narrative))
-		
-		self.endState = self.advanceRunners(endBases, self.runs)
-		
-		self.wpa = self.getWPA()
-		
-		self.batter.battingGameStats[self.event.type] += 1
-		self.pitcher.pitchingGameStats[self.event.type] += 1
-		
-		if self.event.type in ['single', 'double', 'triple', 'HR']:
-			self.batter.battingGameStats['H'] +=1
-			self.pitcher.pitchingGameStats['H'] +=1
-		
-		if self.event.type not in ['BB', 'HBP', 'sacrifice']:
-			self.batter.battingGameStats['AB'] += 1
-			
-		self.batter.battingGameStats['PA'] += 1
-		self.pitcher.pitchingGameStats['BF'] += 1
-		
-		self.batter.battingGameStats['RBI'] += self.runs
-		self.pitcher.pitchingGameStats['R'] += self.runs
-		
-		if self.event.type == 'GDP':
-			self.pitcher.pitchingGameStats['IP'] += Fraction(2,3)
-		
-		elif self.endState.outs != self.baseState.outs:
-			self.pitcher.pitchingGameStats['IP'] += Fraction(1,3)
-			
-		self.batter.battingGameStats['WPA'] += self.wpa
-		self.pitcher.pitchingGameStats['WPA'] += -self.wpa
+		self.top = kwargs.pop('top')
+		self.inning = kwargs.pop('inning')
+		self.awayScore = kwargs.pop('awayScore')
+		self.homeScore = kwargs.pop('homeScore')
+		self.baseState = kwargs.pop('baseState')
+		self.batter = kwargs.pop('batter')
+		self.pitcher = kwargs.pop('pitcher')
+		self.event = kwargs.pop('event')
+		self.advancement = kwargs.pop('advancement')
+		self.endState = self.advancement(baseState)
+		self.narratives = kwargs.pop('narratives')
+		self.paTweet = kwargs.pop('paTweet')
 		
 	def advanceRunners(self, newBases, runs):
 		
