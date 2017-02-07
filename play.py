@@ -1,4 +1,5 @@
 import random, datetime, config
+from config import AD_RATES
 from utils import baseNarratives, transitions, log5, weightedChoice, emojis
 from league import leagueMeans
 from tweet import api
@@ -69,7 +70,14 @@ class Event(object):
 		
 	def single(self):
 		
-		runs = 
+		"""
+		This and subsequent methods will advance baserunners and assign Event
+		attributes commensurate with the type of event
+		"""
+		#Tuple extraBase contains bool values indicating whether each runner (in reverse order) advances an extra base
+		extraBase = (random.randint(0,100) <= AD_RATES['SINGLE_2ND_SCORES'], random.randint(0,100) <= AD_RATES['SINGLE_1ST_TO_3RD'])
+		
+		
 		
 	def double(self):
 		pass
