@@ -21,93 +21,31 @@ class Matchup(object):
 	
 		return weightedChoice(self.__dict__)
 
-class Single(object):
-
-		def __init__(self):
-		
-			self.noun = 'single'
-			self.verb = 'singles'
-			self.atBat = True
-			self.PA = True
-			self.out = False
-		
-		@staticmethod
-		def advance(baseState):
-			
-			first = baseState.batter
-			second = baseState.first
-			third = None
-			runs = sum([1 for a if a in [baseState.second, baseState.third]])
-			outs = baseState.outs
-
-			return (runs, BaseState(first, second, third, outs))
-			
-class Double(object):
-
-		def __init__(self):
-		
-			self.noun = 'double'
-			self.verb = 'doules'
-			self.atBat = True
-			self.PA = True
-			self.out = False
-			
-		@staticmethod
-		def advance(baseState):
-		
-			first = None
-			second = baseState.batter
-			third = baseSate.third
-			runs = sum([1 for a if a in [baseState.second, baseState.third])
-			outs = baseState.outs
-			
-			return (runs, BaseState(first, second, third, outs))
-			
-class Triple(object):
-
-		def __init__(self):
-		
-			self.noun = 'triple'
-			self.verb = 'triples'
-			self.atBat = True
-			self.PA = True
-			self.out = False
-			
-		@staticmethod
-		def advance(baseState):
-		
-			first = None
-			second = None
-			third = baseState.batter
-			runs = sum([1 for a if a in [baseState.first, baseState.second, baseState.third])
-			outs = baseState.outs
-			
-			return (runs, BaseState(first, second, third, outs))
-
-class HomeRun(object):
-
-		def __init__(self):
-		
-			self.noun = 'home run'
-			self.verb = 'homers'
-			self.atBat = True
-			self.PA = True
-			self.out = 0
-			
-		@staticmethod
-		def advance(baseState):
-		
-			first, second, third = None, None, None
-			runs = sum([1 for a if a in [baseState.batter, baseState.first, baseState.second, baseState.third])
-			outs = baseState.outs
-			
-			return (runs, BaseState(first, second, third, outs))	
-			
 class Event(object):
 
 	def __init__(self, **kwargs):
+		
+		#funcs dict matches events to their class method
+		#these methods advance runners and set event attributes, return dict of properties (including end baseState)
+		funcs = {'singles' : self.single, 
+				 'doubles' : self.double,
+				 'triples' : self.triple
+				 } #and so forth
+				 
+		self.type = kwargs.pop('type')
+		self.func = funcs['self.type']
 	
-	
+	def single():
+		pass
+		
+	def double():
+		pass
+		
+	def triple():	
+		pass
+		
+		#and so forth
+		
 	def genString(self):
 		
 		outfield = ['left', 'center', 'right']
