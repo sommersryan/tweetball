@@ -22,29 +22,80 @@ class Matchup(object):
 		return weightedChoice(self.__dict__)
 
 class Event(object):
-
+	
+	"""
+	Event objects are created for everything that happens in a game. They are passed
+	relevant information about the game's current state and initialize with a type 
+	(an outcome of some kind, e.g. 'double') and possess a function to calculate the 
+	end state for every possible event.
+	"""
+	
 	def __init__(self, **kwargs):
 		
-		#funcs dict matches events to their class method
-		#these methods advance runners and set event attributes, return dict of properties (including end baseState)
-		funcs = {'singles' : self.single, 
+		"""
+		An event is initialized with the verb string for what happens (e.g. 'doubles'),
+		picks the proper function from the funcs dict which will return runner advancement 
+		and other information, and sets the proper attributes. Events can be compiled in an
+		inning object.
+		"""
+		
+		funcs = {
+				 'singles' : self.single, 
 				 'doubles' : self.double,
-				 'triples' : self.triple
-				 } #and so forth
-				 
+				 'triples' : self.triple,
+				 'homers' : self.homer
+				 'walks' : self.walk
+				 'strikes out' : self.strikeout
+				 'flies out' : self.flyout
+				 'lines out': self.lineout
+				 'grounds out': self.groundout
+				 'is hit by pitch' : self.hbp
+				 'error' : self.error
+				 'steals' : self.steal
+				 'enters to pitch' : self.bullpenCall
+				 'enters as a pinch hitter' : self.pinchHitter
+				 } 
+		
+		self.beginState = kwargs.pop('beginState')
+		self.battingTeam = kwargs.pop('battingTeam')
+		self.pitchingTeam = kwargs.pop('pitchingTeam')
 		self.type = kwargs.pop('type')
 		self.func = funcs['self.type']
+		self.endState = self.func()['endState']
 	
-	def single():
+	def single(self):
+		
+		runs = 
+		
+	def double(self):
 		pass
 		
-	def double():
+	def triple(self):	
 		pass
 		
-	def triple():	
+	def homer(self):
 		pass
 		
-		#and so forth
+	def walk(self):
+		pass
+		
+	def strikeout(self):
+		pass
+		
+	def flyout(self):
+		pass
+		
+	def lineout(self):
+		pass
+		
+	def groundout(self):
+		pass
+		
+	def hbp(self):
+		pass
+		
+	def error(self):
+		pass
 		
 	def genString(self):
 		
