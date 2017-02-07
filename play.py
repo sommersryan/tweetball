@@ -129,12 +129,19 @@ class PlateAppearance(object):
 		self.inning = kwargs.pop('inning')
 		self.awayScore = kwargs.pop('awayScore')
 		self.homeScore = kwargs.pop('homeScore')
-		self.baseState = kwargs.pop('baseState')
+		self.beginState = kwargs.pop('beginState')
 		self.batter = kwargs.pop('batter')
 		self.pitcher = kwargs.pop('pitcher')
 		self.event = kwargs.pop('event')
 		self.advancement = kwargs.pop('advancement')
-		self.endState, self.runs = self.advancement(baseState)
+		
+		# advancement is a function that returns a tuple of the new base state and runs scored
+		## To do:
+		## should I use a singledispatch decorator to make multiple advancement functions depending on event?
+		## should I add the batter to the baseState and drive the PAs that way
+		## yes and yes. Each generated advancement function handles every base in a possible state
+		self.endState, self.runs = self.advancement(beginState)
+		
 		self.narratives = kwargs.pop('narratives')
 		self.paTweet = kwargs.pop('paTweet')
 		
