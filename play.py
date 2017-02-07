@@ -54,15 +54,19 @@ class Event(object):
 				 'steals' : self.steal
 				 'enters to pitch' : self.bullpenCall
 				 'enters as a pinch hitter' : self.pinchHitter
-				 } 
+				} 
 		
+		self.top = kwargs.pop('top')
+		self.inning = kwargs.pop('inning')
+		self.pitcher = kwargs.pop('pitcher')
 		self.beginState = kwargs.pop('beginState')
 		self.battingTeam = kwargs.pop('battingTeam')
 		self.pitchingTeam = kwargs.pop('pitchingTeam')
 		self.type = kwargs.pop('type')
 		self.func = funcs['self.type']
 		self.endState = self.func()['endState']
-	
+		self.runs = self.func()['runs']
+		
 	def single(self):
 		
 		runs = 
