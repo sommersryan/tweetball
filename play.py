@@ -134,7 +134,7 @@ class PlateAppearance(object):
 		self.pitcher = kwargs.pop('pitcher')
 		self.event = kwargs.pop('event')
 		self.advancement = kwargs.pop('advancement')
-		self.endState = self.advancement(baseState)
+		self.endState, self.runs = self.advancement(baseState)
 		self.narratives = kwargs.pop('narratives')
 		self.paTweet = kwargs.pop('paTweet')
 		
@@ -306,7 +306,17 @@ class PlateAppearance(object):
 		description = '. '.join(self.narratives)
 		
 		return "{0}".format(description)
-	
+
+class Inning(object):
+
+	def __init__(self, **kwargs):
+		
+		self.top = kwargs.pop('top')
+		self.num = kwargs.pop('num')
+		self.PAs = []
+		self.terminating = kwargs.pop('terminating')
+		self.runs = kwargs.pop('runs')
+		
 class Game(object):
 
 	def __init__(self, homeTeam, awayTeam):
