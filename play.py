@@ -20,33 +20,94 @@ class Matchup(object):
 	def genResult(self):
 	
 		return weightedChoice(self.__dict__)
-		
 
+class Single(object):
+
+		def __init__(self):
+		
+			self.noun = 'single'
+			self.verb = 'singles'
+			self.atBat = True
+			self.PA = True
+			self.out = False
+		
+		@staticmethod
+		def advance(baseState):
+			
+			first = baseState.batter
+			second = baseState.first
+			third = None
+			runs = sum([1 for a if a in [baseState.second, baseState.third]])
+			outs = baseState.outs
+
+			return (runs, BaseState(first, second, third, outs))
+			
+class Double(object):
+
+		def __init__(self):
+		
+			self.noun = 'double'
+			self.verb = 'doules'
+			self.atBat = True
+			self.PA = True
+			self.out = False
+			
+		@staticmethod
+		def advance(baseState):
+		
+			first = None
+			second = baseState.batter
+			third = baseSate.third
+			runs = sum([1 for a if a in [baseState.second, baseState.third])
+			outs = baseState.outs
+			
+			return (runs, BaseState(first, second, third, outs))
+			
+class Triple(object):
+
+		def __init__(self):
+		
+			self.noun = 'triple'
+			self.verb = 'triples'
+			self.atBat = True
+			self.PA = True
+			self.out = False
+			
+		@staticmethod
+		def advance(baseState):
+		
+			first = None
+			second = None
+			third = baseState.batter
+			runs = sum([1 for a if a in [baseState.first, baseState.second, baseState.third])
+			outs = baseState.outs
+			
+			return (runs, BaseState(first, second, third, outs))
+
+class HomeRun(object):
+
+		def __init__(self):
+		
+			self.noun = 'home run'
+			self.verb = 'homers'
+			self.atBat = True
+			self.PA = True
+			self.out = 0
+			
+		@staticmethod
+		def advance(baseState):
+		
+			first, second, third = None, None, None
+			runs = sum([1 for a if a in [baseState.batter, baseState.first, baseState.second, baseState.third])
+			outs = baseState.outs
+			
+			return (runs, BaseState(first, second, third, outs))	
+			
 class Event(object):
 
-	def __init__(self, type):
+	def __init__(self, **kwargs):
 	
-		self.type = type
-		self.narrative = self.genString()
-		
-		if type in ['strikeout', 'inPlayOut', 'sacrifice', 'GDP']:
-			self.batterOut = True
-			
-		else:
-			self.batterOut = False
-			
-		if type in ['single', 'double', 'triple', 'HR']:
-			self.isHit = True
-			
-		else:
-			self.isHit = False
-			
-		if type in ['BB', 'HBP', 'sacrifice']:
-			self.isAB = False
-			
-		else:
-			self.isAB = True
-
+	
 	def genString(self):
 		
 		outfield = ['left', 'center', 'right']
@@ -140,7 +201,7 @@ class PlateAppearance(object):
 		## should I use a singledispatch decorator to make multiple advancement functions depending on event?
 		## should I add the batter to the baseState and drive the PAs that way
 		## yes and yes. Each generated advancement function handles every base in a possible state
-		## advancment methods are static methods of Event class
+		## advancment methods are static methods of Event class (so maybe not singledispatch)
 		## matchup function picks from a dict of these methods provided by Event class 
 		## use kwargs to pass every possible piece of information down through the classes, only pass
 		## to each what is needed 
