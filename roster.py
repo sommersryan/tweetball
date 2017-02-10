@@ -5,7 +5,7 @@ from config import RESULT_TYPES
 from tweet import api
 from storage import playerStore
 from collections import Counter
-from itertools import groupBy
+from itertools import groupby
 from boto.s3.key import Key
 
 class Ratings(object):
@@ -209,10 +209,10 @@ def getTeams():
 		
 	finalPool = paGroups[0]
 	
-	for i in paGroups[1:]
+	for i in paGroups[1:]:
 		if len(finalPool) < 24:
 			finalPool += i
-		else
+		else:
 			break
 	
 	random.shuffle(finalPool)
