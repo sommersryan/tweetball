@@ -5,6 +5,7 @@ from config import RESULT_TYPES
 from tweet import api
 from storage import playerStore
 from collections import Counter
+from itertools import groupBy
 from boto.s3.key import Key
 
 class Ratings(object):
@@ -201,7 +202,21 @@ def getTeams():
 	keys = list(playerStore.list())
 	players = [Player.load(a) for a in keys]
 	playersSorted = sorted(players, key = lambda x: x.battingCareerStats['PA'])
-	pool = playersSorted[:24]
+	paGroups = []
+	
+	for k, g in groupby(playersSorted, key=lambda x: x.battingCareerStats['PA']):
+		paGroups.append(list(g))
+		
+	finalPool = paGroups[0]
+	
+	for i in paGroups[1:]
+		if len(finalPool) < 24:
+			finalPool += i
+		else
+			break
+	
+	random.shuffle(finalPool)
+	pool = finalPool[:24]
 	homeHitters, homePitchers, awayHitters, awayPitchers = [], [], [], []
 	
 	for i in range(0,9):
