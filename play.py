@@ -7,7 +7,15 @@ from wpa import winProb
 from fractions import Fraction
 
 class Matchup(object):
-
+	
+	"""
+	A Matchup object is initialized with two dictionaries, one for the batter 
+	and one for the pitcher, containing each player's probability of individual
+	outcomes. It uses Bill James' "Log 5" method to determine the probability of 
+	each outcome when these players face each other. The genResult() function 
+	uses the weightedChoice() function to pick an outcome based on these probabilities
+	"""
+	
 	def __init__(self, batting, pitching):
 		
 		lgAvg = leagueMeans()
@@ -68,47 +76,6 @@ class Event(object):
 		self.endState = self.func()['endState']
 		self.runs = self.func()['runs']
 		
-	def single(self):
-		
-		"""
-		This and subsequent methods will advance baserunners and assign Event
-		attributes commensurate with the type of event
-		"""
-		#Tuple extraBase contains bool values indicating whether each runner (in reverse order) advances an extra base
-		extraBase = (random.randint(0,100) <= AD_RATES['SINGLE_2ND_SCORES'], random.randint(0,100) <= AD_RATES['SINGLE_1ST_TO_3RD'])
-		
-		
-		
-	def double(self):
-		pass
-		
-	def triple(self):	
-		pass
-		
-	def homer(self):
-		pass
-		
-	def walk(self):
-		pass
-		
-	def strikeout(self):
-		pass
-		
-	def flyout(self):
-		pass
-		
-	def lineout(self):
-		pass
-		
-	def groundout(self):
-		pass
-		
-	def hbp(self):
-		pass
-		
-	def error(self):
-		pass
-		
 	def genString(self):
 		
 		outfield = ['left', 'center', 'right']
@@ -138,12 +105,71 @@ class Event(object):
 					
 class BaseOutState(object):
 
-	def __init__(self, first=None, second=None, third=None, outs=0):
+	def __init__(self, battingLineup, batter, first=None, second=None, third=None, outs=0, runs=0):
 	
+		"""
+		A BaseOutState object contains Player objects for every player 
+		on base and at the plate, as well as an integer representing the
+		number of outs, and the batting team's number of runs and lineup object. 
+		The advance() class method instantiates a new BaseOutState based on the event 
+		object ('single', 'double', etc) passed to it. The singledispatch decorator 
+		is used to allow the advance method to accept any type of event and return 
+		the correct new state.
+		"""
+	
+		self.batter = batter
 		self.first = first
 		self.second = second
 		self.third = third
 		self.outs = outs
+		self.runs = runs
+		self.battingLineup = battingLineup
+		
+		# forced is a list containing any runners who are forced by the runners behind
+		# them to advance
+		
+		self.forced = [self.first]
+		
+		if self.first:
+			self.forced.append(self.second)
+			
+		if self.second and self.first:
+			self.forced.append(self.third)
+		
+	@classmethod
+	def strikeout(cls, state):
+		
+		"""
+		This and subsequent class methods advance runners from the passed state
+		based on the named event, and instantiates a new base state. 
+		"""
+		
+		first, second, third = state.first, state.second, state.third
+		battingLineup = state.battingLineup
+		outs = state.outs + 1
+		runs = state.runs
+		
+		if outs < 3:
+			batter = state.battingLineup.newBatter()
+		else:
+			batter = None
+		
+		inst = cls(battingLineup, batter, first, second, third, outs, runs)
+		
+		return inst
+		
+	@classmethod
+	def walk(cls, state):
+		
+		outs = state.outs
+		first = state.batter
+		batter = state.battingLineup.newBatter()
+		
+		if state.third and state.third in state.forced:
+			runs = state.runs + 1
+			third = state.second
+			second = state.first
+			
 	
 	def getState(self):
 		
