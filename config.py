@@ -1,17 +1,5 @@
 import os
 
-#Base advancements -- number of times out of 100 the named advancement occurs
-AD_RATES = {
-			SINGLE_1ST_TO_2ND = 70
-			SINGLE_1ST_TO_3RD = 30
-			#
-			SINGLE_2ND_TO_3RD = 35
-			SINGLE_2ND_SCORES = 65
-			#
-			DOUBLE_1ST_TO_3RD = 60
-			DOUBLE_1ST_SCORES = 40
-			}
-
 #PA time in seconds
 PA_TIME = 134
 

@@ -1,5 +1,4 @@
 import random, datetime, config
-from config import AD_RATES
 from utils import baseNarratives, transitions, log5, weightedChoice, emojis
 from league import leagueMeans
 from tweet import api
@@ -53,16 +52,16 @@ class Event(object):
 				 'singles' : self.single, 
 				 'doubles' : self.double,
 				 'triples' : self.triple,
-				 'homers' : self.homer
-				 'walks' : self.walk
-				 'strikes out' : self.strikeout
-				 'flies out' : self.flyout
-				 'lines out': self.lineout
-				 'grounds out': self.groundout
-				 'is hit by pitch' : self.hbp
-				 'error' : self.error
-				 'steals' : self.steal
-				 'enters to pitch' : self.bullpenCall
+				 'homers' : self.homer,
+				 'walks' : self.walk,
+				 'strikes out' : self.strikeout,
+				 'flies out' : self.flyout,
+				 'lines out': self.lineout,
+				 'grounds out': self.groundout,
+				 'is hit by pitch' : self.hbp,
+				 'error' : self.error,
+				 'steals' : self.steal,
+				 'enters to pitch' : self.bullpenCall,
 				 'enters as a pinch hitter' : self.pinchHitter
 				} 
 		
@@ -173,7 +172,7 @@ class State(object):
 			self.chain[runner] = None
 		
 		else:
-			self.chain[runner + bases] = self.chain[runner]
+			self.chain[runner + numBases] = self.chain[runner]
 			self.chain[runner] = None
 			
 			if runner == 0:
@@ -187,7 +186,8 @@ class State(object):
 		advanceAll() will advance every runner on base using the advance() method
 		"""
 		
-		for i in range(0,3):
+		#Step backward through bases and advance runners
+		for i in range(3,0,-1):
 			self.advance(i, numBases)
 			
 		return None
