@@ -217,7 +217,7 @@ def getTeams():
 	
 	random.shuffle(finalPool)
 	pool = finalPool[:24]
-	pool.sort(key = lambda x: (x.ratings.control + x.ratings.stuff), reverse = True)
+	pool.sort(key = lambda x: (x.ratings.control + x.ratings.stuff), reverse = False)
 	homeHitters, homePitchers, awayHitters, awayPitchers = [], [], [], []
 	
 	for i in range(0,9):
