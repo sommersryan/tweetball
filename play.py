@@ -183,11 +183,11 @@ class State(object):
 	def advanceAll(self, numBases):
 	
 		"""
-		advanceAll() will advance every runner on base using the advance() method
+		advanceAll() will advance every runner on base by numBases using the advance() method
 		"""
 		
 		#Step backward through bases and advance runners
-		for i in range(3,0,-1):
+		for i in range(3,-1,-1):
 			self.advance(i, numBases)
 			
 		return None
