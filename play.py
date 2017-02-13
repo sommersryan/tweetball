@@ -5,6 +5,7 @@ from league import leagueMeans
 from tweet import api
 from wpa import winProb
 from fractions import Fraction
+from copy import copy
 
 class Matchup(object):
 	
@@ -103,12 +104,12 @@ class Event(object):
 				
 		return strings[self.type]
 					
-class BaseOutState(object):
+class State(object):
 
 	def __init__(self, battingLineup, batter, first=None, second=None, third=None, outs=0, runs=0):
 	
 		"""
-		A BaseOutState object contains Player objects for every player 
+		A State object contains Player objects for every player 
 		on base and at the plate, as well as an integer representing the
 		number of outs, and the batting team's number of runs and lineup object. 
 		The advance() class method instantiates a new BaseOutState based on the event 
@@ -116,98 +117,80 @@ class BaseOutState(object):
 		is used to allow the advance method to accept any type of event and return 
 		the correct new state.
 		"""
-	
-		self.batter = batter
-		self.first = first
-		self.second = second
-		self.third = third
+		
 		self.outs = outs
 		self.runs = runs
 		self.battingLineup = battingLineup
 		
-		# forced is a list containing any runners who are forced by the runners behind
-		# them to advance
+		#Chain is a list that orders the batter and runners, with a fourth element to collect
+		#runners who have scored via advancement. The State class __getattr__ will pull from 
+		#State.chain if the batter, first, second, or third base runner is requested
 		
-		self.forced = [self.first]
+		self.chain = [batter, first, second, third, []]
+		
+		# Forced is a list containing True or False is a runner is forced to advance. Batters
+		# (forced[0]) and runners on first (forced[1]) are always forced to advance.
+		
+		self.forced = [True, True, False, False]
 		
 		if self.first:
-			self.forced.append(self.second)
+			self.forced[2] = True
 			
 		if self.second and self.first:
-			self.forced.append(self.third)
-		
-	@classmethod
-	def strikeout(cls, state):
-		
+			self.forced[3] = True
+	
+	def __getattr__(self, key):
+	
 		"""
-		This and subsequent class methods advance runners from the passed state
-		based on the named event, and instantiates a new base state. 
+		If the state's batter or any baserunners are requested, __getattr__ will retrieve
+		these from the chain attribute.
 		"""
 		
-		first, second, third = state.first, state.second, state.third
-		battingLineup = state.battingLineup
-		outs = state.outs + 1
-		runs = state.runs
+		slices = { 'batter' : 0, 'first' : 1, 'second' : 2, 'third' : 3, 'scored' : 4 }
 		
-		if outs < 3:
-			batter = state.battingLineup.newBatter()
+		if key in slices:
+			return self.chain[slices[key]]
+		
 		else:
-			batter = None
-		
-		inst = cls(battingLineup, batter, first, second, third, outs, runs)
-		
-		return inst
-		
-	@classmethod
-	def walk(cls, state):
-		
-		outs = state.outs
-		first = state.batter
-		batter = state.battingLineup.newBatter()
-		
-		if state.third and state.third in state.forced:
-			runs = state.runs + 1
-			third = state.second
-			second = state.first
-			
+			raise AttributeError
 	
-	def getState(self):
-		
-		firstBase, secondBase, thirdBase = '', '', ''
-		
-		if self.first:
-			firstBase = '1'
-			
-		if self.second:
-			secondBase = '2'
-			
-		if self.third:
-			thirdBase = '3'
-			
-		state = '{0}{1}{2}'.format(firstBase, secondBase, thirdBase)
-		
-		if state == '':
-			state = '0'
-		
-		return (int(state), self.outs)
-			
-	def __str__(self):
-		
-		narr = baseNarratives[self.getState()[0]]
-		
-		return "{0} and {1} outs".format(narr, self.outs)
+	def advance(self, runner, numBases=1):
 	
-	def queue(self):
-	
-		runners = []
+		"""
+		advance() will advance the passed runner position (a slice of the bases attribute) 
+		the passed number of bases (an integer) per the dictates of baseball advancement
+		logic. If there is no runner on the passed base, or a runner position greater
+		than 3 is specified, it takes no action. Scoring runners are advanced to the 
+		scoring list in position 4, and the State's runs attribute is updated.
+		"""
 		
-		for runner in [self.first, self.second, self.third]:
-		
-			if runner:
+		if not self.chain[runner] or runner > 3:
+			return None
 			
-				runners.append(runner)
-				
-		return runners
+		if runner + numBases >= 4:
+			self.chain[4].append(self.chain[runner])
+			self.runs += 1
+			self.chain[runner] = None
+		
+		else:
+			self.chain[runner + bases] = self.chain[runner]
+			self.chain[runner] = None
+			
+			if runner == 0:
+				self.chain[runner] = self.battingLineup.newBatter()
+			
+		return None
+	
+	def advanceAll(self, numBases):
+	
+		"""
+		advanceAll() will advance every runner on base using the advance() method
+		"""
+		
+		for i in range(0,3):
+			self.advance(i, numBases)
+			
+		return None
 		
 class PlateAppearance(object):
 	
