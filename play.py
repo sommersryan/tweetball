@@ -111,10 +111,6 @@ class State(object):
 		A State object contains Player objects for every player 
 		on base and at the plate, as well as an integer representing the
 		number of outs, and the batting team's number of runs and lineup object. 
-		The advance() class method instantiates a new BaseOutState based on the event 
-		object ('single', 'double', etc) passed to it. The singledispatch decorator 
-		is used to allow the advance method to accept any type of event and return 
-		the correct new state.
 		"""
 		
 		self.outs = outs
@@ -170,6 +166,9 @@ class State(object):
 			self.chain[4].append(self.chain[runner])
 			self.runs += 1
 			self.chain[runner] = None
+			
+			if runner == 0:
+				self.chain[runner] = self.battingLineup.newBatter()
 		
 		else:
 			self.chain[runner + numBases] = self.chain[runner]
@@ -177,7 +176,9 @@ class State(object):
 			
 			if runner == 0:
 				self.chain[runner] = self.battingLineup.newBatter()
-			
+		
+		self.updateForced()
+		
 		return None
 	
 	def advanceAll(self, numBases):
@@ -189,6 +190,23 @@ class State(object):
 		#Step backward through bases and advance runners
 		for i in range(3,-1,-1):
 			self.advance(i, numBases)
+			
+		return None
+		
+	def updateForced(self):
+	
+		"""
+		updates the forced list based on the current state
+		"""
+		self.forced[2], self.forced[3] = False, False
+		
+		if self.first and self.second:
+			self.forced[2] = True
+			self.forced[3] = True
+		
+		elif self.first:
+			self.forced[2] = True
+			self.forced[3] = True
 			
 		return None
 		
