@@ -198,6 +198,9 @@ class State(object):
 		"""
 		updates the forced list based on the current state
 		"""
+		#Batter and runner on first are always forced
+		self.forced[0], self.forced[1] = True, True
+		
 		self.forced[2], self.forced[3] = False, False
 		
 		if self.first and self.second:
@@ -206,7 +209,6 @@ class State(object):
 		
 		elif self.first:
 			self.forced[2] = True
-			self.forced[3] = True
 			
 		return None
 		
