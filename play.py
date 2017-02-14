@@ -177,6 +177,7 @@ class State(object):
 			if runner == 0:
 				self.chain[runner] = self.battingLineup.newBatter()
 		
+		#update the forced attribute to reflect new base state
 		self.updateForced()
 		
 		return None
