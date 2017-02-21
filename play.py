@@ -166,23 +166,23 @@ class State(object):
 			return None
 			
 		if runner + numBases >= 4:
+			self.advanceLog += "{0} scores. ".format(self.chain[runner].handle)
 			self.chain[4].append(self.chain[runner])
 			self.runs += 1
 			self.chain[runner] = None
-			self.advanceLog += "{0} scores. ".format(self.chain[runner].handle)
 			
 			if runner == 0:
 				self.chain[runner] = self.battingLineup.newBatter()
 		
 		else:
+			if runner != 0:
+				self.advanceLog += "{0} to {1}. ".format(self.chain[runner].handle, strings[runner + numBases])
+		
 			self.chain[runner + numBases] = self.chain[runner]
 			self.chain[runner] = None
 			
 			if runner == 0:
 				self.chain[runner] = self.battingLineup.newBatter()
-			
-			else:
-				self.advanceLog += "{0} to {1}. ".format(self.chain[runner].handle, strings[runner + numBases])
 			
 		#update the forced attribute to reflect new base state
 		self.updateForced()
