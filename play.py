@@ -116,6 +116,7 @@ class State(object):
 		self.outs = outs
 		self.runs = runs
 		self.battingLineup = battingLineup
+		self.advanceLog = ""
 		
 		#Chain is a list that orders the batter and runners, with a fourth element to collect
 		#runners who have scored via advancement. The State class __getattr__ will pull from 
@@ -159,6 +160,8 @@ class State(object):
 		scoring list in position 4, and the State's runs attribute is updated.
 		"""
 		
+		strings = ['', 'first', 'second', 'third']
+		
 		if not self.chain[runner] or runner > 3:
 			return None
 			
@@ -166,6 +169,7 @@ class State(object):
 			self.chain[4].append(self.chain[runner])
 			self.runs += 1
 			self.chain[runner] = None
+			self.advanceLog += "{0} scores. ".format(self.chain[runner].handle)
 			
 			if runner == 0:
 				self.chain[runner] = self.battingLineup.newBatter()
@@ -176,7 +180,10 @@ class State(object):
 			
 			if runner == 0:
 				self.chain[runner] = self.battingLineup.newBatter()
-		
+			
+			else:
+				self.advanceLog += "{0} to {1}. ".format(self.chain[runner].handle, strings[runner + numBases])
+			
 		#update the forced attribute to reflect new base state
 		self.updateForced()
 		
