@@ -136,10 +136,10 @@ class State(object):
 			self.forced[3] = True
 	
 	@classmethod
-	def new(cls, state)
+	def new(cls, state):
 	
 		"""
-		Initializes a new state from a previous one. This is for storing copies
+		Initializes a new state from a previous one. Useful for storing copies
 		of a state in the beginState and endState attributes of event objects and
 		ensuring they won't be modified elsewhere. 
 		"""
