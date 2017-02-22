@@ -118,9 +118,9 @@ class State(object):
 		self.battingLineup = battingLineup
 		self.advanceLog = ""
 		
-		#Chain is a list that orders the batter and runners, with a fourth element to collect
-		#runners who have scored via advancement. The State class __getattr__ will pull from 
-		#State.chain if the batter, first, second, or third base runner is requested
+		# Chain is a list that orders the batter and runners, with a fourth element to collect
+		# runners who have scored via advancement. The State class __getattr__ will pull from 
+		# State.chain if the batter, first, second, or third base runner is requested
 		
 		self.chain = [batter, first, second, third, []]
 		
@@ -134,6 +134,29 @@ class State(object):
 			
 		if self.second and self.first:
 			self.forced[3] = True
+	
+	@classmethod
+	def new(cls, state)
+	
+		"""
+		Initializes a new state from a previous one. This is for storing copies
+		of a state in the beginState and endState attributes of event objects and
+		ensuring they won't be modified elsewhere. 
+		"""
+		
+		kwargs = {
+					'battingLineup' : state.battingLineup,
+					'batter' : state.batter,
+					'first' : state.first,
+					'second' : state.second,
+					'third' : state.third,
+					'outs' : state.outs,
+					'runs' : state.runs
+				}
+				
+		inst = cls(**kwargs)
+		
+		return inst
 	
 	def __getattr__(self, key):
 	
