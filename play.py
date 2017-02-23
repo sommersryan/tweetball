@@ -68,13 +68,14 @@ class Event(object):
 		self.top = kwargs.pop('top')
 		self.inning = kwargs.pop('inning')
 		self.pitcher = kwargs.pop('pitcher')
-		self.beginState = kwargs.pop('beginState')
+		self.beginState = State.new(kwargs.pop('beginState'))
 		self.battingTeam = kwargs.pop('battingTeam')
 		self.pitchingTeam = kwargs.pop('pitchingTeam')
 		self.type = kwargs.pop('type')
-		self.func = funcs['self.type']
-		self.endState = self.func()['endState']
-		self.runs = self.func()['runs']
+		self.func = funcs[self.type]
+		self.endState = State.new(kwargs.pop('beginState'))
+		self.func(self.endState)
+		
 		
 	def genString(self):
 		
