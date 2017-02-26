@@ -1,6 +1,6 @@
 import random, datetime, config
 from utils import baseNarratives, transitions, log5, weightedChoice, emojis
-from league import leagueMeans
+from league import leagueMeans, STEAL_RATE, ADVANCE_EXTRA
 from tweet import api
 from wpa import winProb
 from fractions import Fraction
@@ -106,7 +106,7 @@ class Event(object):
 					
 class State(object):
 
-	def __init__(self, battingLineup, batter, first=None, second=None, third=None, outs=0, runs=0):
+	def __init__(self, battingLineup, batter, pitcher, first=None, second=None, third=None, outs=0, runs=0):
 	
 		"""
 		A State object contains Player objects for every player 
@@ -114,10 +114,18 @@ class State(object):
 		number of outs, and the batting team's number of runs and lineup object. 
 		"""
 		
+		# Note to self -- state includes pitcher. Uses a generator method that calls
+		# methods to check various things -- whether there is a steal, pinch hitter,
+		# bullpen call, etc, and uses Matchup class for batting events. Creates an 
+		# event instance, and uses new() to store a copy of itself as beginState, calls an 
+		# event function to modify itself, stores that as the endstate, and yields the event
+		# for an iterator of the inning class to add to its events list 
+		
 		self.outs = outs
 		self.runs = runs
 		self.battingLineup = battingLineup
 		self.advanceLog = ""
+		self.pitcher = pitcher
 		
 		# Chain is a list that orders the batter and runners, with a fourth element to collect
 		# runners who have scored via advancement. The State class __getattr__ will pull from 
@@ -243,6 +251,39 @@ class State(object):
 			self.forced[2] = True
 			
 		return None
+		
+	def makeEvents(self):
+	
+		"""
+		Generator that yields Event objects		
+		"""
+		
+		pass
+		
+	def checkBullpen(self):
+	
+		"""
+		Evaluates whether a bullpen call should be made
+		"""
+		
+		pass
+		
+	def checkPinchHitter(self):
+	
+		"""
+		Evaluates whether a pinch hitter should be brought in
+		"""
+		
+		pass
+		
+	def checkSteal(self):
+	
+		"""
+		Evaluates whether a steal will occur
+		"""
+		
+		pass
+		
 		
 class PlateAppearance(object):
 	

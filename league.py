@@ -176,3 +176,13 @@ def makeDist(outcomes):
 	
 BAT_DIST = makeDist(BAT_AVG_OUTCOMES)
 PITCH_DIST = makeDist(PITCH_AVG_OUTCOMES)
+
+#Percentage of stolen base opportunities  (runner on first or second with next base open)
+#in which a steal is attempted. Based on 2016 MLB.
+
+STEAL_RATE = 3538/66195
+
+#Percentage of time and adancing runner advances more than one base on a single or more
+#than two on a double. Based on 2016 MLB 
+
+ADVANCE_EXTRA = .4
