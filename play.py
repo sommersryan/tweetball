@@ -258,12 +258,29 @@ class State(object):
 		Generator that yields Event objects		
 		"""
 		
+		#Shuffle the check methods so they aren't always checked in same orders
+		checks = [self.checkBullpen, self.checkPinchHitter, self.checkSteal]
+		random.shuffle(checks)
+		checkCalls = [func() for func in checks]
+		
+		for call in checkCalls:
+			if call:
+				event = call
+				break
+				
+		if event:
+			
+		
+				
+		
+		
 		pass
 		
 	def checkBullpen(self):
 	
 		"""
-		Evaluates whether a bullpen call should be made
+		Evaluates whether a bullpen call should be made; returns the 
+		bullpen caller function if so, if not returns False
 		"""
 		
 		pass
@@ -271,7 +288,8 @@ class State(object):
 	def checkPinchHitter(self):
 	
 		"""
-		Evaluates whether a pinch hitter should be brought in
+		Evaluates whether a pinch hitter should be brought in; returns the
+		pinch hitter function if so, if not returns False
 		"""
 		
 		pass
@@ -279,7 +297,8 @@ class State(object):
 	def checkSteal(self):
 	
 		"""
-		Evaluates whether a steal will occur
+		Evaluates whether a steal will occur; returns the steal function
+		if so, if not returns False
 		"""
 		
 		pass
