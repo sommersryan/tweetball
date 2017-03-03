@@ -251,8 +251,8 @@ class State(object):
 		elif self.first:
 			self.forced[2] = True
 			
-		return None
-		
+		return None	
+	
 	def makeEvents(self):
 	
 		"""
@@ -276,34 +276,6 @@ class State(object):
 		
 		
 		pass
-		
-	def checkBullpen(self):
-	
-		"""
-		Evaluates whether a bullpen call should be made; returns the 
-		bullpen caller function if so, if not returns False
-		"""
-		
-		pass
-		
-	def checkPinchHitter(self):
-	
-		"""
-		Evaluates whether a pinch hitter should be brought in; returns the
-		pinch hitter function if so, if not returns False
-		"""
-		
-		pass
-		
-	def checkSteal(self):
-	
-		"""
-		Evaluates whether a steal will occur; returns the steal function
-		if so, if not returns False
-		"""
-		
-		pass
-		
 		
 class PlateAppearance(object):
 	
@@ -510,7 +482,28 @@ class Inning(object):
 		self.num = kwargs.pop('num')
 		self.PAs = []
 		self.terminating = kwargs.pop('terminating')
-		self.runs = kwargs.pop('runs')
+		self.runs = 0
+		self.homeScore = kwargs.pop('homeScore')
+		self.awayScore = kwargs.pop('awayScore')
+		self.awayTeam = kwargs.pop('awayTeam')
+		self.homeTeam = kwargs.pop('homeTeam')
+		
+		self.battingTeam = self.awayTeam if self.top else self.homeTeam
+		self.pitchingTeam = self.homeTeam if self.top else self.awayTeam
+		
+		
+	def typePicker(self):
+	
+		"""
+		Examines the state and previous PA and evaluates whether a steal, pitching change, 
+		pinch hitter, or normal PA event should occur
+		"""
+		
+		#Point system will accumulate points for event types based on various state traits
+		steal, bullpen, pinch, pa = 0,0,0,0
+		
+		scoreDiff = abs(self.homeScore - self.awayScore)
+		
 		
 class Game(object):
 
