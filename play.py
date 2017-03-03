@@ -106,7 +106,7 @@ class Event(object):
 					
 class State(object):
 
-	def __init__(self, battingLineup, batter, pitcher, first=None, second=None, third=None, outs=0, runs=0):
+	def __init__(self, battingLineup, pitchingLineup, batter, pitcher, first=None, second=None, third=None, outs=0, runs=0):
 	
 		"""
 		A State object contains Player objects for every player 
@@ -124,6 +124,7 @@ class State(object):
 		self.outs = outs
 		self.runs = runs
 		self.battingLineup = battingLineup
+		self.pitchingLineup = pitchingLineup
 		self.advanceLog = ""
 		self.pitcher = pitcher
 		
