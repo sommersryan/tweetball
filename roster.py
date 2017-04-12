@@ -1,4 +1,4 @@
-import random, pickle, forgery_py
+import random, pickle, forgery_py, json
 from league import BAT_DIST, PITCH_DIST
 from utils import percentile, nicknames
 from config import RESULT_TYPES
@@ -48,23 +48,16 @@ class Ratings(object):
 			
 			
 class Player(object):
-
-	def __init__(self, twitterUser):
-		#twitterUser is a tweepy user object
-		self.id = twitterUser.id
-		self.name = twitterUser.screen_name
-		self.fullName = twitterUser.name
-		self.handle = "@{0}".format(twitterUser.screen_name)
-		self.handedness = random.choice(['L','R','S'])
-		self.uniNumber = random.randint(0,71)
-		self.ratings = Ratings()
-		self.pitchingGameStats = Counter()
-		self.battingGameStats = Counter()
-		self.pitchingCareerStats = Counter()
-		self.battingCareerStats = Counter()
-		self.active = True
-		self.sub = False
-		self.position = None
+	
+	def __init__(self, sub = False, position = None, active = True, **kwargs):
+		
+		for key, value in kwargs.items:
+			setattr(self, key, value)
+		
+		self.sub = sub
+		self.position = position
+		self.active = active
+		
 
 	def save(self):
 		
