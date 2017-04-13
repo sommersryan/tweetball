@@ -1,7 +1,7 @@
 import os
 
 #Current Tweetball season
-CURRENT_SEASON = os.environ.get('CURRENT_SEASON')
+CURRENT_SEASON = str(os.environ.get('CURRENT_SEASON'))
 
 #MongoDB URI
 MONGO_URI = os.environ.get('MONGO_URI')

@@ -7,6 +7,12 @@ from storage import playerStore
 from collections import Counter
 from itertools import groupby
 from boto.s3.key import Key
+from pymongo import MongoClient
+from config import MONGO_URI, CURRENT_SEASON
+
+client = MongoClient(MONGO_URI)
+db = client.tweetball
+playerDB = db.players
 
 class Ratings(object):
 
@@ -51,14 +57,21 @@ class Player(object):
 	
 	def __init__(self, sub = False, position = None, active = True, **kwargs):
 		
-		for key, value in kwargs.items:
+		for key, value in kwargs.items():
 			setattr(self, key, value)
 		
 		self.sub = sub
 		self.position = position
 		self.active = active
 		
-
+	@classmethod
+	def loadID(cls, id):
+	
+		rec = playerDB.find_one({'id' : str(id)})
+		inst = cls(**rec)
+		
+		return inst
+	
 	def save(self):
 		
 		self.pitchingCareerStats += self.pitchingGameStats

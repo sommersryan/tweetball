@@ -1,6 +1,7 @@
 from storage import playerStore
 from roster import Player
 from pymongo import MongoClient
+from config import MONGO_URI
 import json
 
 # The purpose of this script is to load player objects from AWS and convert them for
@@ -9,7 +10,7 @@ import json
 
 # initialize client and database
 
-client = MongoClient()
+client = MongoClient(MONGO_URI)
 
 db = client.tweetball
 
