@@ -55,50 +55,28 @@ class Ratings(object):
 			
 class Player(object):
 	
-	def __init__(self, sub = False, position = None, active = True, **kwargs):
+	def __init__(self, twitterID):
 		
-		for key, value in kwargs.items():
-			setattr(self, key, value)
+		# Initializes with a twitterID of an existing record, pulls record and stores reference to mongo objectID
 		
-		self.sub = sub
-		self.position = position
-		self.active = active
-		
-	@classmethod
-	def loadID(cls, id):
+		self.ref = playerDB.find_one({'id' : int(twitterID)})["_id"]
 	
-		rec = playerDB.find_one({'id' : str(id)})
-		inst = cls(**rec)
-		
-		return inst
+	def __getattr__(self, key):
 	
-	def save(self):
+		# Exposes elements of the db document as properties of the object
 		
-		self.pitchingCareerStats += self.pitchingGameStats
-		self.battingCareerStats += self.battingGameStats
+		return playerDB.find_one({'_id' : self.ref})[key]
+	
+	def increment(self, side, stat, amount = 1, season = CURRENT_SEASON):
 		
-		self.pitchingGameStats.clear()
-		self.battingGameStats.clear()
-		self.sub = False
-		self.position = None
-		self.active = True
+		# Increments a specified stat by a specified amount 
+		# Side parameter must be 'batting' or 'pitching'
 		
-		k = Key(playerStore)
-		k.key = self.id
-		zipped = pickle.dumps(self)
-		k.set_contents_from_string(zipped)
+		keyString = "stats.seasons.{0}.{1}.{2}".format(season, side, stat)
+		playerDB.update( { "_id" : self.ref }, { "$inc" : { keyString : amount }} )
 		
 		return True
-		
-	def refresh(self):
-		
-		new = api.get_user(self.id)
-		self.id = new.id
-		self.name = "@{0}".format(new.screen_name)
-		self.fullName = new.name
-		
-		return True
-	
+
 	def notifyAttributes(self):
 	
 		attrTweet = """{0}\r\n
