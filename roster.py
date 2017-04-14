@@ -120,8 +120,19 @@ class Player(object):
 	@staticmethod
 	def refresh(player):
 	
-		pass
+		twitterUser = api.get_user(player.id)
 		
+		updates = {
+					'name' : twitterUser.screen_name,
+					'fullName' : twitterUser.name,
+					'handle' : "@{0}".format(twitterUser.screen_name),
+					'avatarURL' : twitterUser.profile_image_url_https,
+					'headerUR:' : twitterUser.profile_banner_url
+					}
+		
+		playerDB.update({ '_id' : player.id }, { '$set' : updates })
+		
+		return True
 		
 	
 	def notifyAttributes(self):
