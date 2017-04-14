@@ -72,6 +72,9 @@ class Player(object):
 		# Increments a specified stat by a specified amount 
 		# Side parameter must be 'batting' or 'pitching'
 		
+		if side not in ['batting', 'pitching']:
+			raise KeyError
+		
 		keyString = "stats.seasons.{0}.{1}.{2}".format(season, side, stat)
 		playerDB.update( { "_id" : self.ref }, { "$inc" : { keyString : amount }} )
 		
