@@ -81,11 +81,37 @@ class Player(object):
 		return True
 
 	@staticmethod
-	def new(twitterID):
+	def new(twitterUser):
 	
-		# Adds a new record to the database based on a passed Twitter ID
+		# Adds a new document to the  player database based on a passed tweepy user object
 		
-		pass
+		# Build a dict to insert, first with basic attributes from the tweepy user
+		
+		doc = {
+				'id' : twitterUser.id,
+				'name' : twitterUser.screen_name,
+				'fullName' : twitterUser.name,
+				'handle' : "@{0}".format(twitterUser.screen_name),
+				'handedness' : random.choice(['L','R','S']),
+				'uniNumber' : random.randint(0,71),
+				'avatarURL' : twitterUser.profile_image_url_https,
+				'headerURL' : twitterUser.profile_banner_url}
+		
+		# Generate some ratings, and then add them in the appropriate keys
+		
+		ratings = Ratings()
+		
+		doc['ratings'] = {}
+		doc['probabilities'] = {}
+		doc['probabilities']['batting'] = ratings.__dict__.pop('batting')
+		doc['probabilities']['pitching'] = ratings.__dict__.pop('pitching')
+		doc['ratings'].update(ratings.__dict__)
+		
+		# Insert the completed doc into the collection
+		
+		playerDB.insert(doc)
+		
+		return True
 	
 	def notifyAttributes(self):
 	
