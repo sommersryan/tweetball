@@ -80,6 +80,13 @@ class Player(object):
 		
 		return True
 
+	@staticmethod
+	def new(twitterID):
+	
+		# Adds a new record to the database based on a passed Twitter ID
+		
+		pass
+	
 	def notifyAttributes(self):
 	
 		attrTweet = """{0}\r\n
