@@ -66,7 +66,11 @@ class Player(object):
 		# Exposes elements of the db document as properties of the object
 		
 		return playerDB.find_one({'_id' : self.ref})[key]
+		
+	def __setattr__(self, key, value):
 	
+		playerDB.update({'_id' : self.ref}, { "$set" { key : value }})
+		
 	def increment(self, side, stat, amount = 1, season = CURRENT_SEASON):
 		
 		# Increments a specified stat by a specified amount 
@@ -112,6 +116,13 @@ class Player(object):
 		playerDB.insert(doc)
 		
 		return True
+	
+	@staticmethod
+	def refresh(player):
+	
+		pass
+		
+		
 	
 	def notifyAttributes(self):
 	
