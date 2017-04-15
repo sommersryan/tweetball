@@ -68,8 +68,14 @@ class Player(object):
 		return playerDB.find_one({'_id' : self.ref})[key]
 		
 	def __setattr__(self, key, value):
-	
-		playerDB.update({'_id' : self.ref}, { "$set" : { key : value }})
+		
+		# so init doesn't cause recursion:
+		
+		if key == 'ref':
+			self.__dict__['ref'] = value
+		
+		else:
+			playerDB.update({'_id' : self.ref}, { "$set" : { key : value }})
 		
 	def increment(self, side, stat, amount = 1, season = CURRENT_SEASON):
 		
