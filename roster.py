@@ -133,10 +133,10 @@ class Player(object):
 					'fullName' : twitterUser.name,
 					'handle' : "@{0}".format(twitterUser.screen_name),
 					'avatarURL' : twitterUser.profile_image_url_https,
-					'headerUR:' : twitterUser.profile_banner_url
+					'headerURL' : twitterUser.profile_banner_url
 					}
 		
-		playerDB.update({ '_id' : player.id }, { '$set' : updates })
+		playerDB.update({ '_id' : player.ref }, { '$set' : updates })
 		
 		return True
 		
