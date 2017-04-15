@@ -173,13 +173,6 @@ class Player(object):
 	
 		return self.handle
 		
-	@staticmethod
-	def load(playerID):
-	
-		k = playerStore.get_key(playerID)
-		raw = k.get_contents_as_string()
-		return pickle.loads(raw)
-		
 class Lineup(object):
 
 	def __init__(self, battingOrder, pitchers):
@@ -249,47 +242,3 @@ class Team(object):
 	def __str__(self):
 	
 		return "{0} {1}".format(self.location, self.nickname)
-
-def getTeams():
-
-	keys = list(playerStore.list())
-	players = [Player.load(a) for a in keys]
-	playersSorted = sorted(players, key = lambda x: x.battingCareerStats['PA'])
-	paGroups = []
-	
-	for k, g in groupby(playersSorted, key=lambda x: x.battingCareerStats['PA']):
-		paGroups.append(list(g))
-		
-	finalPool = paGroups[0]
-	
-	for i in paGroups[1:]:
-		if len(finalPool) < 24:
-			finalPool += i
-		else:
-			break
-	
-	random.shuffle(finalPool)
-	pool = finalPool[:24]
-	pool.sort(key = lambda x: (x.ratings.control + x.ratings.stuff), reverse = False)
-	homeHitters, homePitchers, awayHitters, awayPitchers = [], [], [], []
-	
-	for i in range(0,9):
-		homeHitters.append(pool.pop())
-		awayHitters.append(pool.pop())
-		
-	for i in range(0,3):
-		homePitchers.append(pool.pop())
-		awayPitchers.append(pool.pop())
-		
-	homeLoc = forgery_py.address.city()
-	awayLoc = forgery_py.address.city()
-	homeNick = random.choice(nicknames)
-	awayNick = random.choice(nicknames)
-	
-	homeLineup = Lineup(homeHitters, homePitchers)
-	awayLineup = Lineup(awayHitters, awayPitchers)
-	
-	homeTeam = Team(homeNick, homeLoc, homeLineup)
-	awayTeam = Team(awayNick, awayLoc, awayLineup)
-	
-	return(homeTeam, awayTeam)
