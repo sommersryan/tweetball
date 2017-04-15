@@ -54,6 +54,11 @@ class Ratings(object):
 			
 			
 class Player(object):
+
+	# The Player class essentially acts as an interface for the players collection in mongoDB. 
+	# The class itself stores only the mongo ObjectID, and uses that to get and set attributes directly
+	# in the database, as well as increment stats and update the database with changes to the user's3
+	# twitter profile. 
 	
 	def __init__(self, twitterID):
 		
