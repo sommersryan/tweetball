@@ -155,12 +155,12 @@ class Player(object):
 					PITCHING:\r\n
 					Control: {4}\r\nStuff: {5}\r\nComposure: {6}
 					""".format(self.handle,
-								self.ratings.contact,
-								self.ratings.power,
-								self.ratings.discipline,
-								self.ratings.control,
-								self.ratings.stuff,
-								self.ratings.composure)
+								self.ratings['contact'],
+								self.ratings['power'],
+								self.ratings['discipline'],
+								self.ratings['control'],
+								self.ratings['stuff'],
+								self.ratings['composure'])
 		
 		api.update_status(attrTweet)
 		return True
