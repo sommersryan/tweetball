@@ -69,7 +69,7 @@ class Player(object):
 		
 	def __setattr__(self, key, value):
 	
-		playerDB.update({'_id' : self.ref}, { "$set" { key : value }})
+		playerDB.update({'_id' : self.ref}, { "$set" : { key : value }})
 		
 	def increment(self, side, stat, amount = 1, season = CURRENT_SEASON):
 		
