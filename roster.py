@@ -13,6 +13,7 @@ from config import MONGO_URI, CURRENT_SEASON
 client = MongoClient(MONGO_URI)
 db = client.tweetball
 playerColl = db.players
+teamColl = db.teams
 
 class Ratings(object):
 
@@ -236,11 +237,14 @@ class Lineup(object):
 		
 class Team(object):
 
-	def __init__(self, nickname, location, lineup):
-	
-		self.nickname = nickname
-		self.location = location
-		self.lineup = lineup
+	def __init__(self, objectID):
+		
+		self.ref = objectID
+		self.nickname = teamColl.find_one({'_id' : self.ref})['nickname']
+		self.location = teamColl.find_one({'_id' : self.ref})['city']
+		self.batters = []
+		self.pitchers = []
+		self.lineups = []
 	
 	def __str__(self):
 	
