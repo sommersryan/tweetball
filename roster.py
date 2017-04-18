@@ -61,11 +61,11 @@ class Player(object):
 	# in the database, as well as increment stats and update the database with changes to the user's3
 	# twitter profile. 
 	
-	def __init__(self, twitterID):
+	def __init__(self, objectID):
 		
-		# Initializes with a twitterID of an existing record, pulls record and stores reference to mongo objectID
+		# Initializes with a objectID of an existing record, pulls record and stores reference to mongo objectID
 		
-		self.ref = playerColl.find_one({'id' : int(twitterID)})["_id"]
+		self.ref = objectID
 		self.active = False
 		self.sub = False
 		self.position = None
