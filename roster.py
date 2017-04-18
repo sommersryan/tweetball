@@ -242,9 +242,9 @@ class Team(object):
 		self.ref = objectID
 		self.nickname = teamColl.find_one({'_id' : self.ref})['nickname']
 		self.location = teamColl.find_one({'_id' : self.ref})['city']
-		self.batters = []
-		self.pitchers = []
-		self.lineups = []
+		self.batters = [Player(p['_id']) for p in teamColl.find_one({'_id' : self.ref})['batters']]
+		self.pitchers = [Player(p['_id']) for p in teamColl.find_one({'_id' : self.ref})['pitchers']]
+		self.lineup = []
 	
 	def __str__(self):
 	
