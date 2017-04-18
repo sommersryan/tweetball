@@ -242,8 +242,8 @@ class Team(object):
 		self.ref = objectID
 		self.nickname = teamColl.find_one({'_id' : self.ref})['nickname']
 		self.location = teamColl.find_one({'_id' : self.ref})['city']
-		self.batters = [Player(p['_id']) for p in teamColl.find_one({'_id' : self.ref})['batters']]
-		self.pitchers = [Player(p['_id']) for p in teamColl.find_one({'_id' : self.ref})['pitchers']]
+		self.batters = [Player(p) for p in teamColl.find_one({'_id' : self.ref})['batters']]
+		self.pitchers = [Player(p) for p in teamColl.find_one({'_id' : self.ref})['pitchers']]
 		self.lineup = []
 	
 	def __str__(self):
