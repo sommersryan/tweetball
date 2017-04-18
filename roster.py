@@ -12,7 +12,7 @@ from config import MONGO_URI, CURRENT_SEASON
 
 client = MongoClient(MONGO_URI)
 db = client.tweetball
-playerDB = db.players
+playerColl = db.players
 
 class Ratings(object):
 
@@ -64,13 +64,16 @@ class Player(object):
 		
 		# Initializes with a twitterID of an existing record, pulls record and stores reference to mongo objectID
 		
-		self.ref = playerDB.find_one({'id' : int(twitterID)})["_id"]
-	
+		self.ref = playerColl.find_one({'id' : int(twitterID)})["_id"]
+		self.active = False
+		self.sub = False
+		self.position = None
+		
 	def __getattr__(self, key):
 	
 		# Exposes elements of the db document as properties of the object
 		
-		return playerDB.find_one({'_id' : self.ref})[key]
+		return playerColl.find_one({'_id' : self.ref})[key]
 		
 	def __setattr__(self, key, value):
 		
@@ -80,7 +83,7 @@ class Player(object):
 			self.__dict__['ref'] = value
 		
 		else:
-			playerDB.update({'_id' : self.ref}, { "$set" : { key : value }})
+			playerColl.update({'_id' : self.ref}, { "$set" : { key : value }})
 		
 	def increment(self, side, stat, amount = 1, season = CURRENT_SEASON):
 		
@@ -91,7 +94,7 @@ class Player(object):
 			raise KeyError
 		
 		keyString = "stats.seasons.{0}.{1}.{2}".format(season, side, stat)
-		playerDB.update( { "_id" : self.ref }, { "$inc" : { keyString : amount }} )
+		playerColl.update( { "_id" : self.ref }, { "$inc" : { keyString : amount }} )
 		
 		return True
 
@@ -124,7 +127,7 @@ class Player(object):
 		
 		# Insert the completed doc into the collection
 		
-		playerDB.insert(doc)
+		playerColl.insert(doc)
 		
 		return True
 	
@@ -141,7 +144,7 @@ class Player(object):
 					'headerURL' : twitterUser.profile_banner_url
 					}
 		
-		playerDB.update({ '_id' : player.ref }, { '$set' : updates })
+		playerColl.update({ '_id' : player.ref }, { '$set' : updates })
 		
 		return True
 		
