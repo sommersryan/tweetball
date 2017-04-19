@@ -177,64 +177,6 @@ class Player(object):
 	
 		return self.handle
 		
-class Lineup(object):
-
-	def __init__(self, battingOrder, pitchers):
-	
-		self.battingOrder = battingOrder
-		self.pitchers = pitchers
-		self.pitchers.insert(0, random.choice(battingOrder))
-		self.currentPitcher = pitchers.pop(0)
-		self.usedPitchers = [self.currentPitcher,]
-		self.atBat = 0
-		self.onDeck = 1
-		self.assignPositions()
-		
-	def newBatter(self):
-		
-		isActive = False
-		
-		while not isActive:
-		
-			try:
-				nb = self.battingOrder[self.onDeck]
-				self.onDeck += 1
-		
-			except IndexError:
-				nb = self.battingOrder[0]
-				self.onDeck = 1
-			
-			isActive = nb.active
-			
-		return nb
-
-	def assignPositions(self):
-		
-		positions = ['C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF']
-		random.shuffle(positions)
-		
-		for player in self.battingOrder:
-			
-			if player == self.currentPitcher:
-				player.position = 'P'
-				
-			else:
-				player.position = positions.pop()
-		
-		return True
-		
-	def subPitcher(self):
-	
-		if self.pitchers:
-		
-			self.currentPitcher.active = False
-			substitute = self.pitchers.pop(0)
-			substitute.sub = True
-			substitute.position = 'P'
-			self.battingOrder.insert(self.battingOrder.index(self.currentPitcher) + 1, substitute)
-			self.currentPitcher = substitute
-			self.usedPitchers += [self.currentPitcher]
-		
 class Team(object):
 
 	def __init__(self, objectID):
@@ -250,6 +192,50 @@ class Team(object):
 		self.onDeck = 1
 		self.atBat = 0
 		
+	def makeLineup(self):
+		
+		# Adds eight random players to the team's lineup and assigns them positions
+		
+		self.lineup += random.sample(self.batters, 8)
+		random.shuffle(self.lineup)
+		
+		positions = ['C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF']
+		random.shuffle(positions)
+		
+		for b in self.lineup:
+			b.position = positions.pop()
+		
+		return True
+		
+	def getStarter(self):
+	
+		pass
+		
+	def newBatter(self):
+		
+		isSpent = True
+		
+		while isSpent:	
+		
+			try:
+				nb = self.lineup[self.onDeck]
+				self.onDeck += 1
+		
+			except IndexError:
+				nb = self.lineup[0]
+				self.onDeck = 1
+			
+			isSpent = nb.spent
+			
+		return nb
+		
+	def pitchingChange(self):
+	
+		pass
+	
+	def pinchHitter(self):
+	
+		pass
 	
 	def __str__(self):
 	
