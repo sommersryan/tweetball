@@ -66,7 +66,7 @@ class Player(object):
 		# Initializes with a objectID of an existing record, pulls record and stores reference to mongo objectID
 		
 		self.ref = objectID
-		self.active = False
+		self.spent = False # True for pitchers or hitters who have been subbed out
 		self.sub = False
 		self.position = None
 		
@@ -244,7 +244,12 @@ class Team(object):
 		self.location = teamColl.find_one({'_id' : self.ref})['city']
 		self.batters = [Player(p) for p in teamColl.find_one({'_id' : self.ref})['batters']]
 		self.pitchers = [Player(p) for p in teamColl.find_one({'_id' : self.ref})['pitchers']]
+		
+		# Some properties for handling a batting lineup
 		self.lineup = []
+		self.onDeck = 1
+		self.atBat = 0
+		
 	
 	def __str__(self):
 	
