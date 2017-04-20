@@ -4,7 +4,7 @@ from utils import percentile, nicknames
 from config import RESULT_TYPES
 from tweet import api
 from storage import playerStore
-from collections import Counter
+from collections import Counter, deque
 from itertools import groupby
 from boto.s3.key import Key
 from pymongo import MongoClient
@@ -188,7 +188,9 @@ class Team(object):
 		self.nickname = teamColl.find_one({'_id' : self.ref})['nickname']
 		self.location = teamColl.find_one({'_id' : self.ref})['city']
 		self.batters = [Player(p) for p in teamColl.find_one({'_id' : self.ref})['batters']]
-		self.pitchers = [Player(p) for p in teamColl.find_one({'_id' : self.ref})['pitchers']]
+		
+		# Sort the pitcher list from the db by earliest date of last start, convert to deque for popleft
+		self.pitchers = deque([Player(p) for p in teamColl.find_one({'_id' : self.ref})['pitchers']].sort(key = lambda x: x.lastStart))
 		
 		# Some properties for handling a batting lineup
 		self.lineup = []
@@ -216,9 +218,8 @@ class Team(object):
 		
 		# Selects the pitcher who has pitched least recently and makes him starter, adds to lineup
 		
-		self.pitchers.sort(key = lambda x: x.lastStart)
-		self.currentPitcher = self.pitchers[0]
-		self.currentPitcher.position = 'P'
+		self.currentPitcher = self.pitchers.popleft()
+		self.currentPitcher.position = 'SP'
 		self.lineup.append(self.currentPitcher)
 		
 		return True
@@ -242,9 +243,26 @@ class Team(object):
 		return nb
 		
 	def pitchingChange(self):
-	
-		pass
-	
+		
+		# Changes out the pitcher for the next one in the queue
+		# This method removes the used pitcher from the pitchers list
+		
+		try:
+		
+			newPitcher = self.pitchers.popleft()
+			
+			self.currentPitcher.spent = True
+			newPitcher.position = 'RP'
+			newPitcher.sub = True
+			
+			self.lineup.insert(self.lineup.index(self.currentPitcher) + 1, newPitcher)
+			self.currentPitcher = newPitcher
+			
+		except IndexError:
+			# Popping from empty list means no more pitchers left in the pen; do nothing
+			return True
+		
+
 	def pinchHitter(self):
 	
 		pass
