@@ -187,7 +187,8 @@ class Team(object):
 		self.ref = objectID
 		self.nickname = teamColl.find_one({'_id' : self.ref})['nickname']
 		self.location = teamColl.find_one({'_id' : self.ref})['city']
-		self.batters = [Player(p) for p in teamColl.find_one({'_id' : self.ref})['batters']]
+		
+		self.batters = deque([Player(p) for p in teamColl.find_one({'_id' : self.ref})['batters']])
 		
 		# Sort the pitcher list from the db by earliest date of last start, convert to deque for popleft
 		self.pitchers = deque([Player(p) for p in teamColl.find_one({'_id' : self.ref})['pitchers']].sort(key = lambda x: x.lastStart))
@@ -203,9 +204,11 @@ class Team(object):
 		
 		# Adds eight random players to the team's lineup and assigns them positions
 		
-		self.lineup += random.sample(self.batters, 8)
-		random.shuffle(self.lineup)
+		random.shuffle(self.batters)
 		
+		for i in range(0,8):
+			self.lineup.append(self.batters.popleft())
+	
 		positions = ['C', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF']
 		random.shuffle(positions)
 		
@@ -264,6 +267,10 @@ class Team(object):
 		
 
 	def pinchHitter(self):
+	
+		# Changes out batter for a substitute
+		
+		
 	
 		pass
 	
