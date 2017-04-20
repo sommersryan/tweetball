@@ -2,6 +2,7 @@ from storage import playerStore
 from roster import Player
 from pymongo import MongoClient
 from config import MONGO_URI
+from datetime import datetime
 import json
 
 # The purpose of this script is to load player objects from AWS and convert them for
@@ -86,6 +87,10 @@ for key in allPlayers:
 	# adding a field for twitter avatar URL (will implement later)
 	
 	playerDict['avatarURL'] = ""
+	
+	# add a field for a pitcher's last start 
+	
+	playerDict['lastStart'] = datetime.utcnow()
 	
 	playerColl.insert_one(playerDict)
 	
