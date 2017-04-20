@@ -9,6 +9,7 @@ from itertools import groupby
 from boto.s3.key import Key
 from pymongo import MongoClient
 from config import MONGO_URI, CURRENT_SEASON
+from datetime import datetime
 
 client = MongoClient(MONGO_URI)
 db = client.tweetball
@@ -126,6 +127,8 @@ class Player(object):
 		doc['probabilities']['pitching'] = ratings.__dict__.pop('pitching')
 		doc['ratings'].update(ratings.__dict__)
 		
+		doc['lastStart'] = datetime.utcnow()
+		
 		# Insert the completed doc into the collection
 		
 		playerColl.insert(doc)
@@ -192,6 +195,8 @@ class Team(object):
 		self.onDeck = 1
 		self.atBat = 0
 		
+		self.currentPitcher = None
+		
 	def makeLineup(self):
 		
 		# Adds eight random players to the team's lineup and assigns them positions
@@ -208,8 +213,15 @@ class Team(object):
 		return True
 		
 	def getStarter(self):
-	
-		pass
+		
+		# Selects the pitcher who has pitched least recently and makes him starter, adds to lineup
+		
+		self.pitchers.sort(key = lambda x: x.lastStart)
+		self.currentPitcher = pitchers[0]
+		self.currentPitcher.position = 'P'
+		self.lineup.append(currentPitcher)
+		
+		return True
 		
 	def newBatter(self):
 		
