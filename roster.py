@@ -196,7 +196,7 @@ class Team(object):
 		# Some properties for handling a batting lineup
 		self.lineup = []
 		self.onDeck = 1
-		self.atBat = 0
+		self.atBat = 0 # is this necessary?
 		
 		self.currentPitcher = None
 		
@@ -261,18 +261,32 @@ class Team(object):
 			self.lineup.insert(self.lineup.index(self.currentPitcher) + 1, newPitcher)
 			self.currentPitcher = newPitcher
 			
+			return True
+			
 		except IndexError:
 			# Popping from empty list means no more pitchers left in the pen; do nothing
 			return True
 		
 
-	def pinchHitter(self):
+	def pinchHitter(self, pinchFor):
 	
-		# Changes out batter for a substitute
+		# Changes out batter (Player pinchFor) for a substitute.
 		
+		try:
 		
-	
-		pass
+			newBatter = self.batters.popleft()
+			newBatter.position = pinchFor.position
+			newBatter.sub = True
+			
+			pinchFor.spent = True
+			
+			self.lineup.insert(self.lineup.index(pinchFor) + 1, newBatter)
+			
+			return True
+		
+		except IndexError:
+			# Popping from empty list means no more batters; do nothing
+			return True
 	
 	def __str__(self):
 	
