@@ -217,9 +217,9 @@ class Team(object):
 		# Selects the pitcher who has pitched least recently and makes him starter, adds to lineup
 		
 		self.pitchers.sort(key = lambda x: x.lastStart)
-		self.currentPitcher = pitchers[0]
+		self.currentPitcher = self.pitchers[0]
 		self.currentPitcher.position = 'P'
-		self.lineup.append(currentPitcher)
+		self.lineup.append(self.currentPitcher)
 		
 		return True
 		
