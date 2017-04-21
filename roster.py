@@ -1,12 +1,8 @@
-import random, pickle, forgery_py, json
+import random
 from league import BAT_DIST, PITCH_DIST
-from utils import percentile, nicknames
-from config import RESULT_TYPES
+from utils import percentile
 from tweet import api
-from storage import playerStore
-from collections import Counter, deque
-from itertools import groupby
-from boto.s3.key import Key
+from collections import deque
 from pymongo import MongoClient
 from config import MONGO_URI, CURRENT_SEASON
 from datetime import datetime
