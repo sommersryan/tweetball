@@ -191,7 +191,8 @@ class Team(object):
 		self.batters = deque([Player(p) for p in teamColl.find_one({'_id' : self.ref})['batters']])
 		
 		# Sort the pitcher list from the db by earliest date of last start, convert to deque for popleft
-		self.pitchers = deque([Player(p) for p in teamColl.find_one({'_id' : self.ref})['pitchers']].sort(key = lambda x: x.lastStart))
+		pitcherList = [Player(p) for p in teamColl.find_one({'_id' : self.ref})['pitchers']].sort(key = lambda x: x.lastStart)
+		self.pitchers = deque(pitcherList)
 		
 		# Some properties for handling a batting lineup
 		self.lineup = []
