@@ -10,13 +10,10 @@ MONGO_URI = os.environ.get('MONGO_URI')
 PA_TIME = 134
 
 #Number of PAs to tweet about per game
-NUM_PAS = 15
+NUM_PAS = 20
 
 #Possible outcomes of a plate appearance
 RESULT_TYPES = ['single','double','triple','HR','strikeout','BB','HBP','inPlayOut','GDP','sacrifice','error']
-
-#Twitter accounts for testing use
-TEST_ACCOUNTS = ['FoodNetwork', 'WWENetwork', 'nflnetwork', 'OnionSports', 'CNN', 'FoxNews', 'maddow', 'MSNBC', 'AV_Newswire']
 
 #S3 Buckets
 PLAYERS_BUCKET = os.environ.get('PLAYERS_BUCKET')

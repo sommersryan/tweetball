@@ -1,12 +1,21 @@
 import random, datetime, config
 from utils import baseNarratives, transitions, log5, weightedChoice, emojis
-from league import leagueMeans
+from league import leagueMeans, STEAL_RATE, ADVANCE_EXTRA
 from tweet import api
 from wpa import winProb
 from fractions import Fraction
+from copy import copy
 
 class Matchup(object):
-
+	
+	"""
+	A Matchup object is initialized with two dictionaries, one for the batter 
+	and one for the pitcher, containing each player's probability of individual
+	outcomes. It uses Bill James' "Log 5" method to determine the probability of 
+	each outcome when these players face each other. The genResult() function 
+	uses the weightedChoice() function to pick an outcome based on these probabilities
+	"""
+	
 	def __init__(self, batting, pitching):
 		
 		lgAvg = leagueMeans()
@@ -20,33 +29,54 @@ class Matchup(object):
 	def genResult(self):
 	
 		return weightedChoice(self.__dict__)
-		
 
 class Event(object):
-
-	def __init__(self, type):
 	
-		self.type = type
-		self.narrative = self.genString()
+	"""
+	Event objects are created for everything that happens in a game. They are passed
+	relevant information about the game's current state and initialize with a type 
+	(an outcome of some kind, e.g. 'double') and possess a function to calculate the 
+	end state for every possible event.
+	"""
+	
+	def __init__(self, **kwargs):
 		
-		if type in ['strikeout', 'inPlayOut', 'sacrifice', 'GDP']:
-			self.batterOut = True
-			
-		else:
-			self.batterOut = False
-			
-		if type in ['single', 'double', 'triple', 'HR']:
-			self.isHit = True
-			
-		else:
-			self.isHit = False
-			
-		if type in ['BB', 'HBP', 'sacrifice']:
-			self.isAB = False
-			
-		else:
-			self.isAB = True
-
+		"""
+		An event is initialized with the verb string for what happens (e.g. 'doubles'),
+		picks the proper function from the funcs dict which will return runner advancement 
+		and other information, and sets the proper attributes. Events can be compiled in an
+		inning object.
+		"""
+		
+		funcs = {
+				 'singles' : self.single, 
+				 'doubles' : self.double,
+				 'triples' : self.triple,
+				 'homers' : self.homer,
+				 'walks' : self.walk,
+				 'strikes out' : self.strikeout,
+				 'flies out' : self.flyout,
+				 'lines out': self.lineout,
+				 'grounds out': self.groundout,
+				 'is hit by pitch' : self.hbp,
+				 'error' : self.error,
+				 'steals' : self.steal,
+				 'enters to pitch' : self.bullpenCall,
+				 'enters as a pinch hitter' : self.pinchHitter
+				} 
+		
+		self.top = kwargs.pop('top')
+		self.inning = kwargs.pop('inning')
+		self.pitcher = kwargs.pop('pitcher')
+		self.beginState = State.new(kwargs.pop('beginState'))
+		self.battingTeam = kwargs.pop('battingTeam')
+		self.pitchingTeam = kwargs.pop('pitchingTeam')
+		self.type = kwargs.pop('type')
+		self.func = funcs[self.type]
+		self.endState = State.new(kwargs.pop('beginState'))
+		self.func(self.endState)
+		
+		
 	def genString(self):
 		
 		outfield = ['left', 'center', 'right']
@@ -74,121 +104,206 @@ class Event(object):
 				
 		return strings[self.type]
 					
-class BaseOutState(object):
+class State(object):
 
-	def __init__(self, first=None, second=None, third=None, outs=0):
+	def __init__(self, battingLineup, pitchingLineup, batter, pitcher, first=None, second=None, third=None, outs=0, runs=0):
 	
-		self.first = first
-		self.second = second
-		self.third = third
-		self.outs = outs
-	
-	def getState(self):
+		"""
+		A State object contains Player objects for every player 
+		on base and at the plate, as well as an integer representing the
+		number of outs, and the batting team's number of runs and lineup object. 
+		"""
 		
-		firstBase, secondBase, thirdBase = '', '', ''
+		# Note to self -- state includes pitcher. Uses a generator method that calls
+		# methods to check various things -- whether there is a steal, pinch hitter,
+		# bullpen call, etc, and uses Matchup class for batting events. Creates an 
+		# event instance, and uses new() to store a copy of itself as beginState, calls an 
+		# event function to modify itself, stores that as the endstate, and yields the event
+		# for an iterator of the inning class to add to its events list 
+		
+		self.outs = outs
+		self.runs = runs
+		self.battingLineup = battingLineup
+		self.pitchingLineup = pitchingLineup
+		self.advanceLog = ""
+		self.pitcher = pitcher
+		
+		# Chain is a list that orders the batter and runners, with a fourth element to collect
+		# runners who have scored via advancement. The State class __getattr__ will pull from 
+		# State.chain if the batter, first, second, or third base runner is requested
+		
+		self.chain = [batter, first, second, third, []]
+		
+		# Forced is a list containing True or False is a runner is forced to advance. Batters
+		# (forced[0]) and runners on first (forced[1]) are always forced to advance.
+		
+		self.forced = [True, True, False, False]
 		
 		if self.first:
-			firstBase = '1'
+			self.forced[2] = True
 			
-		if self.second:
-			secondBase = '2'
-			
-		if self.third:
-			thirdBase = '3'
-			
-		state = '{0}{1}{2}'.format(firstBase, secondBase, thirdBase)
-		
-		if state == '':
-			state = '0'
-		
-		return (int(state), self.outs)
-			
-	def __str__(self):
-		
-		narr = baseNarratives[self.getState()[0]]
-		
-		return "{0} and {1} outs".format(narr, self.outs)
+		if self.second and self.first:
+			self.forced[3] = True
 	
-	def queue(self):
+	@classmethod
+	def new(cls, state):
 	
-		runners = []
+		"""
+		Initializes a new state from a previous one. Useful for storing copies
+		of a state in the beginState and endState attributes of event objects and
+		ensuring they won't be modified elsewhere. 
+		"""
 		
-		for runner in [self.first, self.second, self.third]:
-		
-			if runner:
-			
-				runners.append(runner)
+		kwargs = {
+					'battingLineup' : state.battingLineup,
+					'batter' : state.batter,
+					'first' : state.first,
+					'second' : state.second,
+					'third' : state.third,
+					'outs' : state.outs,
+					'runs' : state.runs
+				}
 				
-		return runners
+		inst = cls(**kwargs)
+		
+		return inst
+	
+	def __getattr__(self, key):
+	
+		"""
+		If the state's batter or any baserunners are requested, __getattr__ will retrieve
+		these from the chain attribute.
+		"""
+		
+		slices = { 'batter' : 0, 'first' : 1, 'second' : 2, 'third' : 3, 'scored' : 4 }
+		
+		if key in slices:
+			return self.chain[slices[key]]
+		
+		else:
+			raise AttributeError
+	
+	def advance(self, runner, numBases=1):
+	
+		"""
+		advance() will advance the passed runner position (a slice of the bases attribute) 
+		the passed number of bases (an integer) per the dictates of baseball advancement
+		logic. If there is no runner on the passed base, or a runner position greater
+		than 3 is specified, it takes no action. Scoring runners are advanced to the 
+		scoring list in position 4, and the State's runs attribute is updated.
+		"""
+		
+		strings = ['', 'first', 'second', 'third']
+		
+		if not self.chain[runner] or runner > 3:
+			return None
+			
+		if runner + numBases >= 4:
+			self.advanceLog += "{0} scores. ".format(self.chain[runner].handle)
+			self.chain[4].append(self.chain[runner])
+			self.runs += 1
+			self.chain[runner] = None
+			
+			if runner == 0:
+				self.chain[runner] = self.battingLineup.newBatter()
+		
+		else:
+			if runner != 0:
+				self.advanceLog += "{0} to {1}. ".format(self.chain[runner].handle, strings[runner + numBases])
+		
+			self.chain[runner + numBases] = self.chain[runner]
+			self.chain[runner] = None
+			
+			if runner == 0:
+				self.chain[runner] = self.battingLineup.newBatter()
+			
+		#update the forced attribute to reflect new base state
+		self.updateForced()
+		
+		return None
+	
+	def advanceAll(self, numBases):
+	
+		"""
+		advanceAll() will advance every runner on base by numBases using the advance() method
+		"""
+		
+		#Step backward through bases and advance runners
+		for i in range(3,-1,-1):
+			self.advance(i, numBases)
+			
+		return None
+		
+	def updateForced(self):
+	
+		"""
+		updates the forced list based on the current state
+		"""
+		#Batter and runner on first are always forced
+		self.forced[0], self.forced[1] = True, True
+		
+		self.forced[2], self.forced[3] = False, False
+		
+		if self.first and self.second:
+			self.forced[2] = True
+			self.forced[3] = True
+		
+		elif self.first:
+			self.forced[2] = True
+			
+		return None	
+	
+	def makeEvents(self):
+	
+		"""
+		Generator that yields Event objects		
+		"""
+		
+		#Shuffle the check methods so they aren't always checked in same orders
+		checks = [self.checkBullpen, self.checkPinchHitter, self.checkSteal]
+		random.shuffle(checks)
+		checkCalls = [func() for func in checks]
+		
+		for call in checkCalls:
+			if call:
+				event = call
+				break
+				
+		if event:
+			
+		
+				
+		
+		
+		pass
 		
 class PlateAppearance(object):
 	
-	def __init__(self, top, inning, awayScore, homeScore, baseState, batter, pitcher):
+	def __init__(self, **kwargs):
 		
-		self.top = top
-		self.inning = inning
-		self.awayScore = awayScore
-		self.homeScore = homeScore
-		self.baseState = baseState
-		self.batter = batter
-		self.pitcher = pitcher
-		self.narratives = []
+		self.top = kwargs.pop('top')
+		self.inning = kwargs.pop('inning')
+		self.awayScore = kwargs.pop('awayScore')
+		self.homeScore = kwargs.pop('homeScore')
+		self.beginState = kwargs.pop('beginState')
+		self.batter = kwargs.pop('batter')
+		self.pitcher = kwargs.pop('pitcher')
+		self.event = kwargs.pop('event')
+		self.advancement = kwargs.pop('advancement')
 		
-		if baseState.outs == 3:
-			self.transitions = [None,]
+		# advancement is a function that returns a tuple of the new base state and runs scored
+		## To do:
+		## should I use a singledispatch decorator to make multiple advancement functions depending on event?
+		## should I add the batter to the baseState and drive the PAs that way
+		## yes and yes. Each generated advancement function handles every base in a possible state
+		## advancment methods are static methods of Event class (so maybe not singledispatch)
+		## matchup function picks from a dict of these methods provided by Event class 
+		## use kwargs to pass every possible piece of information down through the classes, only pass
+		## to each what is needed 
+		self.endState, self.runs = self.advancement(beginState)
 		
-		else:
-			self.transitions = transitions[baseState.getState()]
-			
-		self.matchup = Matchup(batter.ratings.batting, pitcher.ratings.pitching)
-		
-		choice = False
-		
-		while not choice:
-			
-			ev = self.matchup.genResult()
-			states = random.sample(self.transitions, len(self.transitions))
-			
-			for i in states: 
-				
-				if ev in i[1]:
-				
-					self.event = Event(ev)
-					endBases = i[0]
-					self.runs = i[2]
-					choice = True
-					break
-		
-		self.narratives.append("{0} {1}".format(self.batter.handle, self.event.narrative))
-		
-		self.endState = self.advanceRunners(endBases, self.runs)
-		
-		self.wpa = self.getWPA()
-		
-		self.batter.battingGameStats[self.event.type] += 1
-		self.pitcher.pitchingGameStats[self.event.type] += 1
-		
-		if self.event.type in ['single', 'double', 'triple', 'HR']:
-			self.batter.battingGameStats['H'] +=1
-			self.pitcher.pitchingGameStats['H'] +=1
-		
-		if self.event.type not in ['BB', 'HBP', 'sacrifice']:
-			self.batter.battingGameStats['AB'] += 1
-			
-		self.batter.battingGameStats['PA'] += 1
-		self.pitcher.pitchingGameStats['BF'] += 1
-		
-		self.batter.battingGameStats['RBI'] += self.runs
-		self.pitcher.pitchingGameStats['R'] += self.runs
-		
-		if self.event.type == 'GDP':
-			self.pitcher.pitchingGameStats['IP'] += Fraction(2,3)
-		
-		elif self.endState.outs != self.baseState.outs:
-			self.pitcher.pitchingGameStats['IP'] += Fraction(1,3)
-			
-		self.batter.battingGameStats['WPA'] += self.wpa
-		self.pitcher.pitchingGameStats['WPA'] += -self.wpa
+		self.narratives = kwargs.pop('narratives')
+		self.paTweet = kwargs.pop('paTweet')
 		
 	def advanceRunners(self, newBases, runs):
 		
@@ -361,7 +476,38 @@ class PlateAppearance(object):
 		description = '. '.join(self.narratives)
 		
 		return "{0}".format(description)
+
+class Inning(object):
+
+	def __init__(self, **kwargs):
+		
+		self.top = kwargs.pop('top')
+		self.num = kwargs.pop('num')
+		self.PAs = []
+		self.terminating = kwargs.pop('terminating')
+		self.runs = 0
+		self.homeScore = kwargs.pop('homeScore')
+		self.awayScore = kwargs.pop('awayScore')
+		self.awayTeam = kwargs.pop('awayTeam')
+		self.homeTeam = kwargs.pop('homeTeam')
+		
+		self.battingTeam = self.awayTeam if self.top else self.homeTeam
+		self.pitchingTeam = self.homeTeam if self.top else self.awayTeam
+		
+		
+	def typePicker(self):
 	
+		"""
+		Examines the state and previous PA and evaluates whether a steal, pitching change, 
+		pinch hitter, or normal PA event should occur
+		"""
+		
+		#Point system will accumulate points for event types based on various state traits
+		steal, bullpen, pinch, pa = 0,0,0,0
+		
+		scoreDiff = abs(self.homeScore - self.awayScore)
+		
+		
 class Game(object):
 
 	def __init__(self, homeTeam, awayTeam):
