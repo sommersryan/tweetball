@@ -4,6 +4,7 @@ and hitter pools, sort those pools by player ability, and then have teams draft
 the players. 
 """
 
+import random
 from pymongo import MongoClient
 from config import MONGO_URI
 
@@ -62,4 +63,40 @@ pitchKey = lambda x : x['ratings']['stuff'] + x['ratings']['control'] + x['ratin
 batterPool.sort(key = batKey)
 pitcherPool.sort(key = pitchKey)
 
+# Create a pool of team object IDs and shuffle it for a draft order
 
+teamPool = [ t['_id'] for t in list(teamColl.find()) ]
+random.shuffle(teamPool)
+
+# Create a list of containers to add the players
+
+draft = [ { 'team' : a, 'batters' : [], 'pitchers' : [] } for a in teamPool ]
+
+# Conduct the draft
+
+for round in range(0,25):
+
+	for team in draft:
+	
+		if len(team['pitchers']) == 12:
+			team['batters'].append(batterPool.pop()['_id'])
+			continue
+			
+		if len(team['batters']) == 13:
+			team['pitchers'].append(pitcherPool.pop()['_id'])
+			continue
+			
+		else:
+			
+			if random.randint(0,100) < 50:
+				team['batters'].append(batterPool.pop()['_id'])
+				
+			else:
+				team['pitchers'].apppend(pitcherPool.pop()['_id'])
+
+# Finally, add each teams players to their database entries
+
+for team in draft:
+
+	teamColl.update({'_id' : team['team']}, { '$push' : { 'batters' : { '$each' : team['batters']}}})
+	teamColl.update({'_id' : team['team']}, { '$push' : { 'pitchers' : { '$each' : team['pitchers']}}})
