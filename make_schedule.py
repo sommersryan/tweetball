@@ -18,10 +18,13 @@ leagues = [list(teamColl.find({'league' : 'North'})), list(teamColl.find({'leagu
 divisions = [list(teamColl.find({'league' : 'South', 'division' : 'East'})), list(teamColl.find({'league' : 'South', 'division' : 'West'})), 
 	list(teamColl.find({'league' : 'North', 'division' : 'East'})), list(teamColl.find({'league' : 'North', 'division' : 'West'}))]
 
-# take a league, make a deque of each division
-# use the for -> for -> append and rotate method to make a list of series
-# sort series by away and then home (list.sort(key = lambda x: (x[0], x[1])))
-# starting at index 0, 2, 4, 6, flip series (x.reverse) and every series at index + 9*1, 9*2, 9*3, 9*4 etc 
-# should get even home away number series for each team
+class RoundRobin(object):
 
+	# RoundRobin implements Round Robin style tournaments for a given set of teams, passed to init as a sequence
 
+	def __init__(self, teams):
+
+		self.hub = teams[-1]
+		self.wheel = deque(teams[:-1])
+		
+		
