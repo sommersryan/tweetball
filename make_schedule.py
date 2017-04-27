@@ -23,7 +23,7 @@ class RoundRobin(object):
 		self.mid = int(len(self.teams)/2)
 		self.matches = []
 		
-	def makeRound(self, switch=False):
+	def makeRound(self):
 	
 		# Adds one round of matches, as tuples, to the match list
 		# Switch is a boolean, if true the home/away ordering is flipped
@@ -33,10 +33,6 @@ class RoundRobin(object):
 		
 		for i in range(0, self.mid):
 			
-			if switch:
-				self.matches.append((right[i], left[i]))
-			
-			else:
 				self.matches.append((left[i], right[i]))
 			
 		return True	
@@ -51,18 +47,14 @@ class RoundRobin(object):
 		
 		return True
 		
-	def makeAllRounds(self, alternate=True):
+	def makeAllRounds(self):
 	
 		# Appends a complete set of round robin matches
 		# Alternate is boolean, if True, round alternates flipping home/away teams
 		
 		for i in range(0, len(self.teams)-1):
 			
-			if alternate and i % 2 == 0:
-				self.makeRound(switch = True)
-			else:
-				self.makeRound()
-			
+			self.makeRound()
 			self.rotate()
 			
 		return True
