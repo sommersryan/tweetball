@@ -30,11 +30,14 @@ class RoundRobin(object):
 	
 		left = self.teams[:self.mid]
 		right = list(reversed(self.teams[self.mid:]))
+		round = []
 		
 		for i in range(0, self.mid):
 			
-				self.matches.append((left[i], right[i]))
-			
+			round.append((left[i], right[i]))
+		
+		self.matches.append(round)
+		
 		return True	
 			
 	def rotate(self):
