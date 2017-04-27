@@ -8,16 +8,6 @@ from pymongo import MongoClient
 from config import MONGO_URI
 from collections import deque
 
-client = MongoClient(MONGO_URI)
-teamColl = client.tweetball.teams
-
-teams = list(teamColl.find())
-
-leagues = [list(teamColl.find({'league' : 'North'})), list(teamColl.find({'league' : 'South'}))]
-
-divisions = [list(teamColl.find({'league' : 'South', 'division' : 'East'})), list(teamColl.find({'league' : 'South', 'division' : 'West'})), 
-	list(teamColl.find({'league' : 'North', 'division' : 'East'})), list(teamColl.find({'league' : 'North', 'division' : 'West'}))]
-
 class RoundRobin(object):
 
 	# RoundRobin implements Round Robin style tournaments for a given set of teams, passed to init as a sequence
@@ -33,16 +23,21 @@ class RoundRobin(object):
 		self.mid = int(len(self.teams)/2)
 		self.matches = []
 		
-	def makeRound(self):
+	def makeRound(self, switch=False):
 	
 		# Adds one round of matches, as tuples, to the match list
-		
+		# Switch is a boolean, if true the home/away ordering is flipped
+	
 		left = self.teams[:self.mid]
 		right = list(reversed(self.teams[self.mid:]))
 		
 		for i in range(0, self.mid):
-		
-			self.matches.append((left[i], right[i]))
+			
+			if switch:
+				self.matches.append((right[i], left[i]))
+			
+			else:
+				self.matches.append((left[i], right[i]))
 			
 		return True	
 			
@@ -56,13 +51,33 @@ class RoundRobin(object):
 		
 		return True
 		
-	def makeAllRounds(self):
+	def makeAllRounds(self, alternate=True):
 	
 		# Appends a complete set of round robin matches
+		# Alternate is boolean, if True, round alternates flipping home/away teams
 		
 		for i in range(0, len(self.teams)-1):
-		
-			self.makeRound()
+			
+			if alternate and i % 2 == 0:
+				self.makeRound(switch = True)
+			else:
+				self.makeRound()
+			
 			self.rotate()
 			
 		return True
+		
+def main():
+	
+	client = MongoClient(MONGO_URI)
+	teamColl = client.tweetball.teams
+
+	teams = list(teamColl.find())
+
+	leagues = [list(teamColl.find({'league' : 'North'})), list(teamColl.find({'league' : 'South'}))]
+
+	divisions = [list(teamColl.find({'league' : 'South', 'division' : 'East'})), list(teamColl.find({'league' : 'South', 'division' : 'West'})), 
+		list(teamColl.find({'league' : 'North', 'division' : 'East'})), list(teamColl.find({'league' : 'North', 'division' : 'West'}))]
+		
+if __name__ == '__main__':
+	main()
