@@ -168,7 +168,9 @@ class Scheduler(object):
 		for round in self.rounds:
 			
 			start = self.scheduleRound(round, start)
-	
+		
+		self.lastDay = start
+		
 def main():
 	
 	client = MongoClient(MONGO_URI)
