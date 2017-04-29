@@ -173,14 +173,30 @@ class Scheduler(object):
 		
 def main():
 	
-	client = MongoClient(MONGO_URI)
+	leagues = []
+	divisions = []
 	
-	teams = list(teamColl.find())
-
-	leagues = [list(teamColl.find({'league' : 'North'})), list(teamColl.find({'league' : 'South'}))]
-
-	divisions = [list(teamColl.find({'league' : 'South', 'division' : 'East'})), list(teamColl.find({'league' : 'South', 'division' : 'West'})), 
-		list(teamColl.find({'league' : 'North', 'division' : 'East'})), list(teamColl.find({'league' : 'North', 'division' : 'West'}))]
+	for l in teamColl.distinct('league'):
+		leagues.append([a['_id'] for a in teamColl.find({'league' : l})])
+	
+	for l in teamColl.distinct('league'):
+		for d in teamColl.distinct('division', {'league' : l }):
+			divisions.append([a['_id'] for a in teamColl.find({'league' : l, 'division' : d})])
+	
+	for l in leagues:
+		rr = RoundRobin(l)
+		rr.makeAllRounds()
+		scheduler = Scheduler(rr.matches)
+		scheduler.scheduleAllRounds()
+		nextStart = scheduler.lastDay
 		
+	for d in divisions:
+		rr = RoundRobin(d)
+		rr.makeAllRounds()
+		scheduler = Scheduler(rr.matches)
+		scheduler.scheduleAllRounds()
+	
+	print('Scheduling complete.')
+	
 if __name__ == '__main__':
 	main()
