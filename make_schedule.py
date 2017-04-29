@@ -160,7 +160,15 @@ class Scheduler(object):
 			self.scheduleSeries(s[0], s[1], roundStart + timedelta(days = 1))
 			
 		return roundStart + timedelta(days=4)
-		
+	
+	def scheduleAllRounds(self):
+	
+		start = self.seasonStart
+	
+		for round in self.rounds:
+			
+			start = self.scheduleRound(round, start)
+	
 def main():
 	
 	client = MongoClient(MONGO_URI)
