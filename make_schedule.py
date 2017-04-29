@@ -100,11 +100,16 @@ class Scheduler(object):
 		
 		gamesColl.insert(newGame)
 		
+		return True
+		
 	def scheduleSeries(self, away, home, seriesStart):
 	
 		# seriesStart is a datetime object
 		
-		homeLong = int(teamColl.find_one({'_id' : home})['long'])
+		if home == 'BYE' or away == 'BYE':
+			return True
+		
+		homeLong = float(teamColl.find_one({'_id' : home})['coordinates']['long'])
 		
 		if homeLong >= 105:
 			dayStart = time(16,5)
@@ -130,11 +135,36 @@ class Scheduler(object):
 			else:
 				self.scheduleGame(away, home, datetime.combine(day, nightStart))
 		
+		return True
+		
+	def scheduleRound(self, round, roundStart):
+	
+		# round is one list of tuples from a RoundRobin.matches list
+		# roundStart is a datetime object
+		# returns datetime that the next round should start
+		
+		random.shuffle(round)
+		
+		seriesA, seriesB = [], []
+		
+		for i in range(0, int(len(round)/2)):
+			seriesA.append(round.pop())
+			
+		for i in range(0, len(round)):
+			seriesB.append(round.pop())
+			
+		for s in seriesA:
+			self.scheduleSeries(s[0], s[1], roundStart)
+			
+		for s in seriesB:
+			self.scheduleSeries(s[0], s[1], roundStart + timedelta(days = 1))
+			
+		return roundStart + timedelta(days=4)
+		
 def main():
 	
 	client = MongoClient(MONGO_URI)
 	
-
 	teams = list(teamColl.find())
 
 	leagues = [list(teamColl.find({'league' : 'North'})), list(teamColl.find({'league' : 'South'}))]
