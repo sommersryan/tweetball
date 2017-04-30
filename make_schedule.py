@@ -188,12 +188,12 @@ def main():
 		rr.makeAllRounds()
 		scheduler = Scheduler(rr.matches)
 		scheduler.scheduleAllRounds()
-		nextStart = scheduler.lastDay
+		nextStart = scheduler.lastDay + timedelta(days=1)
 		
 	for d in divisions:
 		rr = RoundRobin(d)
 		rr.makeAllRounds()
-		scheduler = Scheduler(rr.matches)
+		scheduler = Scheduler(rr.matches, nextStart)
 		scheduler.scheduleAllRounds()
 	
 	print('Scheduling complete.')
