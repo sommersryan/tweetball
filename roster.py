@@ -198,6 +198,9 @@ class Team(object):
 		
 		self.currentPitcher = None
 		
+		# Runs for the game to track
+		self.runs = 0
+		
 	def makeLineup(self):
 		
 		# Adds eight random players to the team's lineup and assigns them positions
