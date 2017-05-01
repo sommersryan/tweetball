@@ -1,10 +1,16 @@
-import random, datetime, config
+import random, datetime, config, roster
 from utils import baseNarratives, transitions, log5, weightedChoice, emojis
 from league import leagueMeans, STEAL_RATE, ADVANCE_EXTRA
 from tweet import api
 from wpa import winProb
 from fractions import Fraction
 from copy import copy
+from config import MONGO_URI
+from pymongo import MongoClient
+
+client = MongoClient(MONGO_URI)
+gameColl = client.tweetball.games
+teamColl = client.tweetball.teams
 
 class Matchup(object):
 	
@@ -269,13 +275,6 @@ class State(object):
 				event = call
 				break
 				
-		if event:
-			
-		
-				
-		
-		
-		pass
 		
 class PlateAppearance(object):
 	
@@ -304,118 +303,7 @@ class PlateAppearance(object):
 		
 		self.narratives = kwargs.pop('narratives')
 		self.paTweet = kwargs.pop('paTweet')
-		
-	def advanceRunners(self, newBases, runs):
-		
-		oldState = self.baseState
-		newState = BaseOutState()
-		newState.outs = newBases[1]
-		runners = oldState.queue()
-		
-		runners.insert(0, self.batter)
-		
-		for i in range(0, runs):
-			
-			self.narratives += ["{0} scores".format(str(runners.pop()))]
-		
-		if len(runners) > 0:
-		
-			if '3' in str(newBases[0]):
-			
-				newState.third = runners.pop()
-				
-				if newState.third != oldState.third:
-					self.narratives += ["{0} to third".format(str(newState.third))]
-				
-		if len(runners) > 0:
-		
-			if '2' in str(newBases[0]):
-			
-				newState.second = runners.pop()
-				
-				if newState.second != oldState.second:
-					self.narratives += ["{0} to second".format(str(newState.second))]
-				
-		if len(runners) > 0:
-		
-			if '1' in str(newBases[0]):
-			
-				newState.first = runners.pop()	
-
-		if self.event.batterOut:
-			try: 
-				runners.pop()
-			except IndexError:
-				print(oldState)
-				print(newBases)
-				print(oldState.queue())
-				
-		return newState
-
-	def getWPA(self):
 	
-		if self.top:
-			startDiff = self.awayScore - self.homeScore
-			endDiff = ((self.awayScore + self.runs) - self.homeScore)
-			team = "V"
-			
-		else:
-			startDiff = self.homeScore - self.awayScore
-			endDiff = ((self.homeScore + self.runs) - self.awayScore)
-			team = "H"
-			
-		if startDiff > 6:
-			startDiff = 6
-			
-		if startDiff < -6:
-			startDiff = -6
-			
-		if endDiff > 6:
-			endDiff = 6
-			
-		if endDiff < -6:
-			endDiff = -6
-		
-		if self.inning > 9:
-			inn = 9
-			
-		else:
-			inn = self.inning
-		
-		startState = (team, inn, *self.baseState.getState(), startDiff)
-		startWP = winProb[startState]
-		
-		if self.endState.outs == 3:
-		
-			if self.top:
-				team = "H"
-				inn = self.inning
-				
-			else:
-				team = "V"
-				inn = self.inning + 1
-			
-			if inn > 9:
-				inn = 9
-			
-			bases = BaseOutState()
-			diff = -endDiff
-			
-			endState = (team, inn, *bases.getState(), diff)
-			endWP = 1 - winProb[endState]
-		
-		else:
-			
-			endState = (team, inn, *self.endState.getState(), endDiff)
-			
-			try:
-				endWP = winProb[endState]
-			
-			except KeyError:
-				endWP = 1
-			
-		return endWP - startWP
-		
 	def tweetPA(self, replyTo):
 	
 		if self.top:
@@ -510,126 +398,18 @@ class Inning(object):
 		
 class Game(object):
 
-	def __init__(self, homeTeam, awayTeam):
-	
-		self.homeTeam = homeTeam
-		self.awayTeam = awayTeam
+	def __init__(self, objectID):
+		
+		g = gameColl.find_one({ '_id' : objectID })
+		
+		self.homeTeam = roster.Team(g['home'])
+		self.awayTeam = roster.Team(g['away'])
 		self.homeScore = 0
 		self.awayScore = 0
-		self.PAs = []
+		self.innings = []
 		self.inning = 1
 		self.top = True
-		self.startTime = datetime.datetime.now()
+		self.startTime = g['start']
 		self.complete = False
-		
-	def iterate(self, currentPA):
 	
-		self.PAs.append(currentPA)
-		
-		if self.top:
-		
-			self.awayScore += currentPA.runs
-			batter = self.awayTeam.lineup.newBatter()
-			pitcher = self.homeTeam.lineup.currentPitcher
-			
-			return PlateAppearance(self.top, self.inning, self.awayScore, self.homeScore, currentPA.endState, batter, pitcher)
-			
-		elif not self.top:
-		
-			self.homeScore += currentPA.runs
-			
-			if self.inning >= 9 and self.homeScore > self.awayScore:
-			
-				return False
-			
-			batter = self.homeTeam.lineup.newBatter()
-			pitcher = self.awayTeam.lineup.currentPitcher
-			
-			return PlateAppearance(self.top, self.inning, self.awayScore, self.homeScore, currentPA.endState, batter, pitcher)
-			
-	def playInning(self):
-		
-		if self.inning >= 10 and self.top:
-		
-			if self.awayScore > self.homeScore:
-			
-				self.complete = True
-				return True
-		
-		if self.inning == 9 and not self.top:
-		
-			if self.homeScore > self.awayScore:
-			
-				self.complete = True
-				return True
-		
-		if self.top:
-			
-			if self.inning >= 6 and self.homeTeam.lineup.currentPitcher.pitchingGameStats['WPA'] < 0 and random.randint(0,100) > 50:
-				
-				self.homeTeam.lineup.subPitcher()
-				
-			batter = self.awayTeam.lineup.newBatter()
-			pitcher = self.homeTeam.lineup.currentPitcher
-		
-		elif not self.top:
-			
-			if self.inning >=6 and self.awayTeam.lineup.currentPitcher.pitchingGameStats['WPA'] < 0 and random.randint(0,100) > 50:
-			
-				self.awayTeam.lineup.subPitcher()
-				
-			batter = self.homeTeam.lineup.newBatter()
-			pitcher = self.awayTeam.lineup.currentPitcher
-		
-		currentPA = PlateAppearance(self.top, self.inning, self.awayScore, self.homeScore, BaseOutState(), batter, pitcher)
-		
-		while True:
-		
-			currentPA = self.iterate(currentPA)
-			
-			if not currentPA:
-			
-					self.complete = True
-					return True
-			
-			if currentPA.endState.outs == 3:
-				
-				self.PAs.append(currentPA)
-				
-				if not self.top:
-					self.inning += 1
-					self.top = not self.top
-					
-				elif self.top:
-					self.top = not self.top
-					
-				return True
-				
-	def play(self):
-		
-		while not self.complete:
-			self.playInning()
 	
-	def tearDown(self):
-	
-		for player in self.homeTeam.lineup.battingOrder:
-			player.save()
-			
-		for player in self.awayTeam.lineup.battingOrder:
-			player.save()
-			
-		for player in self.homeTeam.lineup.usedPitchers:
-			player.save()
-			
-		for player in self.awayTeam.lineup.usedPitchers:
-			player.save()
-			
-		return True
-	
-	def gameLog(self):
-	
-		for i in self.PAs:
-		
-			print('Top ' if i.top else 'Bot ', i.inning, " | ", i)
-			
-		return True
