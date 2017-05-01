@@ -72,17 +72,16 @@ for key in allPlayers:
 	# rearrange stats for extensibility
 	
 	playerDict['stats'] = {}
-	playerDict['stats']['seasons'] = {}
-	playerDict['stats']['seasons']["0"] = {}
+	playerDict['stats']["0"] = {}
 	
-	playerDict['stats']['seasons']["0"]['batting'] = playerDict.pop('battingCareerStats')
-	playerDict['stats']['seasons']["0"]['pitching'] = playerDict.pop('pitchingCareerStats')
+	playerDict['stats']["0"]['batting'] = playerDict.pop('battingCareerStats')
+	playerDict['stats']["0"]['pitching'] = playerDict.pop('pitchingCareerStats')
 	
 	# add back in IP
 	
-	playerDict['stats']['seasons']["0"]['pitching']['IP'] = {}
-	playerDict['stats']['seasons']["0"]['pitching']['IP']['numerator'] = ipNum
-	playerDict['stats']['seasons']["0"]['pitching']['IP']['denominator'] = ipDenom
+	playerDict['stats']["0"]['pitching']['IP'] = {}
+	playerDict['stats']["0"]['pitching']['IP']['numerator'] = ipNum
+	playerDict['stats']["0"]['pitching']['IP']['denominator'] = ipDenom
 	
 	# adding a field for twitter avatar URL (will implement later)
 	
