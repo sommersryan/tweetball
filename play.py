@@ -128,7 +128,8 @@ class State(object):
 		# for an iterator of the inning class to add to its events list 
 		
 		self.outs = outs
-		self.battingLineup = battingTeam.lineup
+		self.battingTeam = battingTeam
+		self.pitchingTeam = pitchingTeam
 		self.advanceLog = ""
 		self.pitcher = pitchingTeam.currentPitcher
 		
@@ -151,27 +152,26 @@ class State(object):
 		if self.second and self.first:
 			self.forced[3] = True
 	
-	@classmethod
-	def new(cls, state):
+	def toDoc(self):
 	
 		"""
-		Initializes a new state from a previous one. Useful for storing copies
-		of a state in the beginState and endState attributes of event objects and
-		ensuring they won't be modified elsewhere. 
+		Generates a BSON-friendly dict of relevant state attributes to save as
+		an embedded doc in the event doc in the "events" array of the game doc
 		"""
 		
-		kwargs = {
-					'battingLineup' : state.battingLineup,
-					'batter' : state.batter,
-					'first' : state.first,
-					'second' : state.second,
-					'third' : state.third,
-					'outs' : state.outs,
-				}
-				
-		inst = cls(**kwargs)
-		
-		return inst
+		doc = {
+					'battingTeam' : self.battingTeam.ref,
+					'pitchingTeam' : self.pitchingTeam.ref,
+					'batter' : self.batter,
+					'pitcher' : self.pitcher,
+					'first' : self.first,
+					'second' : self.second,
+					'third' : self.third,
+					'outs' : self.outs,
+					'advancements' : self.advanceLog
+			}
+			
+		return doc
 	
 	def __getattr__(self, key):
 	
