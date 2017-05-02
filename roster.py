@@ -194,7 +194,7 @@ class Team(object):
 		# Some properties for handling a batting lineup
 		self.lineup = []
 		self.onDeck = 1
-		self.atBat = 0 # is this necessary?
+		self.atBat = 0
 		
 		self.currentPitcher = None
 		
@@ -236,10 +236,12 @@ class Team(object):
 		
 			try:
 				nb = self.lineup[self.onDeck]
+				self.atBat = self.onDeck
 				self.onDeck += 1
 		
 			except IndexError:
 				nb = self.lineup[0]
+				self.atBat = 0
 				self.onDeck = 1
 			
 			isSpent = nb.spent
