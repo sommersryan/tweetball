@@ -1,10 +1,9 @@
 import random, datetime, config, roster
-from utils import baseNarratives, transitions, log5, weightedChoice, emojis
+from utils import baseNarratives, log5, weightedChoice, emojis
 from league import leagueMeans, STEAL_RATE, ADVANCE_EXTRA
 from tweet import api
 from wpa import winProb
 from fractions import Fraction
-from copy import copy
 from config import MONGO_URI
 from pymongo import MongoClient
 
