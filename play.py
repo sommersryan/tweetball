@@ -363,15 +363,10 @@ class Inning(object):
 		self.top = kwargs.pop('top')
 		self.num = kwargs.pop('num')
 		self.PAs = []
-		self.terminating = kwargs.pop('terminating')
+		self.terminating = None # implement logic for inning to determine this
 		self.runs = 0
-		self.homeScore = kwargs.pop('homeScore')
-		self.awayScore = kwargs.pop('awayScore')
-		self.awayTeam = kwargs.pop('awayTeam')
-		self.homeTeam = kwargs.pop('homeTeam')
-		
-		self.battingTeam = self.awayTeam if self.top else self.homeTeam
-		self.pitchingTeam = self.homeTeam if self.top else self.awayTeam
+		self.battingTeam = kwargs.pop('battingTeam')
+		self.pitchingTeam = kwargs.pop('pitchingTeam')
 		
 		
 	def typePicker(self):
@@ -395,12 +390,17 @@ class Game(object):
 		
 		self.homeTeam = roster.Team(g['home'])
 		self.awayTeam = roster.Team(g['away'])
-		self.homeScore = 0
-		self.awayScore = 0
 		self.innings = []
-		self.inning = 1
-		self.top = True
 		self.startTime = g['start']
 		self.complete = False
+		
+		first = {
+					'top' : True,
+					'num' : 1,
+					'battingTeam' : self.awayTeam,
+					'pitchingTeam' : self.homeTeam
+				}
+		
+		self.innings.append(Inning(**first))
 	
 	
