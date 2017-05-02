@@ -120,13 +120,6 @@ class State(object):
 		number of outs, and the batting team's number of runs and lineup object. 
 		"""
 		
-		# Note to self -- state includes pitcher. Uses a generator method that calls
-		# methods to check various things -- whether there is a steal, pinch hitter,
-		# bullpen call, etc, and uses Matchup class for batting events. Creates an 
-		# event instance, and uses new() to store a copy of itself as beginState, calls an 
-		# event function to modify itself, stores that as the endstate, and yields the event
-		# for an iterator of the inning class to add to its events list 
-		
 		self.outs = outs
 		self.battingTeam = battingTeam
 		self.pitchingTeam = pitchingTeam
