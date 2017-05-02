@@ -151,7 +151,7 @@ class State(object):
 		an embedded doc in the event doc in the "events" array of the game doc
 		"""
 		
-		doc = {
+		doc = 	{
 					'battingTeam' : self.battingTeam.ref,
 					'pitchingTeam' : self.pitchingTeam.ref,
 					'batter' : self.batter,
@@ -161,7 +161,7 @@ class State(object):
 					'third' : self.third,
 					'outs' : self.outs,
 					'advancements' : self.advanceLog
-			}
+				}
 			
 		return doc
 	
