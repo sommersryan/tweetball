@@ -92,7 +92,7 @@ for round in range(0,25):
 				team['batters'].append(batterPool.pop()['_id'])
 				
 			else:
-				team['pitchers'].apppend(pitcherPool.pop()['_id'])
+				team['pitchers'].append(pitcherPool.pop()['_id'])
 
 # Finally, add each teams players to their database entries
 
