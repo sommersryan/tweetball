@@ -112,7 +112,7 @@ class Event(object):
 					
 class State(object):
 
-	def __init__(self, battingLineup, pitchingLineup, batter, pitcher, first=None, second=None, third=None, outs=0, runs=0):
+	def __init__(self, battingTeam, pitchingTeam, first=None, second=None, third=None, outs=0, runs=0):
 	
 		"""
 		A State object contains Player objects for every player 
@@ -128,11 +128,11 @@ class State(object):
 		# for an iterator of the inning class to add to its events list 
 		
 		self.outs = outs
-		self.runs = runs
-		self.battingLineup = battingLineup
-		self.pitchingLineup = pitchingLineup
+		self.battingLineup = battingTeam.lineup
 		self.advanceLog = ""
-		self.pitcher = pitcher
+		self.pitcher = pitchingTeam.currentPitcher
+		
+		batter = self.battingTeam.atBat
 		
 		# Chain is a list that orders the batter and runners, with a fourth element to collect
 		# runners who have scored via advancement. The State class __getattr__ will pull from 
@@ -167,7 +167,6 @@ class State(object):
 					'second' : state.second,
 					'third' : state.third,
 					'outs' : state.outs,
-					'runs' : state.runs
 				}
 				
 		inst = cls(**kwargs)
@@ -207,11 +206,11 @@ class State(object):
 		if runner + numBases >= 4:
 			self.advanceLog += "{0} scores. ".format(self.chain[runner].handle)
 			self.chain[4].append(self.chain[runner])
-			self.runs += 1
+			self.battingTeam.runs += 1
 			self.chain[runner] = None
 			
 			if runner == 0:
-				self.chain[runner] = self.battingLineup.newBatter()
+				self.chain[runner] = self.battingTeam.newBatter()
 		
 		else:
 			if runner != 0:
@@ -221,7 +220,7 @@ class State(object):
 			self.chain[runner] = None
 			
 			if runner == 0:
-				self.chain[runner] = self.battingLineup.newBatter()
+				self.chain[runner] = self.battingTeam.newBatter()
 			
 		#update the forced attribute to reflect new base state
 		self.updateForced()
