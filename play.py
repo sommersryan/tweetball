@@ -11,6 +11,24 @@ client = MongoClient(MONGO_URI)
 gameColl = client.tweetball.games
 teamColl = client.tweetball.teams
 
+funcs = {
+			'single' : PlateAppearance.single, 
+			'double' : PlateAppearance.double,
+			'triple' : PlateAppearance.triple,
+			'HR' : PlateAppearance.homer,
+			'BB' : PlateAppearance.walk,
+			'strikeout' : PlateAppearance.strikeout,
+			'inPlayOut' : PlateAppearance.inPlayOut,
+			'flyout' : PlateAppearance.flyout,
+			'lineout': PlateAppearance.lineout,
+			'groundout': PlateAppearance.groundout,
+			'HBP' : PlateAppearance.hbp,
+			'error' : PlateAppearance.error,
+			'steal' : Event.steal,
+			'pitching change' : Event.bullpenCall,
+			'pinch hitter' : Event.pinchHitter
+		} 
+
 class Matchup(object):
 	
 	"""
@@ -52,23 +70,6 @@ class Event(object):
 		and other information, and sets the proper attributes. Events can be compiled in an
 		inning object.
 		"""
-		
-		funcs = {
-				 'singles' : self.single, 
-				 'doubles' : self.double,
-				 'triples' : self.triple,
-				 'homers' : self.homer,
-				 'walks' : self.walk,
-				 'strikes out' : self.strikeout,
-				 'flies out' : self.flyout,
-				 'lines out': self.lineout,
-				 'grounds out': self.groundout,
-				 'is hit by pitch' : self.hbp,
-				 'error' : self.error,
-				 'steals' : self.steal,
-				 'enters to pitch' : self.bullpenCall,
-				 'enters as a pinch hitter' : self.pinchHitter
-				} 
 		
 		self.state = state
 		
