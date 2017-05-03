@@ -114,10 +114,10 @@ class PlateAppearance(Event):
 		
 		# Get mathcup with batter and pitcher and generate result
 		self.matchup = Matchup(state.batter.probabilities['batting'], state.pitcher.probabilities['pitching'])
-		self.result = self.matchup.genResult()
+		self.type = self.matchup.genResult()
 		
 		# Choose the appropriate modifier method for this result from the func dict
-		self.func = funcs[self.result]
+		self.func = funcs[self.type]
 		
 		# Call chosen method to modify the state
 		self.func()
