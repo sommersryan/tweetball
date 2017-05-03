@@ -44,7 +44,7 @@ class Event(object):
 	end state for every possible event.
 	"""
 	
-	def __init__(self, **kwargs):
+	def __init__(self, state):
 		
 		"""
 		An event is initialized with the verb string for what happens (e.g. 'doubles'),
@@ -70,17 +70,7 @@ class Event(object):
 				 'enters as a pinch hitter' : self.pinchHitter
 				} 
 		
-		self.top = kwargs.pop('top')
-		self.inning = kwargs.pop('inning')
-		self.pitcher = kwargs.pop('pitcher')
-		self.beginState = State.new(kwargs.pop('beginState'))
-		self.battingTeam = kwargs.pop('battingTeam')
-		self.pitchingTeam = kwargs.pop('pitchingTeam')
-		self.type = kwargs.pop('type')
-		self.func = funcs[self.type]
-		self.endState = State.new(kwargs.pop('beginState'))
-		self.func(self.endState)
-		
+		self.state = state
 		
 	def genString(self):
 		
@@ -108,10 +98,22 @@ class Event(object):
 				}
 				
 		return strings[self.type]
-					
+
+class PlateAppearance(Event):
+
+	def __init__(self, state):
+	
+		super().__init__(state)
+		
+		self.matchup = Matchup(state.batter.probabilities['batting'], state.pitcher.probabilities['pitching'])
+		self.type = self.matchup.genResult()
+		
+		
+		
+		
 class State(object):
 
-	def __init__(self, battingTeam, pitchingTeam, first=None, second=None, third=None, outs=0, runs=0):
+	def __init__(self, battingTeam, pitchingTeam, first=None, second=None, third=None, outs=0):
 	
 		"""
 		A State object contains Player objects for every player 
@@ -249,112 +251,6 @@ class State(object):
 			self.forced[2] = True
 			
 		return None	
-	
-	def makeEvents(self):
-	
-		"""
-		Generator that yields Event objects		
-		"""
-		
-		#Shuffle the check methods so they aren't always checked in same orders
-		checks = [self.checkBullpen, self.checkPinchHitter, self.checkSteal]
-		random.shuffle(checks)
-		checkCalls = [func() for func in checks]
-		
-		for call in checkCalls:
-			if call:
-				event = call
-				break
-				
-		
-class PlateAppearance(object):
-	
-	def __init__(self, **kwargs):
-		
-		self.top = kwargs.pop('top')
-		self.inning = kwargs.pop('inning')
-		self.awayScore = kwargs.pop('awayScore')
-		self.homeScore = kwargs.pop('homeScore')
-		self.beginState = kwargs.pop('beginState')
-		self.batter = kwargs.pop('batter')
-		self.pitcher = kwargs.pop('pitcher')
-		self.event = kwargs.pop('event')
-		self.advancement = kwargs.pop('advancement')
-		
-		# advancement is a function that returns a tuple of the new base state and runs scored
-		## To do:
-		## should I use a singledispatch decorator to make multiple advancement functions depending on event?
-		## should I add the batter to the baseState and drive the PAs that way
-		## yes and yes. Each generated advancement function handles every base in a possible state
-		## advancment methods are static methods of Event class (so maybe not singledispatch)
-		## matchup function picks from a dict of these methods provided by Event class 
-		## use kwargs to pass every possible piece of information down through the classes, only pass
-		## to each what is needed 
-		self.endState, self.runs = self.advancement(beginState)
-		
-		self.narratives = kwargs.pop('narratives')
-		self.paTweet = kwargs.pop('paTweet')
-	
-	def tweetPA(self, replyTo):
-	
-		if self.top:
-			half = emojis['top']
-			aScore = self.awayScore + self.runs
-			hScore = self.homeScore
-			
-		else:
-			half = emojis['bottom']
-			aScore = self.awayScore
-			hScore = self.homeScore + self.runs
-			
-		inningString = "{0}{1}".format(half, self.inning)
-		baseString = ""
-		
-		if self.baseState.first:
-			baseString += emojis['first']
-			
-		else:
-			baseString += emojis['empty']
-			
-		if self.baseState.second:
-			baseString += emojis['second']
-		
-		else:
-			baseString += emojis['empty']
-			
-		if self.baseState.third:
-			baseString += emojis['third']
-			
-		else:
-			baseString += emojis['empty']
-		
-		outString = emojis['out'] * self.baseState.outs
-		outString += emojis['noOut'] * (2 - self.baseState.outs)
-		
-		narrative = str(self)
-		
-		if self.runs > 0:
-			if self.top:
-				scoreString = "{0} -- {1}".format(aScore, hScore)
-			else:
-				scoreString = "{0} -- {1}".format(hScore, aScore)
-		else:
-			scoreString = ""
-		
-		t = "{0} | {1} | {2} |\r\n {3}. {4}".format(inningString, baseString, outString, narrative, scoreString)
-		
-		if len(t) > 139:
-			t = t[:139]
-		
-		tweetID = api.update_status(t, in_reply_to_status_id = replyTo).id
-		
-		return tweetID
-	
-	def __str__(self):
-	
-		description = '. '.join(self.narratives)
-		
-		return "{0}".format(description)
 
 class Inning(object):
 
@@ -362,13 +258,18 @@ class Inning(object):
 		
 		self.top = kwargs.pop('top')
 		self.num = kwargs.pop('num')
-		self.PAs = []
+		self.events = []
 		self.terminating = None # implement logic for inning to determine this
 		self.runs = 0
 		self.battingTeam = kwargs.pop('battingTeam')
 		self.pitchingTeam = kwargs.pop('pitchingTeam')
+		self.state = State(self.battingTeam, self.pitchingTeam)
+		
+	def getPAEvent(self):
 		
 		
+		
+	
 	def typePicker(self):
 	
 		"""
@@ -378,6 +279,8 @@ class Inning(object):
 		
 		#Point system will accumulate points for event types based on various state traits
 		steal, bullpen, pinch, pa = 0,0,0,0
+		
+		
 		
 		scoreDiff = abs(self.homeScore - self.awayScore)
 		
