@@ -72,6 +72,7 @@ class Event(object):
 		"""
 		
 		self.state = state
+		self.begin = state.toDoc()
 		
 	def genString(self):
 		
@@ -103,13 +104,26 @@ class Event(object):
 class PlateAppearance(Event):
 
 	def __init__(self, state):
-	
+		
+		"""
+		Subclass of event encompassing all events resulting from a 
+		plate appearance.
+		"""
+		
 		super().__init__(state)
 		
+		# Get mathcup with batter and pitcher and generate result
 		self.matchup = Matchup(state.batter.probabilities['batting'], state.pitcher.probabilities['pitching'])
-		self.type = self.matchup.genResult()
+		self.result = self.matchup.genResult()
 		
+		# Choose the appropriate modifier method for this result from the func dict
+		self.func = funcs[self.result]
 		
+		# Call chosen method to modify the state
+		self.func()
+		
+		# Save dict of the resulting state as property
+		self.end = self.state.toDoc()
 		
 		
 class State(object):
