@@ -280,10 +280,14 @@ class Inning(object):
 		self.pitchingTeam = kwargs.pop('pitchingTeam')
 		self.state = State(self.battingTeam, self.pitchingTeam)
 		
-	def getPAEvent(self):
+	def getEvent(self):
 		
-		
-		
+		"""
+		This method should evaluate whether a steal/pinch hitter/bullpen call
+		is warranted, and if so generate it. If not, it should generate a 
+		plate appearance. 
+		"""
+		pass
 	
 	def typePicker(self):
 	
@@ -294,8 +298,6 @@ class Inning(object):
 		
 		#Point system will accumulate points for event types based on various state traits
 		steal, bullpen, pinch, pa = 0,0,0,0
-		
-		
 		
 		scoreDiff = abs(self.homeScore - self.awayScore)
 		
