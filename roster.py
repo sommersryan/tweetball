@@ -125,7 +125,9 @@ class Player(object):
 	
 		k = playerStore.get_key(playerID)
 		raw = k.get_contents_as_string()
-		return pickle.loads(raw)
+		p = pickle.loads(raw)
+		p.refresh()
+		return p
 		
 class Lineup(object):
 
