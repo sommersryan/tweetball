@@ -88,7 +88,8 @@ class Player(object):
 		
 		new = api.get_user(self.id)
 		self.id = new.id
-		self.name = "@{0}".format(new.screen_name)
+		self.name = new.screen_name
+		self.handle = "@{0}".format(twitterUser.screen_name)
 		self.fullName = new.name
 		
 		return True
@@ -126,7 +127,6 @@ class Player(object):
 		k = playerStore.get_key(playerID)
 		raw = k.get_contents_as_string()
 		p = pickle.loads(raw)
-		p.refresh()
 		return p
 		
 class Lineup(object):
@@ -219,6 +219,10 @@ def getTeams():
 	
 	random.shuffle(finalPool)
 	pool = finalPool[:24]
+	
+	for p in pool:
+		p.refresh()
+	
 	pool.sort(key = lambda x: (x.ratings.control + x.ratings.stuff), reverse = False)
 	homeHitters, homePitchers, awayHitters, awayPitchers = [], [], [], []
 	
