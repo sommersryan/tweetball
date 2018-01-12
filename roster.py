@@ -89,7 +89,7 @@ class Player(object):
 		new = api.get_user(self.id)
 		self.id = new.id
 		self.name = new.screen_name
-		self.handle = "@{0}".format(twitterUser.screen_name)
+		self.handle = "@{0}".format(new.screen_name)
 		self.fullName = new.name
 		
 		return True
