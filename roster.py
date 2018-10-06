@@ -1,6 +1,6 @@
 import random, pickle, forgery_py
 from league import BAT_DIST, PITCH_DIST
-from utils import percentile, nicknames
+from utils import percentile, nicknames, getCities
 from config import RESULT_TYPES
 from tweet import api
 from storage import playerStore
@@ -233,9 +233,11 @@ def getTeams():
 	for i in range(0,3):
 		homePitchers.append(pool.pop())
 		awayPitchers.append(pool.pop())
-		
-	homeLoc = forgery_py.address.city()
-	awayLoc = forgery_py.address.city()
+	
+	cities = getCities()
+	
+	homeLoc = cities[0]
+	awayLoc = cities[1]
 	homeNick = random.choice(nicknames)
 	awayNick = random.choice(nicknames)
 	

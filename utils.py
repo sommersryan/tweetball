@@ -1,5 +1,6 @@
 from random import random
 from bisect import bisect
+import urllib.request, json
 
 def weightedChoice(choices):
 	values, weights = list(choices.keys()), list(choices.values())
@@ -30,6 +31,13 @@ def percentile(p, data):
 	ord = (p / 100) * len(data)
 	
 	return data[int(ord)]
+	
+def getCities():
+	citiesEndpoint = "https://randomuser.me/api/?results=2"
+	response = urllib.request.urlopen(citiesEndpoint)
+	data = json.loads(response.read().decode())
+	
+	return (data['results'][0]['location']['city'].capitalize(), data['results'][1]['location']['city'].capitalize())
 	
 baseNarratives = {
 					0 : 'bases empty',
