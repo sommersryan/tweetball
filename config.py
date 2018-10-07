@@ -7,7 +7,7 @@ CURRENT_SEASON = str(os.environ.get('CURRENT_SEASON'))
 MONGO_URI = os.environ.get('MONGO_URI')
 
 #PA time in seconds
-PA_TIME = 134
+PA_TIME = 90
 
 #Number of PAs to tweet about per game
 NUM_PAS = 20

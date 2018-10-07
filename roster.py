@@ -1,6 +1,7 @@
 import random
 from league import BAT_DIST, PITCH_DIST
-from utils import percentile
+from utils import percentile, nicknames, getCity
+from config import RESULT_TYPES
 from tweet import api
 from collections import deque
 from pymongo import MongoClient
@@ -144,7 +145,11 @@ class Player(object):
 					'headerURL' : twitterUser.profile_banner_url
 					}
 		
-		playerColl.update({ '_id' : player.ref }, { '$set' : updates })
+		new = api.get_user(self.id)
+		self.id = new.id
+		self.name = new.screen_name
+		self.handle = "@{0}".format(new.screen_name)
+		self.fullName = new.name
 		
 		return True
 		
@@ -175,8 +180,16 @@ class Player(object):
 	def __str__(self):
 	
 		return self.handle
+
+	@staticmethod
+	def load(playerID):
+	
+		k = playerStore.get_key(playerID)
+		raw = k.get_contents_as_string()
+		p = pickle.loads(raw)
+		return p
 		
-class Team(object):
+class Lineup(object):
 
 	def __init__(self, objectID):
 		
@@ -294,3 +307,51 @@ class Team(object):
 	def __str__(self):
 	
 		return "{0} {1}".format(self.location, self.nickname)
+
+def getTeams():
+
+	keys = list(playerStore.list())
+	players = [Player.load(a) for a in keys]
+	playersSorted = sorted(players, key = lambda x: x.battingCareerStats['PA'])
+	paGroups = []
+	
+	for k, g in groupby(playersSorted, key=lambda x: x.battingCareerStats['PA']):
+		paGroups.append(list(g))
+		
+	finalPool = paGroups[0]
+	
+	for i in paGroups[1:]:
+		if len(finalPool) < 24:
+			finalPool += i
+		else:
+			break
+	
+	random.shuffle(finalPool)
+	pool = finalPool[:24]
+	
+	for p in pool:
+		p.refresh()
+	
+	pool.sort(key = lambda x: (x.ratings.control + x.ratings.stuff), reverse = False)
+	homeHitters, homePitchers, awayHitters, awayPitchers = [], [], [], []
+	
+	for i in range(0,9):
+		homeHitters.append(pool.pop())
+		awayHitters.append(pool.pop())
+		
+	for i in range(0,3):
+		homePitchers.append(pool.pop())
+		awayPitchers.append(pool.pop())
+
+	homeLoc = getCity()
+	awayLoc = getCity()
+	homeNick = random.choice(nicknames)
+	awayNick = random.choice(nicknames)
+	
+	homeLineup = Lineup(homeHitters, homePitchers)
+	awayLineup = Lineup(awayHitters, awayPitchers)
+	
+	homeTeam = Team(homeNick, homeLoc, homeLineup)
+	awayTeam = Team(awayNick, awayLoc, awayLineup)
+	
+	return(homeTeam, awayTeam)

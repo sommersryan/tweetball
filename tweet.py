@@ -14,33 +14,21 @@ class GameTweeter(object):
 		
 		self.intro = "{0} at {1}".format(game.awayTeam, game.homeTeam)
 		
-		self.awayLineupTop = "{0} (a)\r\n".format(game.awayTeam)
-		self.homeLineupTop = "{0} (h)\r\n".format(game.homeTeam)
-		self.awayLineupBot = "{0} (a) cont.\r\n".format(game.awayTeam)
-		self.homeLineupBot = "{0} (h) cont.\r\n".format(game.homeTeam)
+		self.awayLineup = "{0} (a)\r\n".format(game.awayTeam)
+		self.homeLineup = "{0} (h)\r\n".format(game.homeTeam)
 		
 		num = 1
 		
-		for p in game.awayTeam.lineup.battingOrder[:5]:
+		for p in game.awayTeam.lineup.battingOrder:
 			if not p.sub:
-				self.awayLineupTop += "{0}. {1} {2}\r\n".format(num, p.handle, p.position)
-				num += 1
-				
-		for p in game.awayTeam.lineup.battingOrder[5:]:
-			if not p.sub:
-				self.awayLineupBot += "{0}. {1} {2}\r\n".format(num, p.handle, p.position)
+				self.awayLineup += "{0}. {1} {2}\r\n".format(num, p.handle, p.position)
 				num += 1
 				
 		num = 1
 		
-		for p in game.homeTeam.lineup.battingOrder[:5]:
+		for p in game.homeTeam.lineup.battingOrder:
 			if not p.sub:
-				self.homeLineupTop += "{0}. {1} {2}\r\n".format(num, p.handle, p.position)
-				num += 1
-				
-		for p in game.homeTeam.lineup.battingOrder[5:]:
-			if not p.sub:
-				self.homeLineupBot += "{0}. {1} {2}\r\n".format(num, p.handle, p.position)
+				self.homeLineup += "{0}. {1} {2}\r\n".format(num, p.handle, p.position)
 				num += 1
 				
 		bs = stats.BoxScore(self.game)
@@ -58,19 +46,11 @@ class GameTweeter(object):
 		
 		time.sleep(60)
 		
-		prevID = api.update_status(self.awayLineupTop, in_reply_to_status_id = prevID).id
-		
-		time.sleep(5)
-		
-		prevID = api.update_status(self.awayLineupBot, in_reply_to_status_id = prevID).id
+		prevID = api.update_status(self.awayLineup, in_reply_to_status_id = prevID).id
 		
 		time.sleep(30)
 		
-		prevID = api.update_status(self.homeLineupTop, in_reply_to_status_id = prevID).id
-		
-		time.sleep(5)
-		
-		prevID = api.update_status(self.homeLineupBot, in_reply_to_status_id = prevID).id
+		prevID = api.update_status(self.homeLineup, in_reply_to_status_id = prevID).id
 		
 		time.sleep(60)
 		
