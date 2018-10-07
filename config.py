@@ -1,7 +1,7 @@
 import os
 
 #PA time in seconds
-PA_TIME = 134
+PA_TIME = 90
 
 #Number of PAs to tweet about per game
 NUM_PAS = 15
