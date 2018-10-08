@@ -26,5 +26,6 @@ ACCESS_SECRET = os.environ.get('ACCESS_SECRET') or ''
 MONGO_USER = os.envrion.get('MONGO_USER')
 MONGO_PASS = os.environ.get('MONGO_PASS')
 MONGO_IP = os.environ.get('MONGO_IP')
+MONGO_AUTH_SOURCE = os.environ.get('MONGO_AUTH_SOURCE')
 
-MONGO_URI = "mongodb://{0}:{1}@{2}".format(quote_plus(MONGO_USER), quote_plus(MONGO_PASS), MONGO_IP)
+MONGO_URI = "mongodb://{0}:{1}@{2}/?authSource={3}".format(quote_plus(MONGO_USER), quote_plus(MONGO_PASS), MONGO_IP, MONGO_AUTH_SOURCE)
