@@ -77,6 +77,8 @@ class Player(object):
 		self.position = None
 		self.active = True
 		
+		#mongoPlayer.write() goes here
+		
 		k = Key(playerStore)
 		k.key = self.id
 		zipped = pickle.dumps(self)
@@ -127,6 +129,7 @@ class Player(object):
 		k = playerStore.get_key(playerID)
 		raw = k.get_contents_as_string()
 		p = pickle.loads(raw)
+		#mongoplayerstore.load(playerID) goes here? 
 		return p
 		
 class Lineup(object):
@@ -202,6 +205,7 @@ class Team(object):
 def getTeams():
 
 	keys = list(playerStore.list())
+	# keys = mongoplayerstore.getall() goes here (for now)
 	players = [Player.load(a) for a in keys]
 	playersSorted = sorted(players, key = lambda x: x.battingCareerStats['PA'])
 	paGroups = []
