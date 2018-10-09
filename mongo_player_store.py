@@ -3,7 +3,6 @@ import json
 from datetime import datetime
 from pymongo import MongoClient
 from config import MONGO_URI, CURRENT_SEASON
-import roster
 from fractions import Fraction
 from collections import Counter
 
@@ -69,9 +68,9 @@ def playerMaptoMongo(player):
 	
 	return playerDict
 
-def mongoMapToPlayer(mongoPlayer):
-	
-	tbPlayer = roster.Player.blank()
+def mongoMapToPlayer(mongoPlayer, blankPlayer):
+
+	tbPlayer = blankPlayer
 	
 	for key in ['id', 'name', 'fullName', 'handle', 'handedness', 'uniNumber']:
 		setattr(tbPlayer, key, mongoPlayer[key])
@@ -85,8 +84,6 @@ def mongoMapToPlayer(mongoPlayer):
 	mongoPitchingStats['IP'] = newIP
 	
 	tbPlayer.pitchingCareerStats = Counter(mongoPitchingStats)
-	
-	tbPlayer.ratings = roster.Ratings.blank()
 	
 	for key in ['contact', 'power', 'discipline', 'control', 'stuff', 'composure']:
 		setattr(tbPlayer.ratings, key, mongoPlayer['ratings'][key])

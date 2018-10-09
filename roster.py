@@ -183,7 +183,7 @@ class Player(object):
 		handle = ''
 		handedness = ''
 		uniNumber = 0
-		ratings = None
+		ratings = Ratings.blank()
 		pitchingGameStats = Counter()
 		battingGameStats = Counter()
 		pitchingCareerStats = Counter()
@@ -280,7 +280,7 @@ def getTeams():
 
 	mongoPlayers = mongoGetPlayersByLastStartAscending(24)
 	
-	pool = [mongoMapToPlayer(a) for a in mongoPlayers]
+	pool = [mongoMapToPlayer(a, Player.blank()) for a in mongoPlayers]
 	
 	for p in pool:
 		p.refresh()
