@@ -133,7 +133,8 @@ class Player(object):
 		self.pitchingCareerStats += self.pitchingGameStats
 		self.battingCareerStats += self.battingGameStats
 		
-		mongoPlayerSave(self)
+		record = playerMaptoMongo(self)
+		mongoPlayerSave(record)
 		
 		return True
 		
