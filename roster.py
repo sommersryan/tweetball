@@ -7,7 +7,7 @@ from storage import playerStore
 from collections import Counter
 from itertools import groupby
 from boto.s3.key import Key
-from mongo_player_store import *
+from mongo_player_store import mongoPlayerSave, mongoGetPlayersByLastStartAscending, mongoMapToPlayer, playerMaptoMongo
 
 class Ratings(object):
 	
