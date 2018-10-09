@@ -7,6 +7,7 @@ from storage import playerStore
 from collections import Counter
 from itertools import groupby
 from boto.s3.key import Key
+from mongo_player_store import *
 
 class Ratings(object):
 	
@@ -132,18 +133,7 @@ class Player(object):
 		self.pitchingCareerStats += self.pitchingGameStats
 		self.battingCareerStats += self.battingGameStats
 		
-		self.pitchingGameStats.clear()
-		self.battingGameStats.clear()
-		self.sub = False
-		self.position = None
-		self.active = True
-		
-		#mongoPlayer.write() goes here
-		
-		k = Key(playerStore)
-		k.key = self.id
-		zipped = pickle.dumps(self)
-		k.set_contents_from_string(zipped)
+		mongoPlayerSave(self)
 		
 		return True
 		
@@ -212,8 +202,7 @@ class Player(object):
 	
 		k = playerStore.get_key(playerID)
 		raw = k.get_contents_as_string()
-		p = pickle.loads(raw)
-		#mongoplayerstore.load(playerID) goes here? 
+		p = pickle.loads(raw) 
 		return p
 		
 class Lineup(object):
@@ -288,25 +277,9 @@ class Team(object):
 
 def getTeams():
 
-	keys = list(playerStore.list())
-	# keys = mongoplayerstore.getall() goes here (for now)
-	players = [Player.load(a) for a in keys]
-	playersSorted = sorted(players, key = lambda x: x.battingCareerStats['PA'])
-	paGroups = []
+	mongoPlayers = mongoGetPlayersByLastStartAscending(24)
 	
-	for k, g in groupby(playersSorted, key=lambda x: x.battingCareerStats['PA']):
-		paGroups.append(list(g))
-		
-	finalPool = paGroups[0]
-	
-	for i in paGroups[1:]:
-		if len(finalPool) < 24:
-			finalPool += i
-		else:
-			break
-	
-	random.shuffle(finalPool)
-	pool = finalPool[:24]
+	pool = [mongoMapToPlayer(a) for a in mongoPlayers]
 	
 	for p in pool:
 		p.refresh()

@@ -104,3 +104,6 @@ def mongoReturnAll():
 
 	return list(db.players.find())
 	
+def mongoGetPlayersByLastStartAscending(count):
+	
+	return list(db.players.find().sort('lastStart', pymongo.ASCENDING).limit(count))
