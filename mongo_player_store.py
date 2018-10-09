@@ -100,9 +100,17 @@ def mongoPlayerSave(mongoPlayer):
 	
 	db.players.find_one_and_replace({'id' : mongoPlayer['id']}, mongoPlayer, upsert = True)
 	
+def mongoDeleteByTwitterId(id):
+
+	db.players.delete_one({ 'id' : id })
+	
 def mongoReturnAll():
 
 	return list(db.players.find())
+	
+def mongoGetAllTwitterIds():
+
+	return [a['id'] for a in list(db.players.find({}, {'id' : 1}))]
 	
 def mongoGetPlayersByLastStartAscending(count):
 	

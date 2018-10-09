@@ -113,7 +113,7 @@ class Player(object):
 		handle = "@{0}".format(twitterUser.screen_name)
 		handedness = random.choice(['L','R','S'])
 		uniNumber = random.randint(0,71)
-		ratings = Ratings()
+		ratings = Ratings.new()
 		pitchingGameStats = Counter()
 		battingGameStats = Counter()
 		pitchingCareerStats = Counter()
