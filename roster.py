@@ -9,62 +9,123 @@ from itertools import groupby
 from boto.s3.key import Key
 
 class Ratings(object):
-
-	def __init__(self):
+	
+	def __init__(self, contact, power, discipline, control, stuff, 
+	composure, batting, pitching):
+	
+		self.contact = contact
+		self.power = power
+		self.discipline = discipline
+		self.control = control
+		self.stuff = stuff
+		self.composure = composure
+		self.batting = batting
+		self.pitching = pitching
+	
+	@classmethod
+	def new(cls):
 		
-		self.contact = random.randint(1,99)
-		self.power = random.randint(1,99)
-		self.discipline = random.randint(1,99)
-		self.control = random.randint(1,99)
-		self.stuff = random.randint(1,99)
-		self.composure = random.randint(1,99)
+		contact = random.randint(1,99)
+		power = random.randint(1,99)
+		discipline = random.randint(1,99)
+		control = random.randint(1,99)
+		stuff = random.randint(1,99)
+		composure = random.randint(1,99)
 		
-		self.batting = {}
-		self.pitching = {}
+		batting = {}
+		pitching = {}
 		
-		self.batting['single'] = percentile(self.contact, BAT_DIST['single'])
-		self.batting['strikeout'] = percentile((100-self.contact), BAT_DIST['strikeout'])
-		self.batting['double'] = percentile(self.power, BAT_DIST['double'])
-		self.batting['triple'] = percentile(self.power, BAT_DIST['triple'])
-		self.batting['HR'] = percentile(self.power, BAT_DIST['HR'])
-		self.batting['inPlayOut'] = percentile((100-self.power), BAT_DIST['inPlayOut'])
-		self.batting['BB'] = percentile(self.discipline, BAT_DIST['BB'])
-		self.batting['HBP'] = percentile(self.discipline, BAT_DIST['HBP'])
-		self.batting['sacrifice'] = percentile(random.randint(1,99),BAT_DIST['sacrifice'])
-		self.batting['GDP'] = percentile(random.randint(1,99),BAT_DIST['GDP'])
-		self.batting['error'] = percentile(random.randint(1,99),BAT_DIST['error'])
+		batting['single'] = percentile(self.contact, BAT_DIST['single'])
+		batting['strikeout'] = percentile((100-self.contact), BAT_DIST['strikeout'])
+		batting['double'] = percentile(self.power, BAT_DIST['double'])
+		batting['triple'] = percentile(self.power, BAT_DIST['triple'])
+		batting['HR'] = percentile(self.power, BAT_DIST['HR'])
+		batting['inPlayOut'] = percentile((100-self.power), BAT_DIST['inPlayOut'])
+		batting['BB'] = percentile(self.discipline, BAT_DIST['BB'])
+		batting['HBP'] = percentile(self.discipline, BAT_DIST['HBP'])
+		batting['sacrifice'] = percentile(random.randint(1,99),BAT_DIST['sacrifice'])
+		batting['GDP'] = percentile(random.randint(1,99),BAT_DIST['GDP'])
+		batting['error'] = percentile(random.randint(1,99),BAT_DIST['error'])
 		
-		self.pitching['single'] = percentile((100-self.stuff), PITCH_DIST['single'])
-		self.pitching['strikeout'] = percentile(self.stuff, PITCH_DIST['strikeout'])
-		self.pitching['double'] = percentile((100-self.control), PITCH_DIST['double'])
-		self.pitching['triple'] = percentile((100-self.control), PITCH_DIST['triple'])
-		self.pitching['HR'] = percentile((100-self.control), PITCH_DIST['HR'])
-		self.pitching['inPlayOut'] = percentile(self.stuff, PITCH_DIST['inPlayOut'])
-		self.pitching['BB'] = percentile((100-self.control), PITCH_DIST['BB'])
-		self.pitching['HBP'] = percentile((100-self.control), PITCH_DIST['HBP'])
-		self.pitching['sacrifice'] = percentile(random.randint(1,99), PITCH_DIST['sacrifice'])
-		self.pitching['GDP'] = percentile(self.composure, PITCH_DIST['GDP'])
-		self.pitching['error'] = percentile(random.randint(1,99), PITCH_DIST['error'])
-			
+		pitching['single'] = percentile((100-self.stuff), PITCH_DIST['single'])
+		pitching['strikeout'] = percentile(self.stuff, PITCH_DIST['strikeout'])
+		pitching['double'] = percentile((100-self.control), PITCH_DIST['double'])
+		pitching['triple'] = percentile((100-self.control), PITCH_DIST['triple'])
+		pitching['HR'] = percentile((100-self.control), PITCH_DIST['HR'])
+		pitching['inPlayOut'] = percentile(self.stuff, PITCH_DIST['inPlayOut'])
+		pitching['BB'] = percentile((100-self.control), PITCH_DIST['BB'])
+		pitching['HBP'] = percentile((100-self.control), PITCH_DIST['HBP'])
+		pitching['sacrifice'] = percentile(random.randint(1,99), PITCH_DIST['sacrifice'])
+		pitching['GDP'] = percentile(self.composure, PITCH_DIST['GDP'])
+		pitching['error'] = percentile(random.randint(1,99), PITCH_DIST['error'])
+		
+		ratingSet = cls(contact, power, discipline, control, stuff, composure,
+		batting, pitching)
+		
+		return ratingSet
+	
+	@classmethod
+	def blank(cls):
+		contact = 0
+		power = 0
+		discipline = 0
+		control = 0
+		stuff = 0
+		composure = 0
+		
+		batting = {}
+		pitching = {}
+		
+		ratingSet = cls(contact, power, discipline, control, stuff, composure,
+		batting, pitching)
+		
+		return ratingSet
 			
 class Player(object):
 
-	def __init__(self, twitterUser):
+	def __init__(self, id, name, fullName, handle, handedness,
+	uniNumber, ratings, pitchingGameStats, battingGameStats, 
+	pitchingCareerStats, battingCareerStats, active, sub, position):
+		
+		self.id = id
+		self.name = name
+		self.fullName = fullName
+		self.handle = handle
+		self.handedness = handedness
+		self.uniNumber = uniNumber
+		self.ratings = ratings
+		self.pitchingGameStats = pitchingGameStats
+		self.battingGameStats = battingGameStats
+		self.pitchingCareerStats = pitchingCareerStats
+		self.battingCareerStats = battingCareerStats
+		self.active = active
+		self.sub = sub
+		self.position = position
+	
+	@classmethod
+	def fromTwitter(cls, twitterUser):
 		#twitterUser is a tweepy user object
-		self.id = twitterUser.id
-		self.name = twitterUser.screen_name
-		self.fullName = twitterUser.name
-		self.handle = "@{0}".format(twitterUser.screen_name)
-		self.handedness = random.choice(['L','R','S'])
-		self.uniNumber = random.randint(0,71)
-		self.ratings = Ratings()
-		self.pitchingGameStats = Counter()
-		self.battingGameStats = Counter()
-		self.pitchingCareerStats = Counter()
-		self.battingCareerStats = Counter()
-		self.active = True
-		self.sub = False
-		self.position = None
+		
+		id = twitterUser.id
+		name = twitterUser.screen_name
+		fullName = twitterUser.name
+		handle = "@{0}".format(twitterUser.screen_name)
+		handedness = random.choice(['L','R','S'])
+		uniNumber = random.randint(0,71)
+		ratings = Ratings()
+		pitchingGameStats = Counter()
+		battingGameStats = Counter()
+		pitchingCareerStats = Counter()
+		battingCareerStats = Counter()
+		active = True
+		sub = False
+		position = None
+		
+		player = cls(id, name, fullName, handle, handedness, uniNumber,
+		ratings, pitchingGameStats, battingGameStats, pitchingCareerStats,
+		battingCareerStats, active, sub, position)
+		
+		return player
 
 	def save(self):
 		
@@ -98,7 +159,7 @@ class Player(object):
 	
 	def notifyAttributes(self):
 	
-		attrTweet = """{0}\r\n
+		attrTweet = """{0}\r\n	
 					HITTING:\r\n
 					Contact: {1}\r\nPower: {2}\r\nDiscipline: {3}\r\n
 					\r\n
@@ -122,7 +183,30 @@ class Player(object):
 	def __str__(self):
 	
 		return self.handle
+	
+	@classmethod
+	def blank(cls):
+		id = ''
+		name = ''
+		fullName = ''
+		handle = ''
+		handedness = ''
+		uniNumber = 0
+		ratings = None
+		pitchingGameStats = Counter()
+		battingGameStats = Counter()
+		pitchingCareerStats = Counter()
+		battingCareerStats = Counter()
+		active = True
+		sub = False
+		position = None
 		
+		player = cls(id, name, fullName, handle, handedness, uniNumber,
+		ratings, pitchingGameStats, battingGameStats, pitchingCareerStats,
+		battingCareerStats, active, sub, position)
+		
+		return player
+	
 	@staticmethod
 	def load(playerID):
 	
