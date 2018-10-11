@@ -1,10 +1,11 @@
 import random, pickle, forgery_py
 from league import BAT_DIST, PITCH_DIST
 from utils import percentile, nicknames, getCity
-from config import RESULT_TYPES
+from config import RESULT_TYPES, PLAYER_SAVING_ENABLED
 from tweet import api
 from storage import playerStore
 from collections import Counter
+from datetime import datetime
 from itertools import groupby
 from boto.s3.key import Key
 from mongo_player_store import mongoPlayerSave, mongoGetPlayersByLastStartAscending, mongoMapToPlayer, playerMaptoMongo
@@ -134,7 +135,11 @@ class Player(object):
 		self.battingCareerStats += self.battingGameStats
 		
 		record = playerMaptoMongo(self)
-		mongoPlayerSave(record)
+		
+		record['lastStart'] = datetime.utcnow()
+		
+		if config.PLAYER_SAVING_ENABLED:
+			mongoPlayerSave(record)
 		
 		return True
 		

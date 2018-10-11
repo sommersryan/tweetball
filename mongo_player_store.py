@@ -64,7 +64,7 @@ def playerMaptoMongo(player):
 	
 	# add a field for a pitcher's last start 
 	
-	playerDict['lastStart'] = datetime.utcnow()
+	#playerDict['lastStart'] = datetime.utcnow()
 	
 	return playerDict
 
