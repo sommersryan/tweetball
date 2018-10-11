@@ -1,4 +1,4 @@
-import random, pickle, forgery_py
+import random, pickle
 from league import BAT_DIST, PITCH_DIST
 from utils import percentile, nicknames, getCity
 from config import RESULT_TYPES, PLAYER_SAVING_ENABLED
