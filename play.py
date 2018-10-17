@@ -422,8 +422,12 @@ class Game(object):
 			if self.inning >= 6 and self.homeTeam.lineup.currentPitcher.pitchingGameStats['WPA'] < 0 and random.randint(0,100) > 50:
 				
 				self.homeTeam.lineup.subPitcher()
-				
-			batter = self.awayTeam.lineup.newBatter()
+			
+			if self.inning == 1:
+				batter = self.awayTeam.lineup.battingOrder[0]
+			else:
+				batter = self.awayTeam.lineup.newBatter()
+			
 			pitcher = self.homeTeam.lineup.currentPitcher
 		
 		elif not self.top:
@@ -431,8 +435,12 @@ class Game(object):
 			if self.inning >=6 and self.awayTeam.lineup.currentPitcher.pitchingGameStats['WPA'] < 0 and random.randint(0,100) > 50:
 			
 				self.awayTeam.lineup.subPitcher()
-				
-			batter = self.homeTeam.lineup.newBatter()
+			
+			if self.inning == 1:
+				batter = self.homeTeam.lineup.battingOrder[0]
+			else:	
+				batter = self.homeTeam.lineup.newBatter()
+			
 			pitcher = self.awayTeam.lineup.currentPitcher
 		
 		currentPA = PlateAppearance(self.top, self.inning, self.awayScore, self.homeScore, BaseOutState(), batter, pitcher)
