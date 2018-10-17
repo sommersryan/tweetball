@@ -38,7 +38,7 @@ def getCity():
 	data = json.loads(response.read().decode())
 	
 	flag = next((item for item in flags if item['code'] == data['results'][0]['nat']), None)['emoji']
-	city = data['results'][0]['location']['city'].capitalize()
+	city = data['results'][0]['location']['city'].title()
 	
 	return "{0} {1}".format(flag, city)
 	
