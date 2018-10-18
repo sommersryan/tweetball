@@ -167,10 +167,38 @@
                             </table>
                         </div>
                         <p>
-                            <strong>| 2B:</strong> {% for batter in awayTeam.lineup.battingOrder %}{% if batter.battingGameStats['double'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['double'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['double'] }}); {% endif %}{% endfor %} |
-                            <strong>3B:</strong> {% for batter in awayTeam.lineup.battingOrder %}{% if batter.battingGameStats['triple'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['triple'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['triple'] }}); {% endif %}{% endfor %} |
-                            <strong>HR:</strong> {% for batter in awayTeam.lineup.battingOrder %}{% if batter.battingGameStats['HR'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['HR'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['HR'] }}); {% endif %}{% endfor %} |
-                            <strong>HBP:</strong> {% for batter in awayTeam.lineup.battingOrder %}{% if batter.battingGameStats['HBP'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['HBP'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['HBP'] }}); {% endif %}{% endfor %} |
+                            <span class="boxSubDoubles">
+                                <strong>2B:</strong>
+                                    {% for batter in awayTeam.lineup.battingOrder %}
+                                        {% if batter.battingGameStats['double'] == 1 %}{{ batter.fullName }}; 
+                                        {% elif batter.battingGameStats['double'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['double'] }}); 
+                                        {% endif %}
+                                    {% endfor %}
+                            </span>
+                            <span class="boxSubTriples">
+                                <strong>3B:</strong>
+                                    {% for batter in awayTeam.lineup.battingOrder %}
+                                        {% if batter.battingGameStats['triple'] == 1 %}{{ batter.fullName }};
+                                        {% elif batter.battingGameStats['triple'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['triple'] }});
+                                        {% endif %}
+                                    {% endfor %}
+                            </span>
+                            <span class="boxSubHomers">
+                                <strong>HR:</strong>
+                                    {% for batter in awayTeam.lineup.battingOrder %}
+                                        {% if batter.battingGameStats['HR'] == 1 %}{{ batter.fullName }};
+                                        {% elif batter.battingGameStats['HR'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['HR'] }});
+                                        {% endif %}
+                                    {% endfor %}
+                            </span>
+                            <span class="boxSubHBPs">
+                                <strong>HBP:</strong>
+                                    {% for batter in awayTeam.lineup.battingOrder %}
+                                        {% if batter.battingGameStats['HBP'] == 1 %}{{ batter.fullName }};
+                                        {% elif batter.battingGameStats['HBP'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['HBP'] }});
+                                        {% endif %}
+                                    {% endfor %}
+                            </span>
                         </p>
 
                         <div class="table-responsive">
@@ -241,10 +269,38 @@
                             </table>
                         </div>
                         <p>
-                            <strong>| 2B:</strong> {% for batter in homeTeam.lineup.battingOrder %}{% if batter.battingGameStats['double'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['double'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['double'] }}); {% endif %}{% endfor %} |
-                            <strong>3B:</strong> {% for batter in homeTeam.lineup.battingOrder %}{% if batter.battingGameStats['triple'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['triple'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['triple'] }}); {% endif %}{% endfor %} |
-                            <strong>HR:</strong> {% for batter in homeTeam.lineup.battingOrder %}{% if batter.battingGameStats['HR'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['HR'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['HR'] }}); {% endif %}{% endfor %} |
-                            <strong>HBP:</strong> {% for batter in homeTeam.lineup.battingOrder %}{% if batter.battingGameStats['HBP'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['HBP'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['HBP'] }}); {% endif %}{% endfor %} |
+                            <span class="boxSubDoubles">
+                                <strong>2B:</strong> 
+                                    {% for batter in homeTeam.lineup.battingOrder %}
+                                        {% if batter.battingGameStats['double'] == 1 %}{{ batter.fullName }}; 
+                                        {% elif batter.battingGameStats['double'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['double'] }}); 
+                                        {% endif %}
+                                    {% endfor %}
+                            </span>
+                            <span class="boxSubTriples">
+                                <strong>3B:</strong>
+                                    {% for batter in homeTeam.lineup.battingOrder %}
+                                        {% if batter.battingGameStats['triple'] == 1 %}{{ batter.fullName }};
+                                        {% elif batter.battingGameStats['triple'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['triple'] }});
+                                        {% endif %}
+                                    {% endfor %}
+                            </span>
+                            <span class="boxSubHomers">
+                                <strong>HR:</strong>
+                                    {% for batter in homeTeam.lineup.battingOrder %}
+                                        {% if batter.battingGameStats['HR'] == 1 %}{{ batter.fullName }};
+                                        {% elif batter.battingGameStats['HR'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['HR'] }});
+                                        {% endif %}
+                                    {% endfor %}
+                            </span>
+                            <span class="boxSubHBPs">
+                                <strong>HBP:</strong>
+                                    {% for batter in homeTeam.lineup.battingOrder %}
+                                        {% if batter.battingGameStats['HBP'] == 1 %}{{ batter.fullName }};
+                                        {% elif batter.battingGameStats['HBP'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['HBP'] }});
+                                        {% endif %}
+                                    {% endfor %}
+                            </span>
                         </p>
 
                         <div class="table-responsive">
@@ -354,6 +410,34 @@
 
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
                 $('#gameLog').DataTable().columns.adjust().draw();
+            });
+
+            $('.boxSubDoubles').each(function () {
+                console.log($(this).text());
+                if ($.trim($(this).text()) == "2B:") {
+                    $(this).hide();
+                }
+            });
+
+            $('.boxSubTriples').each(function () {
+                console.log($(this).text());
+                if ($.trim($(this).text()) == "3B:") {
+                    $(this).hide();
+                }
+            });
+
+            $('.boxSubHomers').each(function () {
+                console.log($(this).text());
+                if ($.trim($(this).text()) == "HR:") {
+                    $(this).hide();
+                }
+            });
+
+            $('.boxSubHBPs').each(function () {
+                console.log($(this).text());
+                if ($.trim($(this).text()) == "HBP:") {
+                    $(this).hide();
+                }
             });
         });
     </script>
