@@ -6,6 +6,19 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
 
     <style>
+
+        @media (max-width: 576px) {
+            body {
+                font-size: 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                font-size: 14px;
+            }
+        }
+
         #lineScore td, #lineScore th, #gameLog th {
             text-align: center;
         }
@@ -25,6 +38,7 @@
         .logNum {
             text-align: center;
         }
+
     </style>
 
     <title>{{ awayTeam.location }} {{ awayTeam.nickname }} vs. {{ homeTeam.location }} {{ homeTeam.nickname }}</title>
@@ -41,31 +55,33 @@
 	    		<div class="h2" id="mainTitle">{{ awayTeam.location }} {{ awayTeam.nickname }} at {{ homeTeam.location }} {{ homeTeam.nickname }}</div>
 	    	</div>
 	    	<div class="card-body">
-	    		<table id="lineScore" class="table table-bordered">
-	    			<thead>
-                        <tr class="bg-light">
-                            <th>TEAM</th>
-                            {% for h in header %}
+                <div class="table-responsive">
+                    <table id="lineScore" class="table table-bordered">
+                        <thead>
+                            <tr class="bg-light">
+                                <th>TEAM</th>
+                                {% for h in header %}
                                 <th>{{ h }}</th>
-                            {% endfor %}
-                            <th>T</th>
-                        </tr>
-                    </thead>
-	    			<tr>
-                        <td>{{ awayTeam.location }}</td>
-                        {% for t in tops %}
+                                {% endfor %}
+                                <th>T</th>
+                            </tr>
+                        </thead>
+                        <tr>
+                            <td>{{ awayTeam.location }}</td>
+                            {% for t in tops %}
                             <td>{{ t }}</td>
-                        {% endfor %}
-                        <td><strong>{{ game.awayScore }}</strong></td>
-                    </tr>
-	    			<tr>
-                        <td>{{ homeTeam.location }}</td>
-                        {% for b in bottoms %}
+                            {% endfor %}
+                            <td><strong>{{ game.awayScore }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td>{{ homeTeam.location }}</td>
+                            {% for b in bottoms %}
                             <td>{{ b }}</td>
-                        {% endfor %}
-                        <td><strong>{{ game.homeScore }}</strong></td>
-                    </tr>
-	    		</table>
+                            {% endfor %}
+                            <td><strong>{{ game.homeScore }}</strong></td>
+                        </tr>
+                    </table>
+                </div>
 	    	</div>
 	    </div>
 
@@ -92,38 +108,40 @@
             <div class="card-body">
                 <div class="tab-content" id="gameTabContent">
                     <div class="tab-pane fade show active" id="awayBoxScore" role="tabpanel">
-                        <table class="table table-bordered boxscore">
-                            <thead>
-                                <tr class="bg-light">
-                                    <th>BATTER</th>
-                                    <th>POS</th>
-                                    <th>AB</th>
-                                    <th>H</th>
-                                    <th>RBI</th>
-                                    <th>BB</th>
-                                    <th>SO</th>
-                                    <th>AVG</th>
-                                    <th>OBP</th>
-                                    <th>SLG</th>
+                        <div class="table-responsive">
+                            <table class="table table-bordered boxscore">
+                                <thead>
+                                    <tr class="bg-light">
+                                        <th>BATTER</th>
+                                        <th>POS</th>
+                                        <th>AB</th>
+                                        <th>H</th>
+                                        <th>RBI</th>
+                                        <th>BB</th>
+                                        <th>SO</th>
+                                        <th>AVG</th>
+                                        <th>OBP</th>
+                                        <th>SLG</th>
+                                    </tr>
+                                </thead>
+                                {% for batter in awayTeam.lineup.battingOrder %}
+                                <tr>
+                                    <td class="playerName">
+                                        <a href="https://twitter.com/{{ batter.name }}">{% if batter.sub == True %}*---{% endif %}{{ batter.fullName }}</a>
+                                    </td>
+                                    <td>{{ batter.position }}</td>
+                                    <td>{{ batter.battingGameStats['AB'] }}</td>
+                                    <td>{{ batter.battingGameStats['H'] }}</td>
+                                    <td>{{ batter.battingGameStats['RBI'] }}</td>
+                                    <td>{{ batter.battingGameStats['BB'] }}</td>
+                                    <td>{{ batter.battingGameStats['strikeout'] }}</td>
+                                    <td>{{ batter.battingGameStats['AVG'] }}</td>
+                                    <td>{{ batter.battingGameStats['OBP'] }}</td>
+                                    <td>{{ batter.battingGameStats['SLG'] }}</td>
                                 </tr>
-                            </thead>
-                            {% for batter in awayTeam.lineup.battingOrder %}
-                            <tr>
-                                <td class="playerName">
-                                    <a href="https://twitter.com/{{ batter.name }}">{% if batter.sub == True %}*---{% endif %}{{ batter.fullName }}</a>
-                                </td>
-                                <td>{{ batter.position }}</td>
-                                <td>{{ batter.battingGameStats['AB'] }}</td>
-                                <td>{{ batter.battingGameStats['H'] }}</td>
-                                <td>{{ batter.battingGameStats['RBI'] }}</td>
-                                <td>{{ batter.battingGameStats['BB'] }}</td>
-                                <td>{{ batter.battingGameStats['strikeout'] }}</td>
-                                <td>{{ batter.battingGameStats['AVG'] }}</td>
-                                <td>{{ batter.battingGameStats['OBP'] }}</td>
-                                <td>{{ batter.battingGameStats['SLG'] }}</td>
-                            </tr>
-                            {% endfor %}
-                        </table>
+                                {% endfor %}
+                            </table>
+                        </div>
                         <p>
                             <strong>| 2B:</strong> {% for batter in awayTeam.lineup.battingOrder %}{% if batter.battingGameStats['double'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['double'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['double'] }}); {% endif %}{% endfor %} |
                             <strong>3B:</strong> {% for batter in awayTeam.lineup.battingOrder %}{% if batter.battingGameStats['triple'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['triple'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['triple'] }}); {% endif %}{% endfor %} |
@@ -131,70 +149,73 @@
                             <strong>HBP:</strong> {% for batter in awayTeam.lineup.battingOrder %}{% if batter.battingGameStats['HBP'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['HBP'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['HBP'] }}); {% endif %}{% endfor %} |
                         </p>
 
-                        <table class="table table-bordered boxscore">
-                            <thead>
-                                <tr class="bg-light">
-                                    <th>PITCHER</th>
-                                    <th>IP</th>
-                                    <th>H</th>
-                                    <th>R</th>
-                                    <th>BB</th>
-                                    <th>SO</th>
-                                    <th>HR</th>
-                                    <th>BF</th>
-                                </tr>
-                            </thead>
-                            {% for pitcher in awayTeam.lineup.usedPitchers %}
-                            {% if pitcher.pitchingGameStats['BF'] > 0 %}
-                            <tr>
-                                <td class="playerName">
-                                    <a href="https://twitter.com/{{ pitcher.name }}">{{ pitcher.fullName }}</a>
-                                </td>
-                                <td>{{ pitcher.pitchingGameStats['printIP'] }}</td>
-                                <td>{{ pitcher.pitchingGameStats['H'] }}</td>
-                                <td>{{ pitcher.pitchingGameStats['R'] }}</td>
-                                <td>{{ pitcher.pitchingGameStats['BB'] }}</td>
-                                <td>{{ pitcher.pitchingGameStats['strikeout'] }}</td>
-                                <td>{{ pitcher.pitchingGameStats['HR'] }}</td>
-                                <td>{{ pitcher.pitchingGameStats['BF'] }}</td>
-                            </tr>{% endif%}
-                            {% endfor %}
-                        </table>
-                    </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered boxscore">
+                                <thead>
+                                    <tr class="bg-light">
+                                        <th>PITCHER</th>
+                                        <th>IP</th>
+                                        <th>H</th>
+                                        <th>R</th>
+                                        <th>BB</th>
+                                        <th>SO</th>
+                                        <th>HR</th>
+                                        <th>BF</th>
+                                    </tr>
+                                </thead>
+                                {% for pitcher in awayTeam.lineup.usedPitchers %}
+                                {% if pitcher.pitchingGameStats['BF'] > 0 %}
+                                <tr>
+                                    <td class="playerName">
+                                        <a href="https://twitter.com/{{ pitcher.name }}">{{ pitcher.fullName }}</a>
+                                    </td>
+                                    <td>{{ pitcher.pitchingGameStats['printIP'] }}</td>
+                                    <td>{{ pitcher.pitchingGameStats['H'] }}</td>
+                                    <td>{{ pitcher.pitchingGameStats['R'] }}</td>
+                                    <td>{{ pitcher.pitchingGameStats['BB'] }}</td>
+                                    <td>{{ pitcher.pitchingGameStats['strikeout'] }}</td>
+                                    <td>{{ pitcher.pitchingGameStats['HR'] }}</td>
+                                    <td>{{ pitcher.pitchingGameStats['BF'] }}</td>
+                                </tr>{% endif%}
+                                {% endfor %}
+                            </table>
+                        </div></div>
 
                     <div class="tab-pane fade" id="homeBoxScore" role="tabpanel">
-                        <table class="table table-bordered boxscore">
-                            <thead>
-                                <tr class="bg-light">
-                                    <th>BATTER</th>
-                                    <th>POS</th>
-                                    <th>AB</th>
-                                    <th>H</th>
-                                    <th>RBI</th>
-                                    <th>BB</th>
-                                    <th>SO</th>
-                                    <th>AVG</th>
-                                    <th>OBP</th>
-                                    <th>SLG</th>
+                        <div class="table-responsive">
+                            <table class="table table-bordered boxscore">
+                                <thead>
+                                    <tr class="bg-light">
+                                        <th>BATTER</th>
+                                        <th>POS</th>
+                                        <th>AB</th>
+                                        <th>H</th>
+                                        <th>RBI</th>
+                                        <th>BB</th>
+                                        <th>SO</th>
+                                        <th>AVG</th>
+                                        <th>OBP</th>
+                                        <th>SLG</th>
+                                    </tr>
+                                </thead>
+                                {% for batter in homeTeam.lineup.battingOrder %}
+                                <tr>
+                                    <td class="playerName">
+                                        <a href="https://twitter.com/{{ batter.name }}">{% if batter.sub == True %}*---{% endif %}{{ batter.fullName }}</a>
+                                    </td>
+                                    <td>{{ batter.position }}</td>
+                                    <td>{{ batter.battingGameStats['AB'] }}</td>
+                                    <td>{{ batter.battingGameStats['H'] }}</td>
+                                    <td>{{ batter.battingGameStats['RBI'] }}</td>
+                                    <td>{{ batter.battingGameStats['BB'] }}</td>
+                                    <td>{{ batter.battingGameStats['strikeout'] }}</td>
+                                    <td>{{ batter.battingGameStats['AVG'] }}</td>
+                                    <td>{{ batter.battingGameStats['OBP'] }}</td>
+                                    <td>{{ batter.battingGameStats['SLG'] }}</td>
                                 </tr>
-                            </thead>
-                            {% for batter in homeTeam.lineup.battingOrder %}
-                            <tr>
-                                <td class="playerName">
-                                    <a href="https://twitter.com/{{ batter.name }}">{% if batter.sub == True %}*---{% endif %}{{ batter.fullName }}</a>
-                                </td>
-                                <td>{{ batter.position }}</td>
-                                <td>{{ batter.battingGameStats['AB'] }}</td>
-                                <td>{{ batter.battingGameStats['H'] }}</td>
-                                <td>{{ batter.battingGameStats['RBI'] }}</td>
-                                <td>{{ batter.battingGameStats['BB'] }}</td>
-                                <td>{{ batter.battingGameStats['strikeout'] }}</td>
-                                <td>{{ batter.battingGameStats['AVG'] }}</td>
-                                <td>{{ batter.battingGameStats['OBP'] }}</td>
-                                <td>{{ batter.battingGameStats['SLG'] }}</td>
-                            </tr>
-                            {% endfor %}
-                        </table>
+                                {% endfor %}
+                            </table>
+                        </div>
                         <p>
                             <strong>| 2B:</strong> {% for batter in homeTeam.lineup.battingOrder %}{% if batter.battingGameStats['double'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['double'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['double'] }}); {% endif %}{% endfor %} |
                             <strong>3B:</strong> {% for batter in homeTeam.lineup.battingOrder %}{% if batter.battingGameStats['triple'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['triple'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['triple'] }}); {% endif %}{% endfor %} |
@@ -202,62 +223,66 @@
                             <strong>HBP:</strong> {% for batter in homeTeam.lineup.battingOrder %}{% if batter.battingGameStats['HBP'] == 1 %}{{ batter.fullName }}; {% elif batter.battingGameStats['HBP'] > 1 %} {{ batter.fullName }} ({{ batter.battingGameStats['HBP'] }}); {% endif %}{% endfor %} |
                         </p>
 
-                        <table class="table table-bordered boxscore">
-                            <thead>
-                                <tr class="bg-light">
-                                    <th>PITCHER</th>
-                                    <th>IP</th>
-                                    <th>H</th>
-                                    <th>R</th>
-                                    <th>BB</th>
-                                    <th>SO</th>
-                                    <th>HR</th>
-                                    <th>BF</th>
+                        <div class="table-responsive">
+                            <table class="table table-bordered boxscore">
+                                <thead>
+                                    <tr class="bg-light">
+                                        <th>PITCHER</th>
+                                        <th>IP</th>
+                                        <th>H</th>
+                                        <th>R</th>
+                                        <th>BB</th>
+                                        <th>SO</th>
+                                        <th>HR</th>
+                                        <th>BF</th>
+                                    </tr>
+                                </thead>
+                                {% for pitcher in homeTeam.lineup.usedPitchers %}
+                                {% if pitcher.pitchingGameStats['BF'] > 0 %}
+                                <tr>
+                                    <td class="playerName">
+                                        <a href="https://twitter.com/{{ pitcher.name }}">{{ pitcher.fullName }}</a>
+                                    </td>
+                                    <td>{{ pitcher.pitchingGameStats['printIP'] }}</td>
+                                    <td>{{ pitcher.pitchingGameStats['H'] }}</td>
+                                    <td>{{ pitcher.pitchingGameStats['R'] }}</td>
+                                    <td>{{ pitcher.pitchingGameStats['BB'] }}</td>
+                                    <td>{{ pitcher.pitchingGameStats['strikeout'] }}</td>
+                                    <td>{{ pitcher.pitchingGameStats['HR'] }}</td>
+                                    <td>{{ pitcher.pitchingGameStats['BF'] }}</td>
                                 </tr>
-                            </thead>
-                            {% for pitcher in homeTeam.lineup.usedPitchers %}
-                            {% if pitcher.pitchingGameStats['BF'] > 0 %}
-                            <tr>
-                                <td class="playerName">
-                                    <a href="https://twitter.com/{{ pitcher.name }}">{{ pitcher.fullName }}</a>
-                                </td>
-                                <td>{{ pitcher.pitchingGameStats['printIP'] }}</td>
-                                <td>{{ pitcher.pitchingGameStats['H'] }}</td>
-                                <td>{{ pitcher.pitchingGameStats['R'] }}</td>
-                                <td>{{ pitcher.pitchingGameStats['BB'] }}</td>
-                                <td>{{ pitcher.pitchingGameStats['strikeout'] }}</td>
-                                <td>{{ pitcher.pitchingGameStats['HR'] }}</td>
-                                <td>{{ pitcher.pitchingGameStats['BF'] }}</td>
-                            </tr>
-                            {% endif%}
-                            {% endfor %}
-                        </table>
+                                {% endif%}
+                                {% endfor %}
+                            </table>
+                        </div>
                     </div>
                     <div class="tab-pane fade" id="gameLogTab" role="tabpanel">
-                        <table id="gameLog" class="table table-bordered">
-                            <thead>
-                                <tr class="bg-light">
-                                    <th>INN</th>
-                                    <th>AWAY</th>
-                                    <th>HOME</th>
-                                    <th>PITCHER</th>
-                                    <th>BATTER</th>
-                                    <th>OUTS</th>
-                                    <th>EVENT</th>
+                        <div class="table-responsive">
+                            <table id="gameLog" class="table table-bordered">
+                                <thead>
+                                    <tr class="bg-light">
+                                        <th>INN</th>
+                                        <th>AWAY</th>
+                                        <th>HOME</th>
+                                        <th>PITCHER</th>
+                                        <th>BATTER</th>
+                                        <th>OUTS</th>
+                                        <th>EVENT</th>
+                                    </tr>
+                                </thead>
+                                {% for pa in game.PAs %}
+                                <tr>
+                                    <td class="logNum">{% if pa.top %}<i class="fa fa-angle-up text-success"></i> {{ pa.inning }}{% else %}<i class="fa fa-angle-down text-danger"></i> {{ pa.inning }}{% endif %}</td>
+                                    <td class="logNum">{{ pa.awayScore }}</td>
+                                    <td class="logNum">{{ pa.homeScore }}</td>
+                                    <td><a href="https://twitter.com/{{ pa.pitcher.name }}">{{ pa.pitcher.fullName }}</a></td>
+                                    <td><a href="https://twitter.com/{{ pa.batter.name }}">{{ pa.batter.fullName }}</a></td>
+                                    <td class="logNum">{{ pa.baseState.outs }}</td>
+                                    <td>{{ pa }}</td>
                                 </tr>
-                            </thead>
-                            {% for pa in game.PAs %}
-                            <tr>
-                                <td class="logNum">{% if pa.top %}<i class="fa fa-angle-up text-success"></i> {{ pa.inning }}{% else %}<i class="fa fa-angle-down text-danger"></i> {{ pa.inning }}{% endif %}</td>
-                                <td class="logNum">{{ pa.awayScore }}</td>
-                                <td class="logNum">{{ pa.homeScore }}</td>
-                                <td><a href="https://twitter.com/{{ pa.pitcher.name }}">{{ pa.pitcher.fullName }}</a></td>
-                                <td><a href="https://twitter.com/{{ pa.batter.name }}">{{ pa.batter.fullName }}</a></td>
-                                <td class="logNum">{{ pa.baseState.outs }}</td>
-                                <td>{{ pa }}</td>
-                            </tr>
-                            {% endfor %}
-                        </table>
+                                {% endfor %}
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
