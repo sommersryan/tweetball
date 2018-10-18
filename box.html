@@ -27,6 +27,41 @@
             text-align: center;
         }
 
+        .dataTables_wrapper .dataTables_scroll {
+            border: 1px solid #ccc;
+            margin: 0 0;
+        }
+
+        div.dataTables_scrollHead table.dataTable {
+            margin-bottom: 0 !important;
+            margin-top: 0 !important;
+            border: 0 !important;
+        }
+
+        div.dataTables_scrollHeadInner {
+            background-color: #f8f9fa !important;
+        }
+
+        .dataTables_scrollBody {
+            overflow-x: hidden !important;
+            border-top: 1px solid #ccc;
+        }
+
+        .table {
+            border-left: 0px !important;
+            border-right: 0px !important;
+        }
+        
+        .table th {
+            border-bottom: 0 !important;
+            font-weight: normal;
+            text-align: center;
+        }
+
+        table.dataTable th {
+            border-top: 0 !important;
+        }
+
     </style>
 
     <title>{{ awayTeam.location }} {{ awayTeam.nickname }} vs. {{ homeTeam.location }} {{ homeTeam.nickname }}</title>
@@ -34,6 +69,7 @@
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/r-2.2.2/datatables.min.css" />
 </head>
 	
 	<body>
@@ -88,7 +124,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link lead" data-toggle="tab" role="tab" href="#gameLogTab">
-                            Game Log
+                            <i class="fa fa-file-text-o" aria-hidden="true"></i> Game Log
                         </a>
                     </li>
                 </ul>
@@ -97,7 +133,7 @@
                 <div class="tab-content" id="gameTabContent">
                     <div class="tab-pane fade show active" id="awayBoxScore" role="tabpanel">
                         <div class="table-responsive">
-                            <table class="table table-bordered boxscore">
+                            <table id="awayBoxTable" class="table table-bordered boxscore">
                                 <thead>
                                     <tr class="bg-light">
                                         <th>BATTER</th>
@@ -246,7 +282,7 @@
                     </div>
                     <div class="tab-pane fade" id="gameLogTab" role="tabpanel">
                         <div class="table-responsive">
-                            <table id="gameLog" class="table table-bordered">
+                            <table id="gameLog" class="table table-bordered" style="border-collapse:collapse !important;">
                                 <thead>
                                     <tr class="bg-light">
                                         <th>INN</th>
@@ -279,5 +315,47 @@
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-	</body>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/r-2.2.2/datatables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#gameLog').DataTable({
+                scrollY: '50vh',
+                scrollCollapse: true,
+                paging: false,
+                responsive: true,
+                dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row mt-2'<'col-sm-12 col-md-5'><'col-sm-12 col-md-7'f>>",
+                columns: [
+                    {
+                        responsivePriority: 1
+                    },
+                    {
+                        orderable: false,
+                    },
+                    {
+                        orderable: false
+                    },
+                    {
+                        responsivePriority: 5
+                    },
+                    {
+                        responsivePriority: 4
+                    },
+                    {
+                        orderable: false,
+                        responsivePriority: 3
+                    },
+                    {
+                        responsivePriority: 2
+                    }
+                ]
+            });
+
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                $('#gameLog').DataTable().columns.adjust().draw();
+            });
+        });
+    </script>
+    </body>
 </html>
