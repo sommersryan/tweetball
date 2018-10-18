@@ -305,13 +305,13 @@ class PlateAppearance(object):
 	
 		if self.top:
 			half = emojis['top']
-			aScore = self.awayScore + self.runs
-			hScore = self.homeScore
+			aAfterScore = self.awayScore + self.runs
+			hAfterScore = self.homeScore
 			
 		else:
 			half = emojis['bottom']
-			aScore = self.awayScore
-			hScore = self.homeScore + self.runs
+			aAfterScore = self.awayScore
+			hAfterScore = self.homeScore + self.runs
 			
 		inningString = "{0}{1}".format(half, self.inning)
 		baseString = ""
@@ -341,13 +341,18 @@ class PlateAppearance(object):
 		
 		if self.runs > 0:
 			if self.top:
-				scoreString = "{0} -- {1}".format(aScore, hScore)
+				afterScoreString = "{0} -- {1}".format(aAfterScore, hAfterScore)
 			else:
-				scoreString = "{0} -- {1}".format(hScore, aScore)
+				afterScoreString = "{0} -- {1}".format(hAfterScore, aAfterScore)
 		else:
-			scoreString = ""
+			afterScoreString = ""
+				
+		if self.top:
+			beforeScoreString = "{0} -- {1}".format(self.awayScore, self.homeScore)
+		else:
+			beforeScoreString = "{0} -- {1}".format(self.homeScore, self.awayScore)
 		
-		t = "{0} | {1} | {2} |\r\n {3}. {4}".format(inningString, baseString, outString, narrative, scoreString)
+		t = "{0} | {1} | {2} | {3}|\r\n {4}. {5}".format(inningString, beforeScoreString, baseString, outString, narrative, afterScoreString)
 		
 		if len(t) > 139:
 			t = t[:139]

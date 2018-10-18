@@ -2,7 +2,7 @@ import os
 from urllib.parse import quote_plus
 
 #PA time in seconds
-PA_TIME = 90
+PA_TIME = 30
 
 #Number of PAs to tweet about per game
 NUM_PAS = 15
