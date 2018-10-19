@@ -139,7 +139,7 @@ class Player(object):
 		
 		record['lastStart'] = datetime.utcnow()
 		
-		if config.PLAYER_SAVING_ENABLED:
+		if PLAYER_SAVING_ENABLED:
 			mongoPlayerSave(record)
 		
 		return True
