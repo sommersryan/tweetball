@@ -3,6 +3,7 @@ from league import BAT_DIST, PITCH_DIST
 from utils import percentile, nicknames, getCity
 from config import RESULT_TYPES, PLAYER_SAVING_ENABLED
 from tweet import api
+from tweepy.error import TweepError
 from storage import playerStore
 from collections import Counter
 from datetime import datetime
@@ -145,7 +146,12 @@ class Player(object):
 		
 	def refresh(self):
 		
-		new = api.get_user(self.id)
+		try:
+			new = api.get_user(self.id)
+			
+		except TweepError:
+			return False
+		
 		self.id = new.id
 		self.name = new.screen_name
 		self.handle = "@{0}".format(new.screen_name)
