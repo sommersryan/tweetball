@@ -1,5 +1,6 @@
 from tweet import api
 from tweepy import Cursor
+from datetime import datetime
 from mongo_player_store import *
 import time, roster
 
@@ -19,6 +20,9 @@ for addition in addList:
 	player = roster.Player.fromTwitter(api.get_user(addition))
 	
 	record = playerMaptoMongo(player)
+	
+	record['lastStart'] = datetime.utcnow()
+	
 	mongoPlayerSave(record)
 	
 	player.notifyAttributes()

@@ -5,7 +5,7 @@ from urllib.parse import quote_plus
 PA_TIME = 102
 
 #Number of PAs to tweet about per game
-NUM_PAS = 15
+NUM_PAS = 18
 
 #Possible outcomes of a plate appearance
 RESULT_TYPES = ['single','double','triple','HR','strikeout','BB','HBP','inPlayOut','GDP','sacrifice','error']
@@ -32,4 +32,4 @@ MONGO_AUTH_SOURCE = os.environ.get('MONGO_AUTH_SOURCE')
 
 MONGO_URI = "mongodb://{0}:{1}@{2}/?authSource={3}".format(quote_plus(MONGO_USER), quote_plus(MONGO_PASS), MONGO_IP, MONGO_AUTH_SOURCE)
 
-PLAYER_SAVING_ENABLED = bool(int(os.environ.get('PLAYER_SAVING_ENABLED'))) or False
+PLAYER_SAVING_ENABLED = bool(int(os.environ.get('PLAYER_SAVING_ENABLED'))) or True
