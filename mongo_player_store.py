@@ -11,14 +11,14 @@ db = client.tweetball
 
 def playerMaptoMongo(player):
 	
-	ipNum = player.pitchingCareerStats['IP'].numerator
-	ipDenom = player.pitchingCareerStats['IP'].denominator
+	#ipNum = player.pitchingCareerStats['IP'].numerator
+	#ipDenom = player.pitchingCareerStats['IP'].denominator
 	
-	try:
-		player.pitchingCareerStats.pop('IP')
+	#try:
+	#	player.pitchingCareerStats.pop('IP')
 	
-	except KeyError:
-		pass
+	#except KeyError:
+	#	pass
 	
 	# just in case:
 	
@@ -27,7 +27,7 @@ def playerMaptoMongo(player):
 	
 	# dump to JSON string
 	
-	playerJSONString = json.dumps(player, default= lambda o : o.__dict__)
+	playerJSONString = json.dumps(player, default= lambda o : serializePlayerAttribute(o))
 	
 	# serialize to JSON object (dict really) for editing
 	
@@ -54,9 +54,9 @@ def playerMaptoMongo(player):
 	
 	# add back in IP
 	
-	playerDict['stats'][CURRENT_SEASON]['pitching']['IP'] = {}
-	playerDict['stats'][CURRENT_SEASON]['pitching']['IP']['numerator'] = ipNum
-	playerDict['stats'][CURRENT_SEASON]['pitching']['IP']['denominator'] = ipDenom
+	#playerDict['stats'][CURRENT_SEASON]['pitching']['IP'] = {}
+	#playerDict['stats'][CURRENT_SEASON]['pitching']['IP']['numerator'] = ipNum
+	#playerDict['stats'][CURRENT_SEASON]['pitching']['IP']['denominator'] = ipDenom
 	
 	# adding a field for twitter avatar URL (will implement later)
 	
@@ -67,6 +67,14 @@ def playerMaptoMongo(player):
 	#playerDict['lastStart'] = datetime.utcnow()
 	
 	return playerDict
+	
+def serializePlayerAttribute(attribute):
+	
+	if isinstance(attribute, Fraction):
+		return { "numerator" : attribute.numerator, "denominator" : attribute.denominator }
+		
+	else:
+		return attribute.__dict__
 
 def mongoMapToPlayer(mongoPlayer, blankPlayer):
 
