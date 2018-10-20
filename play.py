@@ -354,8 +354,8 @@ class PlateAppearance(object):
 		
 		t = "{0} | {1} | {2} | {3}|\r\n {4}. {5}".format(inningString, beforeScoreString, baseString, outString, narrative, afterScoreString)
 		
-		if len(t) > 139:
-			t = t[:139]
+		if len(t) > 260:
+			t = t[:260]
 		
 		tweetID = api.update_status(t, in_reply_to_status_id = replyTo).id
 		
