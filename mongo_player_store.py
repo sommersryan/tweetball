@@ -22,8 +22,8 @@ def playerMaptoMongo(player):
 	
 	# just in case:
 	
-	player.pitchingGameStats.clear()
-	player.battingGameStats.clear()
+	#player.pitchingGameStats.clear()
+	#player.battingGameStats.clear()
 	
 	# dump to JSON string
 	
