@@ -132,8 +132,8 @@ class Player(object):
 
 	def save(self):
 		
-		self.pitchingCareerStats += self.pitchingGameStats
-		self.battingCareerStats += self.battingGameStats
+		self.pitchingCareerStats.update(self.pitchingGameStats)
+		self.battingCareerStats.update(self.battingGameStats)
 		
 		record = playerMaptoMongo(self)
 		
