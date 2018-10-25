@@ -263,7 +263,7 @@ class Lineup(object):
 		
 		return True
 		
-	def subPitcher(self):
+	def subPitcher(self, previousPA):
 	
 		if self.pitchers:
 		
@@ -271,9 +271,16 @@ class Lineup(object):
 			substitute = self.pitchers.pop(0)
 			substitute.sub = True
 			substitute.position = 'P'
+			
+			subInfo = Substitution(self.currentPitcher, substitute, previousPA, True)
+			
 			self.battingOrder.insert(self.battingOrder.index(self.currentPitcher) + 1, substitute)
 			self.currentPitcher = substitute
 			self.usedPitchers += [self.currentPitcher]
+			
+			return subInfo
+			
+		return False
 		
 class Team(object):
 
@@ -286,6 +293,44 @@ class Team(object):
 	def __str__(self):
 	
 		return "{0} {1}".format(self.location, self.nickname)
+		
+class Substitution(object):
+
+	def __init__(self, playerOut, playerIn, previousPA, isPitchingChange):
+		
+		self.top = previousPA.top
+		self.inning = previousPA.inning
+		self.outs = previousPA.endState.outs
+		self.runs = 0
+		self.isPitchingChange = isPitchingChange
+		self.wpa = 0
+		self.playerOut = playerOut
+		self.playerIn = playerIn
+		self.isSubstitution = True
+
+		self.narratives = [str(self)]
+		
+	def tweetPA(self, replyTo):
+		
+		if self.isPitchingChange:
+			tweet = "{0} enters the game to pitch, replacing {1}.".format(self.playerIn.handle, self.playerOut.handle)
+		
+		else:
+			tweet = "{0} enters the game to pinch hit for {1}.".format(self.playerIn.handle, self.playerOut.handle)
+		
+		tweetID = api.update_status(tweet, in_reply_to_status_id = replyTo).id
+		
+		return tweetID
+		
+	def __str__(self):
+		
+		if self.isPitchingChange:
+			subString = "{0} enters the game to pitch, replacing {1}.".format(self.playerIn.handle, self.playerOut.handle)
+			
+		else:
+			subString = "{0} enters the game to pinch hit for {1}.".format(self.playerIn.handle, self.playerOut.handle)
+		
+		return subString
 
 def getTeams():
 

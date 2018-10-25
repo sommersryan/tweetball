@@ -134,6 +134,7 @@ class PlateAppearance(object):
 		self.batter = batter
 		self.pitcher = pitcher
 		self.narratives = []
+		self.isSubstitution = False
 		
 		if baseState.outs == 3:
 			self.transitions = [None,]
@@ -457,10 +458,16 @@ class Game(object):
 		
 		while True:
 		
+			subInfo = False
+		
 			if bullpenCall(self, pitchingTeam.lineup.currentPitcher):
-				pitchingTeam.lineup.subPitcher()
+				
+				subInfo = pitchingTeam.lineup.subPitcher(currentPA)
 		
 			currentPA = self.iterate(currentPA)
+			
+			if subInfo:
+				self.PAs.append(subInfo)
 			
 			if not currentPA:
 			

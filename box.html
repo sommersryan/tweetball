@@ -351,15 +351,27 @@
                                     </tr>
                                 </thead>
                                 {% for pa in game.PAs %}
-                                <tr>
-                                    <td class="logNum">{% if pa.top %}<i class="fa fa-angle-up text-success"></i> {{ pa.inning }}{% else %}<i class="fa fa-angle-down text-danger"></i> {{ pa.inning }}{% endif %}</td>
-                                    <td class="logNum">{{ pa.awayScore }}</td>
-                                    <td class="logNum">{{ pa.homeScore }}</td>
-                                    <td><a href="https://twitter.com/{{ pa.pitcher.name }}">{{ pa.pitcher.fullName }}</a></td>
-                                    <td><a href="https://twitter.com/{{ pa.batter.name }}">{{ pa.batter.fullName }}</a></td>
-                                    <td class="logNum">{{ pa.baseState.outs }}</td>
-                                    <td>{{ pa }}</td>
-                                </tr>
+									{% if pa.isSubstitution %}
+										<tr class="subLine">
+											<td class="logNum">{% if pa.top %}<i class="fa fa-angle-up text-success"></i> {{ pa.inning }}{% else %}<i class="fa fa-angle-down text-danger"></i> {{ pa.inning }}{% endif %}</td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td class="logNum">{{ pa.outs }}</td>
+											<td class="text-danger"><i>{{ pa }}</i></td>
+										</tr>
+									{% else %}
+										<tr>
+											<td class="logNum">{% if pa.top %}<i class="fa fa-angle-up text-success"></i> {{ pa.inning }}{% else %}<i class="fa fa-angle-down text-danger"></i> {{ pa.inning }}{% endif %}</td>
+											<td class="logNum">{{ pa.awayScore }}</td>
+											<td class="logNum">{{ pa.homeScore }}</td>
+											<td><a href="https://twitter.com/{{ pa.pitcher.name }}">{{ pa.pitcher.fullName }}</a></td>
+											<td><a href="https://twitter.com/{{ pa.batter.name }}">{{ pa.batter.fullName }}</a></td>
+											<td class="logNum">{{ pa.baseState.outs }}</td>
+											<td>{{ pa }}</td>
+										</tr>
+									{% endif %}
                                 {% endfor %}
                             </table>
                         </div>
