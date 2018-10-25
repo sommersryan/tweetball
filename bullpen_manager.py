@@ -33,6 +33,9 @@ def pitcherAllowedMoreThanFourRuns(**kwargs):
 def pitcherAllowedMoreThanSixRuns(**kwargs):
 	return kwargs['pitcher'].pitchingGameStats['R'] > 6
 	
+def pitcherAllowedLessThanFourRuns(**kwargs):
+	return kwargs['pitcher'].pitchingGameStats['R'] < 4
+	
 def pitcherThrowingShutout(**kwargs):
 	return kwargs['pitcher'].pitchingGameStats['R'] == 0
 
@@ -45,12 +48,29 @@ def noHitter(**kwargs):
 def pitcherThrownLessThanOneInning(**kwargs):
 	return kwargs['pitcher'].pitchingGameStats['IP'] < Fraction(1,1)
 	
+def pitcherRAGreaterThanEight(**kwargs):
+	
+	pitcherStats = kwargs['pitcher'].pitchingGameStats
+	
+	if pitcherStats['IP'] == 0:
+		if pitcherStats['R'] > 2:
+			return True
+		else:
+			return False
+			
+	RA = (pitcherStats['R'] / float(pitcherStats['IP'])) * 9
+	
+	return RA > 8
+		
+		
 scorecard = {
-				sixthOrLater : 40,
-				pitcherAllowedMoreThanFourRuns: 15,
-				pitcherAllowedMoreThanSixRuns: 25,
-				pitcherThrowingShutout: -25,
+				sixthOrLater : 25,
+				pitcherAllowedMoreThanFourRuns: 30,
+				pitcherAllowedMoreThanSixRuns: 80,
+				pitcherRAGreaterThanEight: 50,
+				pitcherThrowingShutout: -80,
 				noHitter: -100,
 				pitcherThrownLessThanOneInning: -10,
-				pitcherWalkedFiveOrMore: 15
+				pitcherWalkedFiveOrMore: 25,
+				pitcherAllowedLessThanFourRuns: -60
 			}

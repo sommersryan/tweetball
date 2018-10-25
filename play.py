@@ -4,6 +4,7 @@ from league import leagueMeans
 from tweet import api
 from wpa import winProb
 from fractions import Fraction
+from bullpen_manager import bullpenCall
 
 class Matchup(object):
 
@@ -424,7 +425,7 @@ class Game(object):
 		
 		if self.top:
 			
-			if self.inning >= 6 and self.homeTeam.lineup.currentPitcher.pitchingGameStats['WPA'] < 0 and random.randint(0,100) > 50:
+			if bullpenCall(self, self.homeTeam.lineup.currentPitcher):
 				
 				self.homeTeam.lineup.subPitcher()
 			
@@ -437,7 +438,7 @@ class Game(object):
 		
 		elif not self.top:
 			
-			if self.inning >=6 and self.awayTeam.lineup.currentPitcher.pitchingGameStats['WPA'] < 0 and random.randint(0,100) > 50:
+			if bullpenCall(self, self.awayTeam.lineup.currentPitcher):
 			
 				self.awayTeam.lineup.subPitcher()
 			
