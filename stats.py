@@ -118,7 +118,11 @@ class BoxScore(object):
 		
 			if pitcher.pitchingGameStats['BF'] > 0:
 			
-				pitcher.pitchingGameStats['RA'] = (pitcher.pitchingGameStats['R'] / float(pitcher.pitchingGameStats['IP'])) * 9
+				if pitcher.pitchingGameStats['IP'] == 0:
+					pitcher.pitchingGameStats['RA'] = float("inf")
+					
+				else:
+					pitcher.pitchingGameStats['RA'] = (pitcher.pitchingGameStats['R'] / float(pitcher.pitchingGameStats['IP'])) * 9
 					
 			ip = pitcher.pitchingGameStats['IP'].__floor__()
 			r = pitcher.pitchingGameStats['IP'] - ip
@@ -134,9 +138,14 @@ class BoxScore(object):
 		for pitcher in game.homeTeam.lineup.usedPitchers:
 		
 			if pitcher.pitchingGameStats['BF'] > 0:
-			
-				pitcher.pitchingGameStats['RA'] = (pitcher.pitchingGameStats['R'] / float(pitcher.pitchingGameStats['IP'])) * 9
+				
+				if pitcher.pitchingGameStats['IP'] == 0:
+					pitcher.pitchingGameStats['RA'] = float("inf")
 					
+				else:
+					pitcher.pitchingGameStats['RA'] = (pitcher.pitchingGameStats['R'] / float(pitcher.pitchingGameStats['IP'])) * 9
+				
+			
 			ip = pitcher.pitchingGameStats['IP'].__floor__()
 			r = pitcher.pitchingGameStats['IP'] - ip
 			

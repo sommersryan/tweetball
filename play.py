@@ -425,9 +425,11 @@ class Game(object):
 		
 		if self.top:
 			
-			if bullpenCall(self, self.homeTeam.lineup.currentPitcher):
+			# if bullpenCall(self, self.homeTeam.lineup.currentPitcher):
 				
-				self.homeTeam.lineup.subPitcher()
+				# self.homeTeam.lineup.subPitcher()
+			
+			pitchingTeam = self.homeTeam
 			
 			if self.inning == 1:
 				batter = self.awayTeam.lineup.battingOrder[0]
@@ -438,9 +440,11 @@ class Game(object):
 		
 		elif not self.top:
 			
-			if bullpenCall(self, self.awayTeam.lineup.currentPitcher):
+			# if bullpenCall(self, self.awayTeam.lineup.currentPitcher):
 			
-				self.awayTeam.lineup.subPitcher()
+				# self.awayTeam.lineup.subPitcher()
+			
+			pitchingTeam = self.awayTeam
 			
 			if self.inning == 1:
 				batter = self.homeTeam.lineup.battingOrder[0]
@@ -452,6 +456,9 @@ class Game(object):
 		currentPA = PlateAppearance(self.top, self.inning, self.awayScore, self.homeScore, BaseOutState(), batter, pitcher)
 		
 		while True:
+		
+			if bullpenCall(self, pitchingTeam.lineup.currentPitcher):
+				pitchingTeam.lineup.subPitcher()
 		
 			currentPA = self.iterate(currentPA)
 			
