@@ -137,7 +137,12 @@ class Player(object):
 		
 		record = playerMaptoMongo(self)
 		
-		record['lastStart'] = datetime.utcnow()
+		if self.position == "P":
+			if self.pitchingGameStats['IP'] >= 2:
+				record['lastStart'] = datetime.utcnow()
+				
+		else:
+			record['lastStart'] = datetime.utcnow()
 		
 		if PLAYER_SAVING_ENABLED:
 			mongoPlayerSave(record)

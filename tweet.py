@@ -56,7 +56,7 @@ class GameTweeter(object):
 		
 		for i, pa in enumerate(self.game.PAs):
 		
-			if abs(pa.wpa) >= self.threshold or pa.runs > 0 or i == len(self.game.PAs)-1:
+			if abs(pa.wpa) >= self.threshold or pa.runs > 0 or i == len(self.game.PAs)-1 or pa.isSubstitution:
 			
 				prevID = pa.tweetPA(prevID)
 			
