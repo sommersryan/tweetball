@@ -5,6 +5,7 @@ from config import RESULT_TYPES, PLAYER_SAVING_ENABLED
 from tweet import api
 from tweepy.error import TweepError
 from storage import playerStore
+from fractions import Fraction
 from collections import Counter
 from datetime import datetime
 from itertools import groupby
@@ -123,6 +124,8 @@ class Player(object):
 		active = True
 		sub = False
 		position = None
+		
+		pitchingCareerStats['IP'] = Fraction(0, 1)
 		
 		player = cls(id, name, fullName, handle, handedness, uniNumber,
 		ratings, pitchingGameStats, battingGameStats, pitchingCareerStats,
