@@ -103,7 +103,7 @@ def mongoMapToPlayer(mongoPlayer, blankPlayer):
 	
 def mongoPlayerSave(mongoPlayer):
 	
-	db.players.find_one_and_replace({'id' : mongoPlayer['id']}, mongoPlayer, upsert = True)
+	db.players.find_one_and_update({'id' : mongoPlayer['id']}, {'$set' : mongoPlayer}, upsert = True)
 	
 def mongoDeleteByTwitterId(id):
 
