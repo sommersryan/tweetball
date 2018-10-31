@@ -97,7 +97,7 @@ class Player(object):
 		#twitterUser is a tweepy user object
 		
 		kwargs = {
-					'objectId' : '',
+					'_id' : '',
 					'id' : twitterUser.id,
 					'name' : twitterUser.screen_name,
 					'fullName' : twitterUser.name,
@@ -186,7 +186,7 @@ class Player(object):
 	
 		kwargs = {
 		
-					'objectId' : '',
+					'_id' : '',
 					'id' : '',
 					'name' : '',
 					'fullName' : '',
