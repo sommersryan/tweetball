@@ -11,78 +11,51 @@ from itertools import groupby
 from boto.s3.key import Key
 from mongo_player_store import mongoPlayerSave, mongoGetPlayersByLastStartAscending, mongoMapToPlayer, playerMaptoMongo
 
-class Ratings(object):
+def generateRatings():
+
+	ratings = {
+				'contact' : random.randint(1,99),
+				'power' : random.randint(1,99),
+				'discipline' : random.randint(1,99),
+				'control' : random.randint(1,99),
+				'stuff' : random.randint(1,99),
+				'composure' : random.randint(1,99)
+			}
+			
+	return ratings
 	
-	def __init__(self, contact, power, discipline, control, stuff, 
-	composure, batting, pitching):
+def rollProbabilities(ratingsDict):
+
+	battingProbs = {}
+	pitchingProbs = {}
 	
-		self.contact = contact
-		self.power = power
-		self.discipline = discipline
-		self.control = control
-		self.stuff = stuff
-		self.composure = composure
-		self.batting = batting
-		self.pitching = pitching
+	battingProbs['single'] = percentile(ratingsDict['contact'], BAT_DIST['single'])
+	battingProbs['strikeout'] = percentile((100-ratingsDict['contact']), BAT_DIST['strikeout'])
+	battingProbs['double'] = percentile(ratingsDict['power'], BAT_DIST['double'])
+	battingProbs['triple'] = percentile(ratingsDict['power'], BAT_DIST['triple'])
+	battingProbs['HR'] = percentile(ratingsDict['power'], BAT_DIST['HR'])
+	battingProbs['inPlayOut'] = percentile((100-ratingsDict['power']), BAT_DIST['inPlayOut'])
+	battingProbs['BB'] = percentile(ratingsDict['discipline'], BAT_DIST['BB'])
+	battingProbs['HBP'] = percentile(ratingsDict['discipline'], BAT_DIST['HBP'])
+	battingProbs['sacrifice'] = percentile(random.randint(1,99),BAT_DIST['sacrifice'])
+	battingProbs['GDP'] = percentile(random.randint(1,99),BAT_DIST['GDP'])
+	battingProbs['error'] = percentile(random.randint(1,99),BAT_DIST['error'])
 	
-	@classmethod
-	def new(cls):
-		
-		contact = random.randint(1,99)
-		power = random.randint(1,99)
-		discipline = random.randint(1,99)
-		control = random.randint(1,99)
-		stuff = random.randint(1,99)
-		composure = random.randint(1,99)
-		
-		batting = {}
-		pitching = {}
-		
-		batting['single'] = percentile(contact, BAT_DIST['single'])
-		batting['strikeout'] = percentile((100-contact), BAT_DIST['strikeout'])
-		batting['double'] = percentile(power, BAT_DIST['double'])
-		batting['triple'] = percentile(power, BAT_DIST['triple'])
-		batting['HR'] = percentile(power, BAT_DIST['HR'])
-		batting['inPlayOut'] = percentile((100-power), BAT_DIST['inPlayOut'])
-		batting['BB'] = percentile(discipline, BAT_DIST['BB'])
-		batting['HBP'] = percentile(discipline, BAT_DIST['HBP'])
-		batting['sacrifice'] = percentile(random.randint(1,99),BAT_DIST['sacrifice'])
-		batting['GDP'] = percentile(random.randint(1,99),BAT_DIST['GDP'])
-		batting['error'] = percentile(random.randint(1,99),BAT_DIST['error'])
-		
-		pitching['single'] = percentile((100-stuff), PITCH_DIST['single'])
-		pitching['strikeout'] = percentile(stuff, PITCH_DIST['strikeout'])
-		pitching['double'] = percentile((100-control), PITCH_DIST['double'])
-		pitching['triple'] = percentile((100-control), PITCH_DIST['triple'])
-		pitching['HR'] = percentile((100-control), PITCH_DIST['HR'])
-		pitching['inPlayOut'] = percentile(stuff, PITCH_DIST['inPlayOut'])
-		pitching['BB'] = percentile((100-control), PITCH_DIST['BB'])
-		pitching['HBP'] = percentile((100-control), PITCH_DIST['HBP'])
-		pitching['sacrifice'] = percentile(random.randint(1,99), PITCH_DIST['sacrifice'])
-		pitching['GDP'] = percentile(composure, PITCH_DIST['GDP'])
-		pitching['error'] = percentile(random.randint(1,99), PITCH_DIST['error'])
-		
-		ratingSet = cls(contact, power, discipline, control, stuff, composure,
-		batting, pitching)
-		
-		return ratingSet
+	pitchingProbs['single'] = percentile((100-ratingsDict['stuff']), PITCH_DIST['single'])
+	pitchingProbs['strikeout'] = percentile(ratingsDict['stuff'], PITCH_DIST['strikeout'])
+	pitchingProbs['double'] = percentile((100-ratingsDict['control']), PITCH_DIST['double'])
+	pitchingProbs['triple'] = percentile((100-ratingsDict['control']), PITCH_DIST['triple'])
+	pitchingProbs['HR'] = percentile((100-ratingsDict['control']), PITCH_DIST['HR'])
+	pitchingProbs['inPlayOut'] = percentile(ratingsDict['stuff'], PITCH_DIST['inPlayOut'])
+	pitchingProbs['BB'] = percentile((100-ratingsDict['control']), PITCH_DIST['BB'])
+	pitchingProbs['HBP'] = percentile((100-ratingsDict['control']), PITCH_DIST['HBP'])
+	pitchingProbs['sacrifice'] = percentile(random.randint(1,99), PITCH_DIST['sacrifice'])
+	pitchingProbs['GDP'] = percentile(ratingsDict['composure'], PITCH_DIST['GDP'])
+	pitchingProbs['error'] = percentile(random.randint(1,99), PITCH_DIST['error'])
 	
-	@classmethod
-	def blank(cls):
-		contact = 0
-		power = 0
-		discipline = 0
-		control = 0
-		stuff = 0
-		composure = 0
-		
-		batting = {}
-		pitching = {}
-		
-		ratingSet = cls(contact, power, discipline, control, stuff, composure,
-		batting, pitching)
-		
-		return ratingSet
+	probs = { 'batting' : battingProbs, 'pitching' : pitchingProbs }
+	
+	return probs
 			
 class Player(object):
 	
@@ -96,6 +69,9 @@ class Player(object):
 	def fromTwitter(cls, twitterUser):
 		#twitterUser is a tweepy user object
 		
+		ratings = generateRatings()
+		probs = rollProbabilities(ratings)
+		
 		kwargs = {
 					'_id' : '',
 					'id' : twitterUser.id,
@@ -104,17 +80,10 @@ class Player(object):
 					'handle' : "@{0}".format(twitterUser.screen_name),
 					'handedness' : random.choice(['L','R','S']),
 					'uniNumber' : random.randint(0,71),
-					'ratings' : Ratings.new(),
-					'pitchingGameStats' : Counter(),
-					'battingGameStats' : Counter(),
-					'pitchingCareerStats' : Counter(),
-					'battingCareerStats' : Counter(),
-					'active' : True,
-					'sub' : False,
-					'position' : None
+					'ratings' : ratings,
+					'battingProbabilities' : probs['batting'],
+					'pitchingProbabilities' : probs['pitching']
 		}
-		
-		kwargs['pitchingCareerStats']['IP'] = Fraction(0, 1)
 		
 		player = cls(**kwargs)
 		
@@ -163,12 +132,12 @@ class Player(object):
 					PITCHING:\r\n
 					Control: {4}\r\nStuff: {5}\r\nComposure: {6}
 					""".format(self.handle,
-								self.ratings.contact,
-								self.ratings.power,
-								self.ratings.discipline,
-								self.ratings.control,
-								self.ratings.stuff,
-								self.ratings.composure)
+								self.ratings['contact'],
+								self.ratings['power'],
+								self.ratings['discipline'],
+								self.ratings['control'],
+								self.ratings['stuff'],
+								self.ratings['composure'])
 		
 		api.update_status(attrTweet)
 		return True
@@ -193,11 +162,9 @@ class Player(object):
 					'handle' : '',
 					'handedness' : '',
 					'uniNumber' : 0,
-					'ratings' : Ratings.blank(),
-					'pitchingGameStats' : Counter(),
-					'battingGameStats' : Counter(),
-					'pitchingCareerStats' : Counter(),
-					'battingCareerStats' : Counter(),
+					'ratings' : {},
+					'battingProbabilities' : {},
+					'pitchingProbabilities' : {},
 					'active' : True,
 					'sub' : False,
 					'position' : None
@@ -213,8 +180,8 @@ class Lineup(object):
 	
 		self.battingOrder = battingOrder
 		self.pitchers = pitchers
-		self.pitchers.insert(0, random.choice(battingOrder))
 		self.currentPitcher = pitchers.pop(0)
+		self.battingOrder.append(self.currentPitcher)
 		self.usedPitchers = [self.currentPitcher,]
 		self.atBat = 0
 		self.onDeck = 1
@@ -324,17 +291,17 @@ class Substitution(object):
 
 def getTeams():
 
-	mongoPlayers = mongoGetPlayersByLastStartAscending(24)
+	mongoPlayers = mongoGetPlayersByLastStartAscending(22)
 	
 	pool = [mongoMapToPlayer(a, Player.blank()) for a in mongoPlayers]
 	
 	for p in pool:
 		p.refresh()
 	
-	pool.sort(key = lambda x: (x.ratings.control + x.ratings.stuff), reverse = False)
+	pool.sort(key = lambda x: (x.ratings['control'] + x.ratings['stuff']), reverse = False)
 	homeHitters, homePitchers, awayHitters, awayPitchers = [], [], [], []
 	
-	for i in range(0,9):
+	for i in range(0,8):
 		homeHitters.append(pool.pop())
 		awayHitters.append(pool.pop())
 		
