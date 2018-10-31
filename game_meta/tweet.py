@@ -1,5 +1,6 @@
 from config import CONSUMER_SECRET, CONSUMER_KEY, ACCESS_TOKEN, ACCESS_SECRET, NUM_PAS, PA_TIME
-import tweepy, time, stats
+import tweepy, time
+from game_meta import stats
 
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_TOKEN, ACCESS_SECRET)

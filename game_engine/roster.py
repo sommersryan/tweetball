@@ -1,10 +1,9 @@
 import random, pickle
-from league import BAT_DIST, PITCH_DIST
-from utils import percentile, nicknames, getCity
+from game_engine.league import BAT_DIST, PITCH_DIST
+from game_engine.utils import percentile, nicknames, getCity
 from config import RESULT_TYPES, PLAYER_SAVING_ENABLED
-from tweet import api
+from game_meta.tweet import api
 from tweepy.error import TweepError
-from storage import playerStore
 from fractions import Fraction
 from collections import Counter
 from datetime import datetime
@@ -207,14 +206,6 @@ class Player(object):
 		player = cls(**kwargs)
 		
 		return player
-	
-	@staticmethod
-	def load(playerID):
-	
-		k = playerStore.get_key(playerID)
-		raw = k.get_contents_as_string()
-		p = pickle.loads(raw) 
-		return p
 		
 class Lineup(object):
 

@@ -1,6 +1,6 @@
 import json, bson, datetime
 from mongo_player_store import serializePlayerAttribute
-from roster import Team, Player, Lineup
+from game_engine.roster import Team, Player, Lineup
 from pymongo import MongoClient
 from config import MONGO_URI, MONGO_DB, CURRENT_SEASON
 

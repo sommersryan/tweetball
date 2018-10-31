@@ -1,10 +1,10 @@
 import random, datetime, config
-from utils import baseNarratives, transitions, log5, weightedChoice, emojis
-from league import leagueMeans
-from tweet import api
-from wpa import winProb
+from game_engine.utils import baseNarratives, transitions, log5, weightedChoice, emojis
+from game_engine.league import leagueMeans
+from game_meta.tweet import api
+from game_engine.wpa import winProb
 from fractions import Fraction
-from bullpen_manager import bullpenCall
+from game_engine.bullpen_manager import bullpenCall
 
 class Matchup(object):
 

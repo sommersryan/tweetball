@@ -4,5 +4,4 @@ from config import PLAYERS_BUCKET, BOXSCORE_BUCKET
 import random, pickle
 
 storageConnection = S3Connection()
-playerStore = storageConnection.get_bucket(PLAYERS_BUCKET)
 boxScoreBucket = storageConnection.get_bucket(BOXSCORE_BUCKET)

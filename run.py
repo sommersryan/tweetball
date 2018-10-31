@@ -1,4 +1,5 @@
-import tweet, play, roster
+from game_meta import tweet
+from game_engine import play, roster
 
 teams = roster.getTeams()
 
