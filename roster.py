@@ -86,50 +86,38 @@ class Ratings(object):
 		return ratingSet
 			
 class Player(object):
-
-	def __init__(self, id, name, fullName, handle, handedness,
-	uniNumber, ratings, pitchingGameStats, battingGameStats, 
-	pitchingCareerStats, battingCareerStats, active, sub, position):
-		
-		self.id = id
-		self.name = name
-		self.fullName = fullName
-		self.handle = handle
-		self.handedness = handedness
-		self.uniNumber = uniNumber
-		self.ratings = ratings
-		self.pitchingGameStats = pitchingGameStats
-		self.battingGameStats = battingGameStats
-		self.pitchingCareerStats = pitchingCareerStats
-		self.battingCareerStats = battingCareerStats
-		self.active = active
-		self.sub = sub
-		self.position = position
 	
+	def __init__(self, **kwargs):
+	
+		for key, value in kwargs.items():
+		
+			setattr(self, key, value)
+
 	@classmethod
 	def fromTwitter(cls, twitterUser):
 		#twitterUser is a tweepy user object
 		
-		id = twitterUser.id
-		name = twitterUser.screen_name
-		fullName = twitterUser.name
-		handle = "@{0}".format(twitterUser.screen_name)
-		handedness = random.choice(['L','R','S'])
-		uniNumber = random.randint(0,71)
-		ratings = Ratings.new()
-		pitchingGameStats = Counter()
-		battingGameStats = Counter()
-		pitchingCareerStats = Counter()
-		battingCareerStats = Counter()
-		active = True
-		sub = False
-		position = None
+		kwargs = {
+					'objectId' : '',
+					'id' : twitterUser.id,
+					'name' : twitterUser.screen_name,
+					'fullName' : twitterUser.name,
+					'handle' : "@{0}".format(twitterUser.screen_name),
+					'handedness' : random.choice(['L','R','S']),
+					'uniNumber' : random.randint(0,71),
+					'ratings' : Ratings.new(),
+					'pitchingGameStats' : Counter(),
+					'battingGameStats' : Counter(),
+					'pitchingCareerStats' : Counter(),
+					'battingCareerStats' : Counter(),
+					'active' : True,
+					'sub' : False,
+					'position' : None
+		}
 		
-		pitchingCareerStats['IP'] = Fraction(0, 1)
+		kwargs['pitchingCareerStats']['IP'] = Fraction(0, 1)
 		
-		player = cls(id, name, fullName, handle, handedness, uniNumber,
-		ratings, pitchingGameStats, battingGameStats, pitchingCareerStats,
-		battingCareerStats, active, sub, position)
+		player = cls(**kwargs)
 		
 		return player
 
@@ -196,24 +184,27 @@ class Player(object):
 	
 	@classmethod
 	def blank(cls):
-		id = ''
-		name = ''
-		fullName = ''
-		handle = ''
-		handedness = ''
-		uniNumber = 0
-		ratings = Ratings.blank()
-		pitchingGameStats = Counter()
-		battingGameStats = Counter()
-		pitchingCareerStats = Counter()
-		battingCareerStats = Counter()
-		active = True
-		sub = False
-		position = None
+	
+		kwargs = {
 		
-		player = cls(id, name, fullName, handle, handedness, uniNumber,
-		ratings, pitchingGameStats, battingGameStats, pitchingCareerStats,
-		battingCareerStats, active, sub, position)
+					'objectId' : '',
+					'id' : '',
+					'name' : '',
+					'fullName' : '',
+					'handle' : '',
+					'handedness' : '',
+					'uniNumber' : 0,
+					'ratings' : Ratings.blank(),
+					'pitchingGameStats' : Counter(),
+					'battingGameStats' : Counter(),
+					'pitchingCareerStats' : Counter(),
+					'battingCareerStats' : Counter(),
+					'active' : True,
+					'sub' : False,
+					'position' : None
+		}
+
+		player = cls(**kwargs)
 		
 		return player
 	
