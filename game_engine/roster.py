@@ -291,7 +291,7 @@ class Substitution(object):
 
 def getTeams():
 
-	mongoPlayers = mongoGetPlayersByLastStartAscending(22)
+	mongoPlayers = mongoGetPlayersByLastStartAscending(24)
 	
 	pool = [mongoMapToPlayer(a, Player.blank()) for a in mongoPlayers]
 	
@@ -305,7 +305,7 @@ def getTeams():
 		homeHitters.append(pool.pop())
 		awayHitters.append(pool.pop())
 		
-	for i in range(0,3):
+	for i in range(0,4):
 		homePitchers.append(pool.pop())
 		awayPitchers.append(pool.pop())
 
