@@ -142,7 +142,7 @@ class PlateAppearance(object):
 		else:
 			self.transitions = transitions[baseState.getState()]
 			
-		self.matchup = Matchup(batter.ratings.batting, pitcher.ratings.pitching)
+		self.matchup = Matchup(batter.battingProbabilities, pitcher.pitchingProbabilities)
 		
 		choice = False
 		
@@ -167,30 +167,30 @@ class PlateAppearance(object):
 		
 		self.wpa = self.getWPA()
 		
-		self.batter.battingGameStats[self.event.type] += 1
-		self.pitcher.pitchingGameStats[self.event.type] += 1
+		#self.batter.battingGameStats[self.event.type] += 1
+		#self.pitcher.pitchingGameStats[self.event.type] += 1
 		
-		if self.event.type in ['single', 'double', 'triple', 'HR']:
-			self.batter.battingGameStats['H'] +=1
-			self.pitcher.pitchingGameStats['H'] +=1
+		#if self.event.type in ['single', 'double', 'triple', 'HR']:
+		#	self.batter.battingGameStats['H'] +=1
+		#	self.pitcher.pitchingGameStats['H'] +=1
 		
-		if self.event.type not in ['BB', 'HBP', 'sacrifice']:
-			self.batter.battingGameStats['AB'] += 1
+		#if self.event.type not in ['BB', 'HBP', 'sacrifice']:
+		#	self.batter.battingGameStats['AB'] += 1
 			
-		self.batter.battingGameStats['PA'] += 1
-		self.pitcher.pitchingGameStats['BF'] += 1
+		#self.batter.battingGameStats['PA'] += 1
+		#self.pitcher.pitchingGameStats['BF'] += 1
 		
-		self.batter.battingGameStats['RBI'] += self.runs
-		self.pitcher.pitchingGameStats['R'] += self.runs
+		#self.batter.battingGameStats['RBI'] += self.runs
+		#self.pitcher.pitchingGameStats['R'] += self.runs
 		
-		if self.event.type == 'GDP':
-			self.pitcher.pitchingGameStats['IP'] += Fraction(2,3)
+		#if self.event.type == 'GDP':
+		#	self.pitcher.pitchingGameStats['IP'] += Fraction(2,3)
 		
-		elif self.endState.outs != self.baseState.outs:
-			self.pitcher.pitchingGameStats['IP'] += Fraction(1,3)
+		#elif self.endState.outs != self.baseState.outs:
+		#	self.pitcher.pitchingGameStats['IP'] += Fraction(1,3)
 			
-		self.batter.battingGameStats['WPA'] += self.wpa
-		self.pitcher.pitchingGameStats['WPA'] += -self.wpa
+		#self.batter.battingGameStats['WPA'] += self.wpa
+		#self.pitcher.pitchingGameStats['WPA'] += -self.wpa
 		
 	def advanceRunners(self, newBases, runs):
 		
