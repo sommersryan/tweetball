@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+# VS 2017
+.git/
+
 # Distribution / packaging
 .Python
 env/
