@@ -1,3 +1,9 @@
+from .schema import *
+from .api_access import API
+
+api = API()
+
+player_schema = PlayerSchema()
 
 class PlayerFactory(object):
 
@@ -6,10 +12,17 @@ class PlayerFactory(object):
 		for key, value in kwargs.items():	
 			setattr(self, key, value)
 			
-	def getPlayer(self, objectId):
+	def get_player_by_id(self, objectId):
 	
-		pass		
+		player_json = api.get_player_by_id(objectId)
+		
+		return player_schema.loads(player_json).data
 	
+	def get_player_by_handle(self, handle):
+	
+		player_json = api.get_player_by_handle(handle)
+		
+		return player_schema.loads(player_json).data
 	
 class TeamFactory(object):
 
@@ -18,6 +31,6 @@ class TeamFactory(object):
 		for key, value in kwargs.items():
 			setattr(self, key, value)
 			
-	def getTeams(self):
+	def get_Teams(self):
 	
 		pass

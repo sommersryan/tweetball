@@ -12,9 +12,6 @@ def PlayerWriter(object):
 		
 def PlateAppearanceWriter(object):
 	
-	#don't know about this one. Maybe a game writer that properly
-	#embeds the plate appearances properly in the game doc? 
-	
 	def __init__(self, **kwargs):
 		
 		for key, value in kwargs.items():	
