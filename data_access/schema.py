@@ -22,6 +22,17 @@ class PlayerSchema(Schema):
 class PlateAppearanceSchema(Schema):
 
 	_id = fields.String()
+	game_id = fields.String()
+	top = fields.Boolean()
+	inning = fields.Integer()
+	awayScore = fields.Integer()
+	homeScore = fields.Integer()
+	batterId = fields.String()
+	pitcherId = fields.String()
+	narratives = fields.List()
+	isSubstitution = fields.Boolean()
+	wpa = fields.Decimal()
+	
 	
 class GameSchema(Schema):
 
