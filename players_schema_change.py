@@ -12,8 +12,6 @@ from bson.objectid import ObjectId
 client = MongoClient(MONGO_URI)
 db = client[MONGO_DB]
 
-count = 1
-
 playerList = list(db.players.find())
 legacyGameId = os.environ.get('LEGACY_GAME_ID')
 legacyPlayerId = os.environ.get('LEGACY_PLAYER_ID')
@@ -21,7 +19,7 @@ legacyPlayerId = os.environ.get('LEGACY_PLAYER_ID')
 eventTypes = ['strikeout', 'sacrifice', 'GDP', 'inPlayOut',
 	'single', 'double', 'triple', 'HR', 'HBP', 'BB', 'error']
 
-for player in playerList:
+for count, player in enumerate(playerList):
 	
 	print("Processing {0} of {1} : {2}".format(count, len(playerList), player['name']))
 	
@@ -33,7 +31,7 @@ for player in playerList:
 	for e in eventTypes:
 		
 		try:
-			for count in range(0, player['stats']['0']['pitching'][e]):
+			for i in range(0, player['stats']['0']['pitching'][e]):
 			
 				newEvent = {
 					'game_id' : ObjectId(legacyGameId),
@@ -62,7 +60,7 @@ for player in playerList:
 	for e in eventTypes:
 	
 		try:
-			for count in range(0, player['stats']['0']['batting'][e]):
+			for i in range(0, player['stats']['0']['batting'][e]):
 			
 				newEvent = {
 					'game_id' : ObjectId(legacyGameId),
@@ -91,5 +89,3 @@ for player in playerList:
 	player.pop('stats')
 	
 	db.players.find_one_and_replace({'_id' : player['_id']}, player)
-	
-	count += 1
