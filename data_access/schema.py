@@ -23,6 +23,7 @@ class PlateAppearanceSchema(Schema):
 
 	_id = fields.String()
 	game_id = fields.String()
+	game_ordinal = fields.Integer()
 	top = fields.Boolean()
 	inning = fields.Integer()
 	awayScore = fields.Integer()
@@ -32,15 +33,43 @@ class PlateAppearanceSchema(Schema):
 	narratives = fields.List()
 	isSubstitution = fields.Boolean()
 	wpa = fields.Decimal()
+	baseState = fields.Nested(BaseStateSchema)
+	endState = fields.Nested(BaseStateSchema)
+	event = fields.Nested(EventSchema)
+	runs = fields.Integer()
+	timestamp = fields.DateTime()
 	
+class BaseStateSchema(Schema):
+
+	first = fields.Nested(PlayerSchema, only=["_id"])
+	second = fields.Nested(PlayerSchema, only=["_id"])
+	third = fields.Nested(PlayerSchema, only=["_id"])
+	outs = fields.Integer()
+	
+class EventSchema(Schema):
+
+	type = fields.String()
+	narrative = fields.String()
+	isHit = fields.Boolean()
+	isAB = fields.Boolean()
+	batterOut = fields.Boolean()
 	
 class GameSchema(Schema):
 
 	_id = fields.String()
+	startTime = fields.DateTime()
+	homeTeam = fields.Nested(TeamSchema, only=["_id"])
+	awayTeam = fields.Nested(TeamSchema, only=["_id"])
+	homeScore = fields.Integer()
+	awayScore = fields.Integer()
+	complete = fields.Boolean()
+	
 	
 class TeamSchema(Schema):
 
 	_id = fields.String()
+	nickname = fields.String()
+	location = fields.String()
 	
 # class ObjectID(fields.Field)
 
