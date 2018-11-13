@@ -19,6 +19,21 @@ class PlayerSchema(Schema):
 	def make_player(self, data):
 		return Player(**data)
 	
+class BaseStateSchema(Schema):
+
+	first = fields.Nested(PlayerSchema, only=["_id"])
+	second = fields.Nested(PlayerSchema, only=["_id"])
+	third = fields.Nested(PlayerSchema, only=["_id"])
+	outs = fields.Integer()
+
+class EventSchema(Schema):
+
+	type = fields.String()
+	narrative = fields.String()
+	isHit = fields.Boolean()
+	isAB = fields.Boolean()
+	batterOut = fields.Boolean()
+	
 class PlateAppearanceSchema(Schema):
 
 	_id = fields.String()
@@ -30,7 +45,7 @@ class PlateAppearanceSchema(Schema):
 	homeScore = fields.Integer()
 	batterId = fields.String()
 	pitcherId = fields.String()
-	narratives = fields.List()
+	narratives = fields.List(fields.String())
 	isSubstitution = fields.Boolean()
 	wpa = fields.Decimal()
 	baseState = fields.Nested(BaseStateSchema)
@@ -38,21 +53,12 @@ class PlateAppearanceSchema(Schema):
 	event = fields.Nested(EventSchema)
 	runs = fields.Integer()
 	timestamp = fields.DateTime()
-	
-class BaseStateSchema(Schema):
 
-	first = fields.Nested(PlayerSchema, only=["_id"])
-	second = fields.Nested(PlayerSchema, only=["_id"])
-	third = fields.Nested(PlayerSchema, only=["_id"])
-	outs = fields.Integer()
-	
-class EventSchema(Schema):
+class TeamSchema(Schema):
 
-	type = fields.String()
-	narrative = fields.String()
-	isHit = fields.Boolean()
-	isAB = fields.Boolean()
-	batterOut = fields.Boolean()
+	_id = fields.String()
+	nickname = fields.String()
+	location = fields.String()
 	
 class GameSchema(Schema):
 
@@ -64,12 +70,6 @@ class GameSchema(Schema):
 	awayScore = fields.Integer()
 	complete = fields.Boolean()
 	
-	
-class TeamSchema(Schema):
-
-	_id = fields.String()
-	nickname = fields.String()
-	location = fields.String()
 	
 # class ObjectID(fields.Field)
 

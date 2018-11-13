@@ -288,36 +288,3 @@ class Substitution(object):
 			subString = "{0} enters the game to pinch hit for {1}.".format(self.playerIn.handle, self.playerOut.handle)
 		
 		return subString
-
-def getTeams():
-
-	mongoPlayers = mongoGetPlayersByLastStartAscending(24)
-	
-	pool = [mongoMapToPlayer(a, Player.blank()) for a in mongoPlayers]
-	
-	for p in pool:
-		p.refresh()
-	
-	pool.sort(key = lambda x: (x.ratings['control'] + x.ratings['stuff']), reverse = False)
-	homeHitters, homePitchers, awayHitters, awayPitchers = [], [], [], []
-	
-	for i in range(0,8):
-		homeHitters.append(pool.pop())
-		awayHitters.append(pool.pop())
-		
-	for i in range(0,4):
-		homePitchers.append(pool.pop())
-		awayPitchers.append(pool.pop())
-
-	homeLoc = getCity()
-	awayLoc = getCity()
-	homeNick = random.choice(nicknames)
-	awayNick = random.choice(nicknames)
-	
-	homeLineup = Lineup(homeHitters, homePitchers)
-	awayLineup = Lineup(awayHitters, awayPitchers)
-	
-	homeTeam = Team(homeNick, homeLoc, homeLineup)
-	awayTeam = Team(awayNick, awayLoc, awayLineup)
-	
-	return(homeTeam, awayTeam)

@@ -17,5 +17,14 @@ class API(object):
 		
 		return req.text
 		
+	def get_players(self, sort_key = None, desc=False, count = None, page = 1):
+		
+		if desc:
+			sort_key = "-{0}".format(sort_key)
+		
+		req = requests.get("{0}/players?sort={1}&max_results={2}&page={3}"
+			.format(base_url, sort_key, count, page), auth=auth)
+			
+		return req.text
 	
 
