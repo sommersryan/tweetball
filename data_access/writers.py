@@ -4,27 +4,27 @@ from .api_access import API
 api = API()
 pa_schema = PlateAppearanceSchema()
 
-def PlayerWriter(object):
+class PlayerWriter(object):
 
 	def __init__(self, **kwargs):
 		
 		for key, value in kwargs.items():	
 			setattr(self, key, value)
 			
-	def savePlayer(self, player):
+	def save_player(self, player):
 	
 		pass
 		
-def PlateAppearanceWriter(object):
+class PlateAppearanceWriter(object):
 	
 	def __init__(self, **kwargs):
 		
 		for key, value in kwargs.items():	
 			setattr(self, key, value)
 			
-	def savePlateAppearance(self, plateAppearance):
+	def save_plate_appearance(self, plateAppearance):
 	
-		paJson = pa_schema.dumps(plateAppearance)
+		paJson = pa_schema.dumps(plateAppearance).data
 		
 		result = api.post_event(paJson)
 		
