@@ -1,3 +1,8 @@
+from .schema import *
+from .api_access import API
+
+api = API()
+pa_schema = PlateAppearanceSchema()
 
 def PlayerWriter(object):
 
@@ -19,4 +24,12 @@ def PlateAppearanceWriter(object):
 			
 	def savePlateAppearance(self, plateAppearance):
 	
-		pass
+		paJson = pa_schema.dumps(plateAppearance)
+		
+		result = api.post_event(paJson)
+		
+		return result.json()
+		
+		
+		
+		

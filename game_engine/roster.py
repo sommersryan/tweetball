@@ -61,6 +61,9 @@ class Player(object):
 	
 	def __init__(self, **kwargs):
 	
+		self.active = True
+		self.sub = False
+	
 		for key, value in kwargs.items():
 		
 			setattr(self, key, value)

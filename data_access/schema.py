@@ -1,6 +1,7 @@
 from marshmallow import Schema, fields, pprint, post_load
 from game_engine.roster import Player
 from bson import ObjectId as oid
+import simplejson
 
 class PlayerSchema(Schema):
 
@@ -21,9 +22,9 @@ class PlayerSchema(Schema):
 	
 class BaseStateSchema(Schema):
 
-	first = fields.Nested(PlayerSchema, only=["_id"])
-	second = fields.Nested(PlayerSchema, only=["_id"])
-	third = fields.Nested(PlayerSchema, only=["_id"])
+	first = fields.Nested(PlayerSchema, only="_id")
+	second = fields.Nested(PlayerSchema, only="_id")
+	third = fields.Nested(PlayerSchema, only="_id")
 	outs = fields.Integer()
 
 class EventSchema(Schema):
@@ -36,6 +37,9 @@ class EventSchema(Schema):
 	
 class PlateAppearanceSchema(Schema):
 
+	class Meta:
+		json_module = simplejson
+
 	_id = fields.String()
 	game_id = fields.String()
 	game_ordinal = fields.Integer()
@@ -43,8 +47,8 @@ class PlateAppearanceSchema(Schema):
 	inning = fields.Integer()
 	awayScore = fields.Integer()
 	homeScore = fields.Integer()
-	batterId = fields.String()
-	pitcherId = fields.String()
+	batterId = fields.Nested(PlayerSchema, only="_id", attribute="batter")
+	pitcherId = fields.Nested(PlayerSchema, only="_id", attribute="pitcher")
 	narratives = fields.List(fields.String())
 	isSubstitution = fields.Boolean()
 	wpa = fields.Decimal()
@@ -64,14 +68,14 @@ class GameSchema(Schema):
 
 	_id = fields.String()
 	startTime = fields.DateTime()
-	homeTeam = fields.Nested(TeamSchema, only=["_id"])
-	awayTeam = fields.Nested(TeamSchema, only=["_id"])
+	homeTeam = fields.Nested(TeamSchema, only="_id")
+	awayTeam = fields.Nested(TeamSchema, only="_id")
 	homeScore = fields.Integer()
 	awayScore = fields.Integer()
 	complete = fields.Boolean()
 	
 	
-# class ObjectID(fields.Field)
+# class ObjectID(fields.Field):
 
 	# def _serialize(self, value, attr, obj, **kwargs):
 		# if value is None:

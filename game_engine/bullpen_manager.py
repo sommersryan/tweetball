@@ -16,13 +16,15 @@ def tallyScore(game, pitcher):
 	
 def bullpenCall(game, pitcher):
 
-	choice = random.randint(1, 100)
-	score = tallyScore(game, pitcher)
+	#choice = random.randint(1, 100)
+	#score = tallyScore(game, pitcher)
 	
-	if choice > score:
-		return False
-		
-	return True
+	#if choice > score:
+	#	return False
+	
+	return False
+	
+	#return True
 
 def sixthOrLater(**kwargs):
 	return kwargs['game'].inning >= 6 
