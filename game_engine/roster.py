@@ -267,6 +267,8 @@ class Substitution(object):
 		self.playerOut = playerOut
 		self.playerIn = playerIn
 		self.isSubstitution = True
+		self.timestamp = previousPA.timestamp
+		self.game_id = previousPA.game_id
 
 		self.narratives = [str(self)]
 		

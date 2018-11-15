@@ -58,18 +58,23 @@ class PlateAppearanceSchema(Schema):
 	runs = fields.Integer()
 	timestamp = fields.DateTime()
 
+class LineupSchema(Schema):
+
+	batters = fields.Nested(PlayerSchema, only="_id", many=True, attribute="battingOrder")
+	pitchers = fields.Nested(PlayerSchema, only="_id", many=True, attribute="usedPitchers")	
+	
 class TeamSchema(Schema):
 
-	_id = fields.String()
 	nickname = fields.String()
 	location = fields.String()
+	roster = fields.Nested(LineupSchema, attribute="lineup")
 	
 class GameSchema(Schema):
 
 	_id = fields.String()
 	startTime = fields.DateTime()
-	homeTeam = fields.Nested(TeamSchema, only="_id")
-	awayTeam = fields.Nested(TeamSchema, only="_id")
+	homeTeam = fields.Nested(TeamSchema)
+	awayTeam = fields.Nested(TeamSchema)
 	homeScore = fields.Integer()
 	awayScore = fields.Integer()
 	complete = fields.Boolean()

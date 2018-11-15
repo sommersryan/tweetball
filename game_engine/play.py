@@ -124,25 +124,21 @@ class BaseOutState(object):
 		
 class PlateAppearance(object):
 	
-	def __init__(self, top, inning, awayScore, homeScore, baseState, batter, pitcher):
+	def __init__(self, **kwargs):
 		
-		self.top = top
-		self.inning = inning
-		self.awayScore = awayScore
-		self.homeScore = homeScore
-		self.baseState = baseState
-		self.batter = batter
-		self.pitcher = pitcher
+		for key, value in kwargs.items():
+			setattr(self, key, value)
+		
 		self.narratives = []
 		self.isSubstitution = False
 		
-		if baseState.outs == 3:
+		if self.baseState.outs == 3:
 			self.transitions = [None,]
 		
 		else:
-			self.transitions = transitions[baseState.getState()]
+			self.transitions = transitions[self.baseState.getState()]
 			
-		self.matchup = Matchup(batter.battingProbabilities, pitcher.pitchingProbabilities)
+		self.matchup = Matchup(self.batter.battingProbabilities, self.pitcher.pitchingProbabilities)
 		
 		choice = False
 		
@@ -372,20 +368,25 @@ class PlateAppearance(object):
 class Game(object):
 
 	def __init__(self, homeTeam, awayTeam):
-	
+		
+		self._id = None
 		self.homeTeam = homeTeam
 		self.awayTeam = awayTeam
 		self.homeScore = 0
 		self.awayScore = 0
 		self.PAs = []
+		self.paInterval = datetime.timedelta(0, config.PA_TIME, 0)
 		self.inning = 1
 		self.top = True
-		self.startTime = datetime.datetime.now()
+		self.currentTime = datetime.datetime.utcnow()
+		self.startTime = datetime.datetime.utcnow()
 		self.complete = False
 		
 	def iterate(self, currentPA):
 	
 		self.PAs.append(currentPA)
+		
+		self.currentTime += self.paInterval
 		
 		if self.top:
 		
@@ -393,7 +394,13 @@ class Game(object):
 			batter = self.awayTeam.lineup.newBatter()
 			pitcher = self.homeTeam.lineup.currentPitcher
 			
-			return PlateAppearance(self.top, self.inning, self.awayScore, self.homeScore, currentPA.endState, batter, pitcher)
+			args = { 'top' : self.top, 'inning' : self.inning,
+				'awayScore' : self.awayScore, 'homeScore' : self.homeScore,
+				'baseState' : currentPA.endState, 'batter' : batter, 
+				'pitcher' : pitcher, 'timestamp' : self.currentTime,
+				'game_id' : self._id }
+			
+			return PlateAppearance(**args)
 			
 		elif not self.top:
 		
@@ -406,9 +413,17 @@ class Game(object):
 			batter = self.homeTeam.lineup.newBatter()
 			pitcher = self.awayTeam.lineup.currentPitcher
 			
-			return PlateAppearance(self.top, self.inning, self.awayScore, self.homeScore, currentPA.endState, batter, pitcher)
+			args = { 'top' : self.top, 'inning' : self.inning,
+				'awayScore' : self.awayScore, 'homeScore' : self.homeScore,
+				'baseState' : currentPA.endState, 'batter' : batter, 
+				'pitcher' : pitcher, 'timestamp' : self.currentTime,
+				'game_id' : self._id }
+			
+			return PlateAppearance(**args)
 			
 	def playInning(self):
+	
+		self.currentTime += datetime.timedelta(0, 90, 0)
 		
 		if self.inning >= 10 and self.top:
 		
@@ -453,8 +468,14 @@ class Game(object):
 				batter = self.homeTeam.lineup.newBatter()
 			
 			pitcher = self.awayTeam.lineup.currentPitcher
+			
+		args = { 'top' : self.top, 'inning' : self.inning,
+				'awayScore' : self.awayScore, 'homeScore' : self.homeScore,
+				'baseState' : BaseOutState(), 'batter' : batter, 
+				'pitcher' : pitcher, 'timestamp' : self.currentTime,
+				'game_id' : self._id  }
 		
-		currentPA = PlateAppearance(self.top, self.inning, self.awayScore, self.homeScore, BaseOutState(), batter, pitcher)
+		currentPA = PlateAppearance(**args)
 		
 		while True:
 		
