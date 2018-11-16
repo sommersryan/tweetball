@@ -15,6 +15,7 @@ class PlayerSchema(Schema):
 	ratings = fields.Dict(values = fields.Integer(), keys = fields.String())
 	battingProbabilities = fields.Dict(values = fields.Float(), keys = fields.String())
 	pitchingProbabilities = fields.Dict(values = fields.Float(), keys = fields.String())
+	lastStart = fields.DateTime(format="%a, %d %b %Y %H:%M:%S GMT")
 	
 	@post_load
 	def make_player(self, data):
@@ -72,7 +73,7 @@ class TeamSchema(Schema):
 class GameSchema(Schema):
 
 	_id = fields.String()
-	startTime = fields.DateTime()
+	startTime = fields.DateTime(format="%a, %d %b %Y %H:%M:%S GMT")
 	homeTeam = fields.Nested(TeamSchema)
 	awayTeam = fields.Nested(TeamSchema)
 	homeScore = fields.Integer()

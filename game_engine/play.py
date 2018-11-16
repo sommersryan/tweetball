@@ -1,4 +1,4 @@
-import random, datetime, config
+import random, datetime, config, bson
 from game_engine.utils import baseNarratives, transitions, log5, weightedChoice, emojis
 from game_engine.league import leagueMeans
 from game_meta.tweet import api
@@ -369,7 +369,7 @@ class Game(object):
 
 	def __init__(self, homeTeam, awayTeam):
 		
-		self._id = None
+		self._id = bson.objectid.ObjectId()
 		self.homeTeam = homeTeam
 		self.awayTeam = awayTeam
 		self.homeScore = 0
