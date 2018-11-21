@@ -30,6 +30,14 @@ class PlateAppearanceWriter(object):
 		
 		return result.json()
 		
-		
+def save_game(game)
+
+	gs = GameSchema()
+	
+	game_json = gs.dumps(game).data
+	
+	resp = API.put_game(game_json)
+	
+	return resp
 		
 		

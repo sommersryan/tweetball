@@ -338,17 +338,13 @@ class PlateAppearance(object):
 		narrative = str(self)
 		
 		if self.runs > 0:
-			if self.top:
-				afterScoreString = "{0} -- {1}".format(aAfterScore, hAfterScore)
-			else:
-				afterScoreString = "{0} -- {1}".format(hAfterScore, aAfterScore)
+			
+			afterScoreString = "{0} -- {1}".format(aAfterScore, hAfterScore)
+			
 		else:
 			afterScoreString = ""
 				
-		if self.top:
-			beforeScoreString = "{0} -- {1}".format(self.awayScore, self.homeScore)
-		else:
-			beforeScoreString = "{0} -- {1}".format(self.homeScore, self.awayScore)
+		beforeScoreString = "{0} -- {1}".format(self.awayScore, self.homeScore)
 		
 		t = "{0} | {1} | {2} | {3}|\r\n {4}. {5}".format(inningString, beforeScoreString, baseString, outString, narrative, afterScoreString)
 		
@@ -367,7 +363,7 @@ class PlateAppearance(object):
 	
 class Game(object):
 
-	def __init__(self, homeTeam, awayTeam):
+	def __init__(self, homeTeam, awayTeam, paWriter):
 		
 		self._id = bson.objectid.ObjectId()
 		self.homeTeam = homeTeam
@@ -381,10 +377,12 @@ class Game(object):
 		self.currentTime = datetime.datetime.utcnow()
 		self.startTime = datetime.datetime.utcnow()
 		self.complete = False
+		self.paWriter = paWriter
 		
 	def iterate(self, currentPA):
 	
 		self.PAs.append(currentPA)
+		self.paWriter.save_plate_appearance(currentPA)
 		
 		self.currentTime += self.paInterval
 		
@@ -514,19 +512,7 @@ class Game(object):
 			self.playInning()
 	
 	def tearDown(self):
-	
-		# for player in self.homeTeam.lineup.battingOrder:
-			# player.save()
-			
-		# for player in self.awayTeam.lineup.battingOrder:
-			# player.save()
-			
-		# for player in self.homeTeam.lineup.usedPitchers:
-			# player.save()
-			
-		# for player in self.awayTeam.lineup.usedPitchers:
-			# player.save()
-			
+
 		for player in set(self.homeTeam.lineup.battingOrder 
 				+ self.awayTeam.lineup.battingOrder + self.homeTeam.lineup.usedPitchers 
 				+ self.awayTeam.lineup.usedPitchers):

@@ -57,7 +57,7 @@ class PlateAppearanceSchema(Schema):
 	endState = fields.Nested(BaseStateSchema)
 	event = fields.Nested(EventSchema)
 	runs = fields.Integer()
-	timestamp = fields.DateTime()
+	timestamp = fields.DateTime(format="%a, %d %b %Y %H:%M:%S GMT")
 
 class LineupSchema(Schema):
 

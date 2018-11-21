@@ -35,7 +35,7 @@ class API(object):
 		
 		return req.text
 		
-	def post_game(self, game_json):
+	def put_game(self, game_json):
 	
 		req = requests.put("{0}/games".format(base_url),
 			auth=auth, headers=headers, data=game_json)

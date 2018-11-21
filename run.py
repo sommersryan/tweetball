@@ -2,6 +2,7 @@ from game_meta import tweet
 from game_engine import play, roster
 from game_engine.utils import getCity, nicknames
 from data_access.factories import load_player_pool
+from data_access.writers import PlateAppearanceWriter, PlayerWriter, save_game
 import random
 
 def getTeams():
@@ -23,17 +24,21 @@ def getTeams():
 
 def main():
 	
+	paWriter = PlateAppearanceWriter()
+	
 	teams = getTeams()
 	
-	g = play.Game(teams[0], teams[1])
+	g = play.Game(teams[0], teams[1], paWriter)
 	
 	g.play()
 	
-	g.tearDown()
+	#g.tearDown()
 	
-	t = tweet.GameTweeter(g)
+	save_game(g)
 	
-	t.execute()
+	#t = tweet.GameTweeter(g)
+	
+	#t.execute()
 	
 if __name__ == "__main__":
 	main()
