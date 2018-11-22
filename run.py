@@ -2,7 +2,7 @@ from game_meta import tweet
 from game_engine import play, roster
 from game_engine.utils import getCity, nicknames
 from data_access.factories import load_player_pool
-from data_access.writers import PlateAppearanceWriter, PlayerWriter, save_game
+from data_access.writers import PlateAppearanceWriter, PlayerWriter, GameWriter
 import random
 
 def getTeams():
@@ -25,17 +25,22 @@ def getTeams():
 def main():
 	
 	paWriter = PlateAppearanceWriter()
+	gameWriter = GameWriter()
 	
 	teams = getTeams()
 	
 	g = play.Game(teams[0], teams[1], paWriter)
 	
+	print("generated id: {0}".format(g._id))
+	
 	g.play()
 	
 	#g.tearDown()
 	
-	save_game(g)
+	resp = gameWriter.save_game(g)
 	
+	print(resp)
+
 	#t = tweet.GameTweeter(g)
 	
 	#t.execute()

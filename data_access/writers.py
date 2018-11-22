@@ -28,16 +28,21 @@ class PlateAppearanceWriter(object):
 		
 		result = api.post_event(paJson)
 		
-		return result.json()
+		return result
 		
-def save_game(game)
+class GameWriter(object):
 
-	gs = GameSchema()
+	def __init__(self, **kwargs):
 	
-	game_json = gs.dumps(game).data
-	
-	resp = API.put_game(game_json)
-	
-	return resp
+		for key, value in kwargs.items():	
+			setattr(self, key, value)
 		
+	def save_game(self, game):
+	
+		gs = GameSchema()
 		
+		game_json = gs.dumps(game).data
+		
+		resp = api.post_game(game_json)
+		
+		return resp

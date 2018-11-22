@@ -6,6 +6,11 @@ headers = {'Content-type': 'application/json'}
 
 class API(object):
 
+	def __init__(self, **kwargs):
+		
+		for key, value in kwargs.items():	
+			setattr(self, key, value)
+			
 	def get_player_by_id(self, objectId):
 
 		req = requests.get("{0}/players/{1}".format(base_url, objectId), auth=auth)
@@ -35,12 +40,9 @@ class API(object):
 		
 		return req.text
 		
-	def put_game(self, game_json):
+	def post_game(self, game_json):
 	
-		req = requests.put("{0}/games".format(base_url),
+		req = requests.post("{0}/games".format(base_url),
 			auth=auth, headers=headers, data=game_json)
 			
 		return req.text
-		
-	
-
