@@ -5,47 +5,42 @@ from data_access.factories import load_player_pool
 from data_access.writers import PlateAppearanceWriter, PlayerWriter, GameWriter
 import random
 
-def getTeams():
 
-	pool = load_player_pool()
+def get_teams():
+    pool = load_player_pool()
 
-	homeLoc = getCity()
-	awayLoc = getCity()
-	homeNick = random.choice(nicknames)
-	awayNick = random.choice(nicknames)
-	
-	homeLineup = roster.Lineup(pool['homeHitters'], pool['homePitchers'])
-	awayLineup = roster.Lineup(pool['awayHitters'], pool['awayPitchers'])
-	
-	homeTeam = roster.Team(homeNick, homeLoc, homeLineup)
-	awayTeam = roster.Team(awayNick, awayLoc, awayLineup)
-	
-	return(homeTeam, awayTeam)
+    home_loc = getCity()
+    away_loc = getCity()
+    home_nick = random.choice(nicknames)
+    away_nick = random.choice(nicknames)
+
+    home_lineup = roster.Lineup(pool['homeHitters'], pool['homePitchers'])
+    away_lineup = roster.Lineup(pool['awayHitters'], pool['awayPitchers'])
+
+    home_team = roster.Team(home_nick, home_loc, home_lineup)
+    away_team = roster.Team(away_nick, away_loc, away_lineup)
+
+    return home_team, away_team
+
 
 def main():
-	
-	paWriter = PlateAppearanceWriter()
-	gameWriter = GameWriter()
-	
-	teams = getTeams()
-	
-	g = play.Game(teams[0], teams[1], paWriter)
-	
-	print("generated id: {0}".format(g._id))
-	
-	g.play()
-	
-	#g.tearDown()
-	
-	resp = gameWriter.save_game(g)
-	
-	print(resp)
+    pa_writer = PlateAppearanceWriter()
+    game_writer = GameWriter()
 
-	#t = tweet.GameTweeter(g)
-	
-	#t.execute()
-	
+    teams = get_teams()
+
+    g = play.Game(teams[0], teams[1], pa_writer)
+
+    print("generated id: {0}".format(g._id))
+
+    g.play()
+
+    # g.tearDown()
+
+    resp = game_writer.save_game(g)
+
+    print(resp)
+
+
 if __name__ == "__main__":
-	main()
-	
-
+    main()
