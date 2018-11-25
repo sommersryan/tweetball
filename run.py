@@ -1,8 +1,7 @@
-from game_meta import tweet
 from game_engine import play, roster
 from game_engine.utils import getCity, nicknames
 from data_access.factories import load_player_pool
-from data_access.writers import PlateAppearanceWriter, PlayerWriter, GameWriter
+from data_access.writers import PlateAppearanceWriter, GameWriter
 import random
 
 
