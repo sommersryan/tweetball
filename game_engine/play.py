@@ -363,7 +363,7 @@ class PlateAppearance(object):
 	
 class Game(object):
 
-	def __init__(self, homeTeam, awayTeam, paWriter):
+	def __init__(self, homeTeam, awayTeam, paWriter, statsHelper):
 		
 		self._id = bson.objectid.ObjectId()
 		self.homeTeam = homeTeam
@@ -378,6 +378,7 @@ class Game(object):
 		self.startTime = datetime.datetime.utcnow()
 		self.complete = False
 		self.paWriter = paWriter
+		self.statsHelper = statsHelper
 		
 	def iterate(self, currentPA):
 	
