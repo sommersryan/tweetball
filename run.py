@@ -1,7 +1,9 @@
 from game_engine import play, roster
 from game_engine.utils import getCity, nicknames
+from game_meta.stats_helper import StatsHelper
 from data_access.factories import load_player_pool
 from data_access.writers import PlateAppearanceWriter, GameWriter
+from data_access.api_access import API
 import random
 
 
@@ -25,10 +27,12 @@ def get_teams():
 def main():
     pa_writer = PlateAppearanceWriter()
     game_writer = GameWriter()
+    api = API()
+    stats_helper = StatsHelper(api)
 
     teams = get_teams()
 
-    g = play.Game(teams[0], teams[1], pa_writer)
+    g = play.Game(teams[0], teams[1], pa_writer, stats_helper)
 
     print("generated id: {0}".format(g._id))
 
