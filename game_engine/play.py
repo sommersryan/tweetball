@@ -497,6 +497,7 @@ class Game(object):
 			if currentPA.endState.outs == 3:
 				
 				self.PAs.append(currentPA)
+				self.paWriter.save_plate_appearance(currentPA)
 				
 				if not self.top:
 					self.inning += 1
