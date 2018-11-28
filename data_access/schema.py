@@ -58,6 +58,8 @@ class PlateAppearanceSchema(Schema):
 	event = fields.Nested(EventSchema)
 	runs = fields.Integer()
 	timestamp = fields.DateTime(format="%a, %d %b %Y %H:%M:%S GMT")
+	tweet = fields.Function(lambda obj: obj.tweetPA())
+	description = fields.Function(lambda obj: obj.description())
 
 class LineupSchema(Schema):
 
