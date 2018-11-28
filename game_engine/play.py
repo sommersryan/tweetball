@@ -299,7 +299,7 @@ class PlateAppearance(object):
 			
 		return endWP - startWP
 		
-	def tweetPA(self, replyTo):
+	def tweetPA(self):
 	
 		if self.top:
 			half = emojis['top']
@@ -351,10 +351,13 @@ class PlateAppearance(object):
 		if len(t) > 260:
 			t = t[:260]
 		
-		tweetID = api.update_status(t, in_reply_to_status_id = replyTo).id
+		#tweetID = api.update_status(t, in_reply_to_status_id = replyTo).id
 		
-		return tweetID
-	
+		return t
+
+	def description(self):
+		return '. '.join(self.narratives)
+
 	def __str__(self):
 	
 		description = '. '.join(self.narratives)
