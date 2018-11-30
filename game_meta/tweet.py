@@ -59,7 +59,7 @@ class GameTweeter(object):
 		
 			if abs(pa.wpa) >= self.threshold or pa.runs > 0 or i == len(self.game.PAs)-1 or pa.isSubstitution:
 			
-				prevID = pa.tweetPA(prevID)
+				prevID = api.update_status(pa.tweetPA(), in_reply_to_status_id = prevID).id
 			
 			time.sleep(PA_TIME)
 		
