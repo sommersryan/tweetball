@@ -8,42 +8,42 @@ import random
 
 
 def get_teams():
-    pool = load_player_pool()
+	pool = load_player_pool()
 
-    home_loc = getCity()
-    away_loc = getCity()
-    home_nick = random.choice(nicknames)
-    away_nick = random.choice(nicknames)
+	home_loc = getCity()
+	away_loc = getCity()
+	home_nick = random.choice(nicknames)
+	away_nick = random.choice(nicknames)
 
-    home_lineup = roster.Lineup(pool['homeHitters'], pool['homePitchers'])
-    away_lineup = roster.Lineup(pool['awayHitters'], pool['awayPitchers'])
+	home_lineup = roster.Lineup(pool['homeHitters'], pool['homePitchers'])
+	away_lineup = roster.Lineup(pool['awayHitters'], pool['awayPitchers'])
 
-    home_team = roster.Team(home_nick, home_loc, home_lineup)
-    away_team = roster.Team(away_nick, away_loc, away_lineup)
+	home_team = roster.Team(home_nick, home_loc, home_lineup)
+	away_team = roster.Team(away_nick, away_loc, away_lineup)
 
-    return home_team, away_team
+	return home_team, away_team
 
 
 def main():
-    pa_writer = PlateAppearanceWriter()
-    game_writer = GameWriter()
-    api = API()
-    stats_helper = StatsHelper(api)
+	pa_writer = PlateAppearanceWriter()
+	game_writer = GameWriter()
+	api = API()
+	stats_helper = StatsHelper(api)
 
-    teams = get_teams()
+	teams = get_teams()
 
-    g = play.Game(teams[0], teams[1], pa_writer, stats_helper)
+	g = play.Game(teams[0], teams[1], pa_writer, stats_helper)
 
-    print("generated id: {0}".format(g._id))
+	print("generated id: {0}".format(g._id))
 
-    g.play()
+	g.play()
 
-    # g.tearDown()
+	# g.tearDown()
 
-    resp = game_writer.save_game(g)
+	resp = game_writer.save_game(g)
 
-    print(resp)
+	print(resp)
 
 
 if __name__ == "__main__":
-    main()
+	main()
