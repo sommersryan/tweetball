@@ -493,18 +493,6 @@ class Game(object):
 			self.playInning()
 	
 	def tearDown(self):
-	
-		# for player in self.homeTeam.lineup.battingOrder:
-			# player.save()
-			
-		# for player in self.awayTeam.lineup.battingOrder:
-			# player.save()
-			
-		# for player in self.homeTeam.lineup.usedPitchers:
-			# player.save()
-			
-		# for player in self.awayTeam.lineup.usedPitchers:
-			# player.save()
 			
 		for player in set(self.homeTeam.lineup.battingOrder 
 				+ self.awayTeam.lineup.battingOrder + self.homeTeam.lineup.usedPitchers 

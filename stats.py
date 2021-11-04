@@ -1,4 +1,4 @@
-from collections import Counter
+	from collections import Counter
 from itertools import groupby
 from jinja2 import Environment, FileSystemLoader
 from storage import boxScoreBucket
