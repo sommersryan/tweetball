@@ -5,8 +5,7 @@ from fractions import Fraction
 
 from bullpen_manager import bullpenCall
 from league import leagueMeans
-#from tweet import api
-from utils import baseNarratives, transitions, log5, weightedChoice, emojis
+from utils import baseNarratives, transitions, log5, weightedChoice
 from wpa import winProb
 
 
@@ -302,67 +301,6 @@ class PlateAppearance(object):
 				endWP = 1
 
 		return endWP - startWP
-
-	def tweetPA(self, replyTo):
-
-		if self.top:
-			half = emojis['top']
-			aAfterScore = self.awayScore + self.runs
-			hAfterScore = self.homeScore
-
-		else:
-			half = emojis['bottom']
-			aAfterScore = self.awayScore
-			hAfterScore = self.homeScore + self.runs
-
-		inningString = "{0}{1}".format(half, self.inning)
-		baseString = ""
-
-		if self.baseState.first:
-			baseString += emojis['first']
-
-		else:
-			baseString += emojis['empty']
-
-		if self.baseState.second:
-			baseString += emojis['second']
-
-		else:
-			baseString += emojis['empty']
-
-		if self.baseState.third:
-			baseString += emojis['third']
-
-		else:
-			baseString += emojis['empty']
-
-		outString = emojis['out'] * self.baseState.outs
-		outString += emojis['noOut'] * (2 - self.baseState.outs)
-
-		narrative = str(self)
-
-		if self.runs > 0:
-			if self.top:
-				afterScoreString = "{0} -- {1}".format(aAfterScore, hAfterScore)
-			else:
-				afterScoreString = "{0} -- {1}".format(hAfterScore, aAfterScore)
-		else:
-			afterScoreString = ""
-
-		if self.top:
-			beforeScoreString = "{0} -- {1}".format(self.awayScore, self.homeScore)
-		else:
-			beforeScoreString = "{0} -- {1}".format(self.homeScore, self.awayScore)
-
-		t = "{0} | {1} | {2} | {3}|\r\n {4}. {5}".format(inningString, beforeScoreString, baseString, outString,
-														 narrative, afterScoreString)
-
-		if len(t) > 260:
-			t = t[:260]
-
-		#tweetID = api.update_status(t, in_reply_to_status_id=replyTo).id
-
-		#return tweetID
 
 	def __str__(self):
 

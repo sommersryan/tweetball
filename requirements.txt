@@ -10,3 +10,4 @@ six==1.10.0
 tweepy==3.6.0
 
 marshmallow==3.14.0
+pika==1.2.0
