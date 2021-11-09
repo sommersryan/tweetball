@@ -2,7 +2,7 @@ import random, pickle
 from league import BAT_DIST, PITCH_DIST
 from utils import percentile, nicknames, getCity
 from config import RESULT_TYPES, PLAYER_SAVING_ENABLED
-from tweet import api
+# from tweet import api
 from tweepy.error import TweepError
 from storage import playerStore
 from fractions import Fraction
@@ -152,39 +152,39 @@ class Player(object):
 		
 		return True
 		
-	def refresh(self):
-		
-		try:
-			new = api.get_user(self.id)
-			
-		except TweepError:
-			return False
-		
-		self.id = new.id
-		self.name = new.screen_name
-		self.handle = "@{0}".format(new.screen_name)
-		self.fullName = new.name
-		
-		return True
+	# def refresh(self):
+	#
+	# 	try:
+	# 		#new = api.get_user(self.id)
+	#
+	# 	except TweepError:
+	# 		return False
+	#
+	# 	self.id = new.id
+	# 	self.name = new.screen_name
+	# 	self.handle = "@{0}".format(new.screen_name)
+	# 	self.fullName = new.name
+	#
+	# 	return True
 	
-	def notifyAttributes(self):
-	
-		attrTweet = """{0}\r\n	
-					HITTING:\r\n
-					Contact: {1}\r\nPower: {2}\r\nDiscipline: {3}\r\n
-					\r\n
-					PITCHING:\r\n
-					Control: {4}\r\nStuff: {5}\r\nComposure: {6}
-					""".format(self.handle,
-								self.ratings.contact,
-								self.ratings.power,
-								self.ratings.discipline,
-								self.ratings.control,
-								self.ratings.stuff,
-								self.ratings.composure)
-		
-		api.update_status(attrTweet)
-		return True
+	# def notifyAttributes(self):
+	#
+	# 	attrTweet = """{0}\r\n
+	# 				HITTING:\r\n
+	# 				Contact: {1}\r\nPower: {2}\r\nDiscipline: {3}\r\n
+	# 				\r\n
+	# 				PITCHING:\r\n
+	# 				Control: {4}\r\nStuff: {5}\r\nComposure: {6}
+	# 				""".format(self.handle,
+	# 							self.ratings.contact,
+	# 							self.ratings.power,
+	# 							self.ratings.discipline,
+	# 							self.ratings.control,
+	# 							self.ratings.stuff,
+	# 							self.ratings.composure)
+	#
+	# 	api.update_status(attrTweet)
+	# 	return True
 		
 	def __repr__(self):
 	
@@ -318,17 +318,17 @@ class Substitution(object):
 
 		self.narratives = [str(self)]
 		
-	def tweetPA(self, replyTo):
-		
-		if self.isPitchingChange:
-			tweet = "{0} enters the game to pitch, replacing {1}.".format(self.playerIn.handle, self.playerOut.handle)
-		
-		else:
-			tweet = "{0} enters the game to pinch hit for {1}.".format(self.playerIn.handle, self.playerOut.handle)
-		
-		tweetID = api.update_status(tweet, in_reply_to_status_id = replyTo).id
-		
-		return tweetID
+	# def tweetPA(self, replyTo):
+	#
+	# 	if self.isPitchingChange:
+	# 		tweet = "{0} enters the game to pitch, replacing {1}.".format(self.playerIn.handle, self.playerOut.handle)
+	#
+	# 	else:
+	# 		tweet = "{0} enters the game to pinch hit for {1}.".format(self.playerIn.handle, self.playerOut.handle)
+	#
+	# 	tweetID = api.update_status(tweet, in_reply_to_status_id = replyTo).id
+	#
+	# 	return tweetID
 		
 	def __str__(self):
 		
@@ -346,8 +346,8 @@ def getTeams():
 	
 	pool = [mongoMapToPlayer(a, Player.blank()) for a in mongoPlayers]
 	
-	for p in pool:
-		p.refresh()
+	# for p in pool:
+	# 	p.refresh()
 	
 	pool.sort(key = lambda x: (x.ratings.control + x.ratings.stuff), reverse = False)
 	homeHitters, homePitchers, awayHitters, awayPitchers = [], [], [], []

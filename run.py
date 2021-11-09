@@ -1,4 +1,5 @@
-import tweet, play, roster
+import play
+import roster
 
 teams = roster.getTeams()
 
@@ -6,8 +7,8 @@ g = play.Game(teams[0], teams[1])
 
 g.play()
 
-g.tearDown()
+# g.tearDown()
 
-t = tweet.GameTweeter(g)
+# t = tweet.GameTweeter(g)
 
-t.execute()
+# t.execute()
