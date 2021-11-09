@@ -3,7 +3,7 @@ from marshmallow import Schema, fields, post_load
 
 class RatingSetSchema(Schema):
     class Meta:
-        fields = ("contact", "power", "discipline", "control", "stuff", "composure", "batting", "pitching")
+        fields = ("contact", "power", "discipline", "control", "stuff", "composure")
         ordered = True
 
 
@@ -11,7 +11,7 @@ class PlayerSchema(Schema):
     ratings = fields.Nested(RatingSetSchema)
 
     class Meta:
-        fields = ("id", "name", "fullName", "handle", "position", "sub")
+        fields = ("id", "name", "fullName", "handle", "position", "sub", "ratings", "handedness", "uniNumber")
         ordered = True
 
 
@@ -45,9 +45,12 @@ class PlateAppearanceSchema(Schema):
 
 
 class LineupSchema(Schema):
-    battingOrder = fields.Pluck('PlayerSchema', 'id', many=True)
-    pitchers = fields.Pluck('PlayerSchema', 'id', many=True)
-    usedPitchers = fields.Pluck('PlayerSchema', 'id', many=True)
+    # battingOrder = fields.Pluck('PlayerSchema', 'id', many=True)
+    # pitchers = fields.Pluck('PlayerSchema', 'id', many=True)
+    # usedPitchers = fields.Pluck('PlayerSchema', 'id', many=True)
+    battingOrder = fields.List(fields.Nested(PlayerSchema))
+    pitchers = fields.List(fields.Nested(PlayerSchema))
+    usedPitchers = fields.List(fields.Nested(PlayerSchema))
 
 
 class TeamSchema(Schema):

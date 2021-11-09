@@ -105,7 +105,7 @@ class Player(object):
 
     def __init__(self, id, name, fullName, handle, handedness,
                  uniNumber, ratings, pitchingGameStats, battingGameStats,
-                 pitchingCareerStats, battingCareerStats, active, sub, position):
+                 active, sub, position):
 
         self.id = id
         self.name = name
@@ -116,8 +116,8 @@ class Player(object):
         self.ratings = ratings
         self.pitchingGameStats = pitchingGameStats
         self.battingGameStats = battingGameStats
-        self.pitchingCareerStats = pitchingCareerStats
-        self.battingCareerStats = battingCareerStats
+        # self.pitchingCareerStats = pitchingCareerStats
+        # self.battingCareerStats = battingCareerStats
         self.active = active
         self.sub = sub
         self.position = position
@@ -126,7 +126,13 @@ class Player(object):
     def from_dict(cls, **kwargs):
         base_ratings = kwargs.pop('ratings')
         rating_set = Ratings.from_ratings(**base_ratings)
+
         kwargs['ratings'] = rating_set
+        kwargs['active'] = True
+
+        kwargs['pitchingGameStats'] = Counter()
+        kwargs['battingGameStats'] = Counter()
+
         return cls(**kwargs)
 
     @classmethod
@@ -156,24 +162,24 @@ class Player(object):
 
         return player
 
-    def save(self):
-
-        self.pitchingCareerStats.update(self.pitchingGameStats)
-        self.battingCareerStats.update(self.battingGameStats)
-
-        record = playerMaptoMongo(self)
-
-        if self.position == "P":
-            if self.pitchingGameStats['IP'] >= 2:
-                record['lastStart'] = datetime.utcnow()
-
-        else:
-            record['lastStart'] = datetime.utcnow()
-
-        if PLAYER_SAVING_ENABLED:
-            mongoPlayerSave(record)
-
-        return True
+    # def save(self):
+    #
+    #     self.pitchingCareerStats.update(self.pitchingGameStats)
+    #     self.battingCareerStats.update(self.battingGameStats)
+    #
+    #     record = playerMaptoMongo(self)
+    #
+    #     if self.position == "P":
+    #         if self.pitchingGameStats['IP'] >= 2:
+    #             record['lastStart'] = datetime.utcnow()
+    #
+    #     else:
+    #         record['lastStart'] = datetime.utcnow()
+    #
+    #     if PLAYER_SAVING_ENABLED:
+    #         mongoPlayerSave(record)
+    #
+    #     return True
 
     # def refresh(self):
     #
@@ -286,6 +292,9 @@ class Lineup(object):
         random.shuffle(positions)
 
         for player in self.battingOrder:
+            if len(positions) < 1:
+                player.position = None
+                continue
 
             if player == self.currentPitcher:
                 player.position = 'P'
@@ -327,7 +336,7 @@ class Team(object):
         pitchers = [Player.from_dict(**p) for p in kwargs['lineup']['pitchers']]
 
         lineup = Lineup(batters, pitchers)
-        
+
         kwargs['lineup'] = lineup
 
         return cls(**kwargs)
