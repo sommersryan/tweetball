@@ -123,6 +123,13 @@ class Player(object):
         self.position = position
 
     @classmethod
+    def from_dict(cls, **kwargs):
+        base_ratings = kwargs.pop('ratings')
+        rating_set = Ratings.from_ratings(**base_ratings)
+        kwargs['ratings'] = rating_set
+        return cls(**kwargs)
+
+    @classmethod
     def fromTwitter(cls, twitterUser):
         # twitterUser is a tweepy user object
 
@@ -313,6 +320,17 @@ class Team(object):
         self.nickname = nickname
         self.location = location
         self.lineup = lineup
+
+    @classmethod
+    def from_dict(cls, **kwargs):
+        batters = [Player.from_dict(**p) for p in kwargs['lineup']['battingOrder']]
+        pitchers = [Player.from_dict(**p) for p in kwargs['lineup']['pitchers']]
+
+        lineup = Lineup(batters, pitchers)
+        
+        kwargs['lineup'] = lineup
+
+        return cls(**kwargs)
 
     def __str__(self):
         return "{0} {1}".format(self.location, self.nickname)
