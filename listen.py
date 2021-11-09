@@ -25,4 +25,5 @@ sub_channel.basic_consume(
 	queue=queue_name, on_message_callback=callback, auto_ack=True
 )
 
+print('now listening for game start events')
 sub_channel.start_consuming()
