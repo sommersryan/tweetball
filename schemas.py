@@ -40,17 +40,14 @@ class PlateAppearanceSchema(Schema):
     timestamp = fields.DateTime()
 
     class Meta:
-        additional = ("narratives",)
+        additional = ("narratives", "inning", "top")
         ordered = True
 
 
 class LineupSchema(Schema):
-    # battingOrder = fields.Pluck('PlayerSchema', 'id', many=True)
-    # pitchers = fields.Pluck('PlayerSchema', 'id', many=True)
-    # usedPitchers = fields.Pluck('PlayerSchema', 'id', many=True)
-    battingOrder = fields.List(fields.Nested(PlayerSchema))
-    pitchers = fields.List(fields.Nested(PlayerSchema))
-    usedPitchers = fields.List(fields.Nested(PlayerSchema))
+    battingOrder = fields.Pluck('PlayerSchema', 'id', many=True)
+    pitchers = fields.Pluck('PlayerSchema', 'id', many=True)
+    usedPitchers = fields.Pluck('PlayerSchema', 'id', many=True)
 
 
 class TeamSchema(Schema):
