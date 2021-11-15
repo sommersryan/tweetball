@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, post_load
+from marshmallow import Schema, fields
 
 
 class RatingSetSchema(Schema):
@@ -52,6 +52,7 @@ class LineupSchema(Schema):
 
 class TeamSchema(Schema):
     lineup = fields.Nested(LineupSchema)
+    team_id = fields.String(data_key="id")
 
     class Meta:
         additional = ('location', 'nickname')

@@ -205,10 +205,11 @@ class Lineup(object):
 
 class Team(object):
 
-    def __init__(self, nickname, location, lineup):
+    def __init__(self, team_id, nickname, location, lineup):
         self.nickname = nickname
         self.location = location
         self.lineup = lineup
+        self.team_id = team_id
 
     @classmethod
     def from_dict(cls, **kwargs):
