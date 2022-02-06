@@ -136,6 +136,8 @@ class PlateAppearance(object):
 		self.pitcher = pitcher
 		self.narratives = []
 		self.isSubstitution = False
+		self.playerIn = None
+		self.playerOut = None
 		self.timestamp = timestamp
 
 		if baseState.outs == 3:

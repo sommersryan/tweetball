@@ -38,9 +38,11 @@ class PlateAppearanceSchema(Schema):
     baseState = fields.Nested(BaseOutSchema)
     endState = fields.Nested(BaseOutSchema)
     timestamp = fields.DateTime()
+    playerIn = fields.Pluck('PlayerSchema', 'id')
+    playerOut = fields.Pluck('PlayerSchema', 'id')
 
     class Meta:
-        additional = ("narratives", "inning", "top")
+        additional = ("narratives", "inning", "top", "isSubstitution")
         ordered = True
 
 

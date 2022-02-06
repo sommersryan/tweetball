@@ -1,6 +1,9 @@
 import random
 from collections import Counter
 
+import config
+import datetime
+
 from league import BAT_DIST, PITCH_DIST
 
 from utils import percentile
@@ -192,7 +195,9 @@ class Lineup(object):
             substitute.sub = True
             substitute.position = 'P'
 
-            subInfo = Substitution(self.currentPitcher, substitute, previousPA, True)
+            new_timestamp = previousPA.timestamp + datetime.timedelta(seconds=(config.PA_TIME / 2))
+
+            subInfo = Substitution(self.currentPitcher, substitute, previousPA, True, new_timestamp)
 
             self.battingOrder.insert(self.battingOrder.index(self.currentPitcher) + 1, substitute)
             self.currentPitcher = substitute
@@ -228,7 +233,7 @@ class Team(object):
 
 class Substitution(object):
 
-    def __init__(self, playerOut, playerIn, previousPA, isPitchingChange):
+    def __init__(self, playerOut, playerIn, previousPA, isPitchingChange, timestamp):
 
         self.top = previousPA.top
         self.inning = previousPA.inning
@@ -239,6 +244,7 @@ class Substitution(object):
         self.playerOut = playerOut
         self.playerIn = playerIn
         self.isSubstitution = True
+        self.timestamp = timestamp
 
         self.narratives = [str(self)]
 
