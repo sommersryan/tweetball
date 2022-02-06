@@ -425,7 +425,7 @@ class Game(object):
 				elif self.top:
 					self.top = not self.top
 
-				return current_pa.timestamp
+				return current_pa.timestamp + datetime.timedelta(seconds=config.PA_TIME)
 
 	def play(self):
 
